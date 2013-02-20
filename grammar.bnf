@@ -1,0 +1,33 @@
+/***
+*   TODO:
+*   Preguntar acerca de imports,y directivas de preprocesamiento
+*
+**/
+
+program : functions
+        ;
+        
+functions   : functions function
+            | function
+            ;
+            
+function    : FUN ID RPAR args LPAR locals BEGIN statements END
+            ;
+            
+args    :
+        | variable 
+        | variable listvar
+        ;
+        
+listvar : listvar COMMA variable ;
+
+variable   : ID COLON TYPE SEMICOLON
+           | ID ASIG expr
+           ;
+            
+            
+expr    :   expr PLUS expr
+        |   expr MINUS expr 
+        |   expr TIMES expr
+        //TODO anothers expressions
+        ;
