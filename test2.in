@@ -1,0 +1,22 @@
+test2: this test is a wrong-case and should to fail.
+floats:
+  1.00001
+  2.0.0.e
+  3.0
+  1e-18
+  -3.141592
+
+ints: 
+  123
+  00001
+  0xqqe
+  0x1
+  033
+
+strings:
+  """"
+  "345875h4g457()(/&#Fg678Hg"
+  "nice string"
+  "\n"
+  "string with \s \t"
+
