@@ -91,8 +91,8 @@ ejecutarlos con algunas pruebas mas dificiles:
      bash % python mpaslex.py testlex1.pas
      bash % python mpaslex.py testlex2.pas
 
-Bonos: ¿Que haria usted para convertir estas pruebas en pruebas unitarias
-adecuadas?
+Bonos: Que haria usted para convertir estas pruebas en pruebas unitarias
+adecuadas
 '''
 
 # ----------------------------------------------------------------------
@@ -124,7 +124,7 @@ tokens = [
 	# Operators and delimiters
 	'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
 	'ASSIGN', 'SEMI', 'LPAREN', 'RPAREN', 'COMMA',
-	'LBRACE', 'RBRACE',
+	'LBRACE', 'RBRACE', 'COLON', 'LSBRACKET' , 'RSBRACKET',
 
 	# Boolean operators
 	'LT', 'LE', 'GT', 'GE', 'LAND', 'LOR', 'LNOT',
@@ -153,8 +153,11 @@ t_TIMES     = r'\*'
 t_DIVIDE    = r'/'
 t_ASSIGN    = r'='
 t_SEMI      = r';'
+t_COLON     = r':'
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
+t_LSBRACKET = r'\['
+t_RSBRACKET = r'\]'
 t_LBRACE    = r'{'
 t_RBRACE    = r'}'
 t_COMMA     = r','
