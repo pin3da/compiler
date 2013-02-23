@@ -30,66 +30,66 @@ Su lexer debera reconocer los siguientes simbolos y tokens.  El nombre de la
 izquierda es el nombre del token, el valor de la derecha es el texto coincidente.
 
 Palabras Reservadas:
-	CONST   : 'const'
-	VAR	 : 'var'  
-	PRINT   : 'print'
-	FUNC	: 'func'
-	EXTERN  : 'extern'
+    CONST   : 'const'
+    VAR     : 'var'  
+    PRINT   : 'print'
+    FUNC    : 'func'
+    EXTERN  : 'extern'
 
 Identificadores:  (Las mismas reglas que para Python)
-	ID	  : Texto que comience con una letra o '_', seguido de cualquier numero
-			  numero de letras, digitos o guion bajo.
+    ID      : Texto que comience con una letra o '_', seguido de cualquier numero
+              numero de letras, digitos o guion bajo.
 
 Operadores y Delimitadores:
-	PLUS	: '+'
-	MINUS   : '-'
-	TIMES   : '*'
-	DIVIDE  : '/'
-	ASSIGN  : '='
-	SEMI	: ';'
-	LPAREN  : '('
-	RPAREN  : ')'
-	COMMA   : ','
+    PLUS    : '+'
+    MINUS   : '-'
+    TIMES   : '*'
+    DIVIDE  : '/'
+    ASSIGN  : '='
+    SEMI    : ';'
+    LPAREN  : '('
+    RPAREN  : ')'
+    COMMA   : ','
 
 Literales:
-	INTEGER : '123'   (decimal)
-			  '0123'  (octal)
-			  '0x123' (hex)
+    INTEGER : '123'   (decimal)
+              '0123'  (octal)
+              '0x123' (hex)
 
-	FLOAT   : '1.234'
-			  '1.234e1'
-			  '1.234e+1'
-			  '1.234e-1'
-			  '1e2'
-			  '.1234'
-			  '1234.'
+    FLOAT   : '1.234'
+              '1.234e1'
+              '1.234e+1'
+              '1.234e-1'
+              '1e2'
+              '.1234'
+              '1234.'
 
-	STRING  : '"Hola Mundo\n"'
+    STRING  : '"Hola Mundo\n"'
 
 Comentarios:  Deben ser ignorados por su analizador lexico
-	 //			 Salta el resto de la linea
-	 /* ... */	  Salta un bloque (anidacion no permitida)
+     //             Salta el resto de la linea
+     /* ... */      Salta un bloque (anidacion no permitida)
 
 Errores: Su lexer debera reportar los siguientes mensajes de error:
 
-	 lineno: Ilegal char 'c'
-	 lineno: Cadena no terminada
-	 lineno: Comentario sin terminar
-	 lineno: Codigo de escape malo en cadena '\..'
+     lineno: Ilegal char 'c'
+     lineno: Cadena no terminada
+     lineno: Comentario sin terminar
+     lineno: Codigo de escape malo en cadena '\..'
 
 Pruebas
 -------
 Para el desarrollo inicial, intente ejecutar el lexer con un archivo de 
 entrada de ejemplo como:
 
-	 bash % python mpaslex.py sample.pas
+     bash % python mpaslex.py sample.pas
 
 Estudie cuidadosamente la salida del lexer y asegurese que tiene sentido.
 Una vez que este razonablemente satisfecho con el resultado, trate de 
 ejecutarlos con algunas pruebas mas dificiles:
 
-	 bash % python mpaslex.py testlex1.pas
-	 bash % python mpaslex.py testlex2.pas
+     bash % python mpaslex.py testlex1.pas
+     bash % python mpaslex.py testlex2.pas
 
 Bonos: Que haria usted para convertir estas pruebas en pruebas unitarias
 adecuadas
@@ -125,7 +125,7 @@ tokens = [
 	'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
 	'ASSIGN', 'SEMI', 'LPAREN', 'RPAREN', 'COMMA',
 	'LBRACE', 'RBRACE', 'COLON', 'LSBRACKET' , 'RSBRACKET',
-	'COLONEQUAL',
+    'COLONEQUAL', 
 
 	# Boolean operators
 	'LT', 'LE', 'GT', 'GE', 'LAND', 'LOR', 'LNOT',
@@ -148,30 +148,29 @@ t_ignore = ' \t\r'
 # 
 # Tokens para simbolos sencillos: + - * / = ( ) ;
 
-t_PLUS	  	= r'\+'
-t_MINUS	 	= r'-'
-t_TIMES	 	= r'\*'
-t_DIVIDE	= r'/'
-t_ASSIGN	= r'='
-t_SEMI	 	= r';'
-t_COLON	 	= r':'
-t_COLONEQUAL= r':='
-t_LPAREN	= r'\('
-t_RPAREN	= r'\)'
+t_PLUS      = r'\+'
+t_MINUS     = r'-'
+t_TIMES     = r'\*'
+t_DIVIDE    = r'/'
+t_ASSIGN    = r'='
+t_SEMI      = r';'
+t_COLON     = r':'
+t_LPAREN    = r'\('
+t_RPAREN    = r'\)'
 t_LSBRACKET = r'\['
 t_RSBRACKET = r'\]'
-t_LBRACE	= r'{'
-t_RBRACE	= r'}'
-t_COMMA	 	= r','
-t_LT		= r'<'
-t_LE		= r'<='
-t_EQ		= r'=='
-t_GE		= r'>='
-t_GT		= r'>'
-t_NE		= r'!='
-t_LAND	  	= r'&&'
-t_LOR	   	= r'\|\|'
-t_LNOT	  	= r'!'
+t_LBRACE    = r'{'
+t_RBRACE    = r'}'
+t_COMMA     = r','
+t_LT        = r'<'
+t_LE        = r'<='
+t_EQ        = r'=='
+t_GE        = r'>='
+t_GT        = r'>'
+t_NE        = r'!='
+t_LAND      = r'&&'
+t_LOR       = r'\|\|'
+t_LNOT      = r'!'
 
 # ----------------------------------------------------------------------
 # *** DEBE COMPLETAR : escriba las regexps y codigo adicional para ***
@@ -185,23 +184,23 @@ t_LNOT	  	= r'!'
 #
 # El valor debe ser convertido a un float de Python cuando se analice
 def t_FLOAT(t):
-	r'((\d*\.\d+)([eE][-+]?\d+)?)|(\d+\.\d*)|(\d+)([eE][-+]?\d+)'
-	t.value = float(t.value)			   # Conversion a float de Python
+	r'(?:\d*\.\d+|\d+\.\d*)(?:[eE][-+]?\d+)?'
+	t.value = float(t.value)               # Conversion a float de Python
 	return t
 
 # Constantes enteras.  Se debe reconocer enteros en todos los formatos
 # siguientes:
 #
-#	 1234			 (decimal)
-#	 01234			(octal)
-#	 0x1234 or 0X1234 (hex)
+#     1234             (decimal)
+#     01234            (octal)
+#     0x1234 or 0X1234 (hex)
 #
 # El valor debe ser convertido a un int de Python cuando se analice.
 def t_INTEGER(t):
 	r'(?:0[xX]?)?\d+'
 	# Conversion a int de Python
 	if t.value.startswith(('0x','0X')):
-		t.value = int(t.value,16)
+		t.value = int(t.value,16)              
 	elif t.value.startswith('0'):
 		t.value = int(t.value,8)
 	else:
@@ -211,18 +210,18 @@ def t_INTEGER(t):
 # Constantes string.  Se debe reconocer texto entre comillas.
 # Por ejemplo:
 #
-#	 "Hola Mundo"
+#     "Hola Mundo"
 #
 # A las cadenas se les permite tener codigos de escape los cuales
 # estan definidos por un backslash inicial.   Los siguientes 
 # codigos backslash deben ser reconocidos:
-#	  
-#	   \n	= newline (10)
-#	   \r	= carriage return (13) 
-#	   \t	= tab (9)
-#	   \\	= char baskslash (\)
-#	   \"	= comilla (")
-#	   \bhh  = codigo caracter byte hh  (h es un digito hex)
+#      
+#       \n    = newline (10)
+#       \r    = carriage return (13) 
+#       \t    = tab (9)
+#       \\    = char baskslash (\)
+#       \"    = comilla (")
+#       \bhh  = codigo caracter byte hh  (h es un digito hex)
 #
 # Todas los otros codigos de escape deberan dar un error. Nota: las 
 # literales de string *NO* comprenden el rango completo de codigos de
@@ -240,18 +239,14 @@ def _replace_escape_codes(t):
 	Reemplace todos los codigos de escape validos \.. en una cadena con
 	su codigo de caracter raw equivalente.
 	'''
-	newval = ""
+	newval = []
 	ostring = iter(t.value)
 	olen = len(t.value)
 	for c in ostring:
-		flag = false
-		rval = ""
 		if c=='"':
 			error("Fin de cadena prematuro")
 		elif c=='\\':
 			c1 = ostring.next()
-			c2 = ostring.next().next()
-			c3 = ostring.next().next().next()
 			#if c1 not in escapes_not_b:
 			if c1 not in escapes:
 				error(t.lexer.lineno,"Codigo secuencia escape mala '%s'" % escape_code)
@@ -266,31 +261,19 @@ def _replace_escape_codes(t):
 					c='\\'
 				elif c1=='"':
 					c='"'
-				elif c1=='b':
-					if str.isdigit(c2) and str.isdigit(c3): 
-						flag = true
-						rval += (c1 + c2 +c3)
-					else:
-						error(t.lexer.lineno,"Codigo secuencia escape mala '%s'" % escape_code)
-			if(flag):
-				newval += rval
-			else:
-				newval += c
-		else:
-			newval += c
+		newval.append(c)
 
-	t.value = newval
-	return t
+	t.value = ''.join(newval)
 
 def t_STRING(t):
 	r'".*"'
 	# Convierta t.value a una cadena con codigo de escape reemplazado por valor actual.
 	t.value = t.value[1:-1]
-	_replace_escape_codes(t)	# Debe implementar arriba
+	_replace_escape_codes(t)    # Debe implementar arriba
 	return t
 
 def t_BOOLEAN(t):
-	r'(true|false)'
+	r'\b(true|false)\b'
 	t.value = True if t.value=='true' else False
 	return t
 
@@ -318,18 +301,16 @@ reserved = {
 	'while':'WHILE',
 	'var':'VAR',
 	'const':'CONST',
-	#Podria ser fun
-	'func':'FUNC',
+    #Podria ser func
+	'fun':'FUN',
 	'extern':'EXTERN',
 	'print':'PRINT',
-	'begin':'BEGIN',
-	'int':'INT_TYPE',
-	'float': 'FLOAT_TYPE',
-	'boolean': 'BOOLEAN_TYPE',
-	'string': 'STRING_TYPE',
+    'begin':'BEGIN',
+    'int':'INT_TYPE',
+    'float': 'FLOAT_TYPE',
+    'boolean': 'BOOLEAN_TYPE'
 }
 
-# En realidad este diccionario no se usa
 operators = {
 	r'+' : "PLUS",
 	r'-' : "MINUS",
@@ -354,18 +335,18 @@ operators = {
 # ----------------------------------------------------------------------
 # *** DEBE COMPLETAR : Escriba las regexps adecuadas ***
 #
-# Ignore texto.  Las siguientes reglas deben ser usadas para ignorar
+# Ignore texto.  Las siguientes reglas debeb ser usadas para ignorar
 # texto en el archivo de entrada.  Esto incluye comentarios y lineas
 # en blanco.
 
 # Una o mas lineas en blanco
 def t_newline(t):
 	r'\n+'
-	t.lexer.lineno += t.value.count('\n')
+	t.lexer.lineno += len(t.value)
 
 # Comentarios C-style (/* ... */)
 def t_COMMENT(t):
-	r'/\*(.|\n|\r|\t)*\*/'
+	r'/\*(.|\n)*?\*/'
 	t.lexer.lineno += t.value.count('\n')
 
 # Comentarios C++-style (//...)
@@ -396,7 +377,7 @@ def t_STRING_UNTERM(t):
 	t.lexer.lineno += 1
 
 # ----------------------------------------------------------------------
-#				NO CAMBIE NADA DEBAJO DE ESTA PARTE
+#                NO CAMBIE NADA DEBAJO DE ESTA PARTE
 # ----------------------------------------------------------------------
 def make_lexer():
 	'''

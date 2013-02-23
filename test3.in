@@ -1,0 +1,10 @@
+/* Comentario */
+func quicksort(l:float, r:int, l:int, r:int, a:int[8192])
+    i:int;
+    j:int;
+    x:int;
+    w:int;
+    tmp:int;
+    done:int;
+begin
+

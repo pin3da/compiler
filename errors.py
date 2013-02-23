@@ -59,9 +59,9 @@ _subscribers = []
 _num_errors = 0
 
 def error(lineno, message, filename=None):
-	'''
-	Reporta un error del compilador a todos los suscriptores.
-	'''
+	
+	#Reporta un error del compilador a todos los suscriptores.
+	
 	global _num_errors
 	if not filename:
 		errmsg = "{}: {}".format(lineno, message)
