@@ -116,7 +116,7 @@ from ply.lex import lex
 
 tokens = [
 	# keywords
-	'ID', 'CONST', 'VAR', 'PRINT', 'FUNC', 'EXTERN',
+	'ID', 'CONST', 'VAR', 'PRINT', 'FUNC', 'EXTERN','BEGIN','DO',
 
 	# Control flow
 	'IF', 'ELSE', 'WHILE',
@@ -133,6 +133,9 @@ tokens = [
 
 	# Literals
 	'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN',
+	#Types
+    'INT_TYPE','FLOAT_TYPE','BOOLEAN_TYPE','STRING_TYPE',
+	
 ]
 
 # ----------------------------------------------------------------------
@@ -207,7 +210,12 @@ def t_INTEGER(t):
 	else:
 		t.value = int(t.value)
 	return t
-
+	
+	
+def my_next(ostring,pos):
+    if(pos < len(ostring)):
+        return ostring[pos]
+    return '-1'
 # Constantes string.  Se debe reconocer texto entre comillas.
 # Por ejemplo:
 #
@@ -234,24 +242,21 @@ def t_INTEGER(t):
 escapes_not_b = r'nrt\"'
 escapes = escapes_not_b + "b"
 def _replace_escape_codes(t):
-	r'''
-	*** SE DEBE IMPLEMENTAR ***
-
-	Reemplace todos los codigos de escape validos \.. en una cadena con
-	su codigo de caracter raw equivalente.
-	'''
 	newval = ""
-	ostring = iter(t.value)
+	ostring = t.value
 	olen = len(t.value)
-	for c in ostring:
-		flag = false
+	i=-1
+	while(i < olen -1):
+		i+=1
+		c = ostring[i]
+		flag = False
 		rval = ""
 		if c=='"':
 			error("Fin de cadena prematuro")
 		elif c=='\\':
-			c1 = ostring.next()
-			c2 = ostring.next().next()
-			c3 = ostring.next().next().next()
+			c1 = my_next(ostring,i+1)
+			c2 = my_next(ostring,i+2)
+			c3 = my_next(ostring,i+3)
 			#if c1 not in escapes_not_b:
 			if c1 not in escapes:
 				error(t.lexer.lineno,"Codigo secuencia escape mala '%s'" % escape_code)
@@ -268,14 +273,17 @@ def _replace_escape_codes(t):
 					c='"'
 				elif c1=='b':
 					if str.isdigit(c2) and str.isdigit(c3): 
-						flag = true
+						flag = True
 						rval += (c1 + c2 +c3)
 					else:
 						error(t.lexer.lineno,"Codigo secuencia escape mala '%s'" % escape_code)
 			if(flag):
 				newval += rval
+				i= i+1
+				
 			else:
 				newval += c
+			i=i+1
 		else:
 			newval += c
 
@@ -318,6 +326,7 @@ reserved = {
 	'while':'WHILE',
 	'var':'VAR',
 	'const':'CONST',
+	'do':'DO',
 	#Podria ser fun
 	'func':'FUNC',
 	'extern':'EXTERN',
