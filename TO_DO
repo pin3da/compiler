@@ -1,4 +1,2 @@
--fun debe ser un token no un id
--float debe ser un token no un id
-- TODAS las palabras reservadas deben aparecer como TOKENS no como id
--revisar posicion (columna) de los tokens
+- Check unitary test
+- think about functional test

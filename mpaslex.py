@@ -211,11 +211,12 @@ def t_INTEGER(t):
 		t.value = int(t.value)
 	return t
 	
-	
+#	to avoid index out of bounds
+#	Can return any non-digit charcter
 def my_next(ostring,pos):
     if(pos < len(ostring)):
         return ostring[pos]
-    return '-1'
+    return 'p'
 # Constantes string.  Se debe reconocer texto entre comillas.
 # Por ejemplo:
 #
@@ -252,14 +253,14 @@ def _replace_escape_codes(t):
 		flag = False
 		rval = ""
 		if c=='"':
-			error("Fin de cadena prematuro")
+			error(t.lexer.lineno, "Premature end of String at '%s'" % i,filename=sys.argv[1])
 		elif c=='\\':
 			c1 = my_next(ostring,i+1)
 			c2 = my_next(ostring,i+2)
 			c3 = my_next(ostring,i+3)
 			#if c1 not in escapes_not_b:
 			if c1 not in escapes:
-				error(t.lexer.lineno,"Codigo secuencia escape mala '%s'" % escape_code)
+				error(t.lexer.lineno,"Bad escape sequence code '%s'" % c1,filename=sys.argv[1])
 			else:
 				if c1=='n':
 					c='\n'
@@ -276,10 +277,10 @@ def _replace_escape_codes(t):
 						flag = True
 						rval += (c1 + c2 +c3)
 					else:
-						error(t.lexer.lineno,"Codigo secuencia escape mala '%s'" % escape_code)
+						error(t.lexer.lineno,"Bad escape sequence code '%s'" % c2+c3,filename=sys.argv[1])
 			if(flag):
 				newval += rval
-				i= i+1
+				i= i+2
 				
 			else:
 				newval += c
@@ -390,18 +391,18 @@ def t_CPPCOMMENT(t):
 
 # Caracteres ilegales (manejo errores generico)
 def t_error(t):
-	error(t.lexer.lineno,"Caracter ilegal %r" % t.value[0])
+	error(t.lexer.lineno,"Illegal character %r" % t.value[0],filename=sys.argv[1])
 	t.lexer.skip(1)
 
 # Comentario C-style no terminado
 def t_COMMENT_UNTERM(t):
 	r'/\*[.\n]*(?!\*/)'
-	error(t.lexer.lineno,"Comentario no terminado")
+	error(t.lexer.lineno,"unfinished commentary",filename=sys.argv[1])
 
 # Literal de cadena no terminada
 def t_STRING_UNTERM(t):
 	r'"["]+'
-	error(t.lexer.lineno,"Literal de cadena no terminada")
+	error(t.lexer.lineno,"string literal not finished",filename=sys.argv[1])
 	t.lexer.lineno += 1
 
 # ----------------------------------------------------------------------
@@ -411,7 +412,7 @@ def make_lexer():
 	'''
 	Funcion de utilidad para crear el objeto lexer
 	'''
-	return lex()
+	return lex(optimize=1)
 
 if __name__ == '__main__':
 	import sys
