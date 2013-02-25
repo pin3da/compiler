@@ -6,5 +6,6 @@ func quicksort(l:float, r:int, l:int, r:int, a:int[8192])
     w:int;
     tmp:int;
     done:int;
+	mio:=12.34e-18;
 begin
 

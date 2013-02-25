@@ -116,7 +116,7 @@ from ply.lex import lex
 
 tokens = [
 	# keywords
-	'ID', 'CONST', 'VAR', 'PRINT', 'FUNC', 'EXTERN','BEGIN','DO',
+	'ID', 'CONST', 'VAR', 'PRINT', 'FUNC', 'EXTERN','BEGIN','DO','THEN',
 
 	# Control flow
 	'IF', 'ELSE', 'WHILE',
@@ -328,6 +328,7 @@ reserved = {
 	'var':'VAR',
 	'const':'CONST',
 	'do':'DO',
+	'then' : 'THEN',
 	#Podria ser fun
 	'func':'FUNC',
 	'extern':'EXTERN',
@@ -398,6 +399,7 @@ def t_error(t):
 def t_COMMENT_UNTERM(t):
 	r'/\*[.\n]*(?!\*/)'
 	error(t.lexer.lineno,"unfinished commentary",filename=sys.argv[1])
+	t.lexer.lineno += t.value.count('\n')
 
 # Literal de cadena no terminada
 def t_STRING_UNTERM(t):

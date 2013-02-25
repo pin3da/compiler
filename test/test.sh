@@ -15,7 +15,7 @@ if [ $# -gt 0 ];then
 		    fi
 		done
 		if [ "$check" = "true" ];then
-			echo "*** All test passed ***"
+			echo "*** All tests checked ***"
 		fi
 	else
 		python ../mpaslex.py $1 > log
@@ -31,6 +31,6 @@ else
         fi
     done
     if [ "$check" = "true" ];then
-    	echo "*** All test passed ***"
+    	echo "*** All tests checked ***"
     fi
 fi 
