@@ -1,0 +1,183 @@
+program	:	(function)*function_main
+		;
+
+function:	FUNC ID LPAREN args outvar? RPAREN COLON TYPE locals BEGIN 				(statementlist)* END
+		;
+
+args	:	var (COMMA var)*
+		|
+		;
+
+locals	:	(varass SEMICOLON)*
+		|
+		;
+
+varass	: 	var
+		|	assignation
+		;
+
+var		:	ID COLON TYPE
+		;
+
+outvar	:	VAR TYPE COLON ID
+		;
+
+assignation	:	ID COLONEQUAL INTEGER
+			|	ID COLONEQUAL FLOAT
+			|	ID COLONEQUAL STRING
+			|	ID COLONEQUAL BOOLEAN
+			|	ID COLONEQUAL ID
+			|	ID COLONEQUAL expression
+			;
+
+
+
+statementlist	:	controlstate
+				|(instruction SEMICOLON)*instruction
+				|
+				;
+
+controlstate	:	cif
+				|	cwhile
+				;
+
+cwhile	: 	WHILE LPAREN? conditional RPAREN? DO BEGIN (whilestate)* BREAK  END SEMICOLON
+		|	WHILE LPAREN? conditional RPAREN? DO BEGIN (whilestate)* BREAK SEMICOLON (whilestate)*  END SEMICOLON
+		|	WHILE LPAREN? conditional RPAREN? DO instruction SEMICOLON
+		|	WHILE LPAREN? conditional RPAREN? DO BREAK SEMICOLON
+		;
+
+whilestate	:	statement
+			|cyclicalif
+			;
+
+cyclicalif	:	IF LPAREN? conditional RPAREN? THEN BEGIN (whilestate)* BREAK END SEMICOLON
+			|	IF LPAREN? conditional RPAREN? THEN BEGIN (whilestate)* BREAK SEMICOLON (whilestate)*  END SEMICOLON
+			|	IF LPAREN? conditional RPAREN? THEN instruction SEMICOLON
+			|	IF LPAREN? conditional RPAREN? THEN BREAK SEMICOLON
+			;
+
+cif	:	IF LPAREN? conditional RPAREN? THEN BEGIN (statementlist)* END SEMICOLON
+	|	IF LPAREN? conditional RPAREN? THEN instruction SEMICOLON
+	;
+
+conditional	:	expression GREATER expression
+			| expression LESS expression
+			| expression GREATEREQUAL expression
+			| expression LESSEQUAL expression
+			| expression DISTINT expression
+			| expression NOT expression
+			| expression OR expression
+			| expression AND expression
+			| NOT expression
+			| LPARENT expression RPARENT 
+			|BOOLEAN
+			;
+
+expression	: 	prod (PLUS prod MINUS prod)*
+			;
+
+prod	:	term (MULTIPL Y term DIVIDE term)*
+		;
+
+term	:	ID | FLOAT | INTEGER | LPAREN expression RPAREN
+		|INT_TYPE LPAREN ID RPAREN
+		|FLOAT_TYPE LPAREN ID RPAREN
+		;
+		
+instruction:	return | print | assignation | SKIP | read | write | ID LPAREN args RPAREN
+		;
+
+return: 	RETURN INTEGER
+		|RETURN FLOAT
+		|RETURN STRING
+		|RETURN ID
+		|RETURN expression
+		;
+
+print: 		PRINT LPAREN STRING RPAREN
+		|PRINT LPAREN FLOAT RPAREN
+		|PRINT LPAREN INTEGER RPAREN
+		|PRINT LPAREN BOOLEAN RPAREN
+		;
+
+read:		READ LPAREN expression RPAREN
+		;
+
+write: 		WRITE LPAREN expression RPAREN
+		;
+		
+
+function_main:	FUN MAIN LPAREN RPAREN locals BEGIN (statementlist)* END
+		;
+
+RETURN: 'return';
+
+PRINT: 'print';
+
+SKIP: 'skip'; 
+
+READ: 'read';
+
+WRITE: 'write';	
+		 		
+IF 		: 'if
+		;	 
+ELSE 	: 'else'
+	 	;
+WHILE 	: 'while'
+	  	;
+VAR 	: 'var'
+		;
+CONST 	: 'const'
+		;
+DO 		: 'do'
+		;
+THEN	: 'then'
+		;
+FUNC 	: 'func'
+		;
+EXTERN	: 'extern'
+		;
+PRINT	: 'print'
+		;
+BEGIN 	: 'begin'
+		;
+INT_TYPE: 'int'
+		;
+FLOAT_TYPE:	'float'
+		  ;
+BOOLEAN_TYPE : 'boolean'
+			 ;
+
+STRING_TYPE	: 'string'
+			;
+PLUS 		: '\+'
+MINUS 		: '-'
+TIMES	 	: '\*'
+DIVIDE		: '/'
+ASSIGN		: '='
+SEMI	 	: ';'
+COLON	 	: ':'
+COLONEQUAL	: ':='
+LPAREN		: '\('
+RPAREN		: '\)'
+LSBRACKET 	: '\['
+RSBRACKET 	: '\]'
+COMMA	 	: ','
+LT			: '<'
+LE			: '<='
+EQ			: '=='
+GE			: '>='
+GT			: '>'
+NE			: '!='
+LAND	  	: '&&'
+LOR	   		: '\|\|'
+LNOT	  	: '!'
+		
+ID 			: '[a-zA-Z_]\w*'
+BOOLEAN 	: '(true|false)'
+STRING 		: '"[^\n]*?(?<!\\)"'
+FLOAT		: '((\d*\.\d+)([eE][-+]?\d+)?)|(\d+\.\d*)|(\d+)([eE][-+]?\d+)'	
+INTEGER 	: '(?:0[xX]?)?\d+'
+3

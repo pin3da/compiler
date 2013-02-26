@@ -119,7 +119,7 @@ tokens = [
 	'ID', 'CONST', 'VAR', 'PRINT', 'FUNC', 'EXTERN','BEGIN','DO','THEN',
 
 	# Control flow
-	'IF', 'ELSE', 'WHILE',
+	'IF', 'ELSE', 'WHILE', 'READ', 'WRITE', 'PRINT','SKIP', 'RETURN',
 
 	# Operators and delimiters
 	'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
@@ -365,6 +365,11 @@ reserved = {
 	'float': 'FLOAT_TYPE',
 	'boolean': 'BOOLEAN_TYPE',
 	'string': 'STRING_TYPE',
+	'read':'READ', 
+	'write':'WRITE', 
+	'print':'PRINT',
+	'skip':'SKIP',
+	'return':'RETURN',
 }
 
 # En realidad este diccionario no se usa

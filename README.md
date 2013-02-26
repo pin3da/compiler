@@ -1,7 +1,7 @@
 Minipascal compiler
 ===================
 
-Manuel Felipe Pineda
+Manuel Felipe Pineda -
 Carlos Alvaro Gonzales
 
 A minipascal compiler for my compliers course on Universidad Tecnologica de Pereira.
@@ -21,4 +21,13 @@ it will run the "correct" tests, to run all write
 	
 to run a specific test write
 
-	./test.s specific_name
+	./test.sh specific_name
+	
+or
+	
+	python mpaslex.py specific_name
+	
+	
+	
+_________
+https://github.com/pin3da/compiler
