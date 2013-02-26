@@ -123,9 +123,8 @@ tokens = [
 
 	# Operators and delimiters
 	'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
-	'ASSIGN', 'SEMI', 'LPAREN', 'RPAREN', 'COMMA',
-	'LBRACE', 'RBRACE', 'COLON', 'LSBRACKET' , 'RSBRACKET',
-	'COLONEQUAL',
+	'ASSIGN', 'SEMI', 'LPAREN', 'RPAREN', 'COMMA', 'COLON', 
+	'LSBRACKET' , 'RSBRACKET','COLONEQUAL',
 
 	# Boolean operators
 	'LT', 'LE', 'GT', 'GE', 'LAND', 'LOR', 'LNOT',
@@ -146,6 +145,29 @@ tokens = [
 
 t_ignore = ' \t\r'
 
+# Una o mas lineas en blanco
+def t_newline(t):
+	r'\n+'
+	t.lexer.lineno += t.value.count('\n')
+
+# Comentarios C-style (/* ... */)
+def t_COMMENT(t):
+	r'/\*(.|\n|\r|\t)*\*/'
+	t.lexer.lineno += t.value.count('\n')
+	
+def t_PASCALCOMMENT(t):
+	r'\{(.|\n|\r|\t)*\}'
+	t.lexer.lineno += t.value.count('\n')
+
+# Comentarios C++-style (//...)
+def t_CPPCOMMENT(t):
+	r'//.*\n'
+	t.lexer.lineno += 1
+
+
+
+
+
 # ----------------------------------------------------------------------
 # *** DEBE COMPLETAR : Escriba las regexps indicadas a continuacion ***
 # 
@@ -163,8 +185,6 @@ t_LPAREN	= r'\('
 t_RPAREN	= r'\)'
 t_LSBRACKET = r'\['
 t_RSBRACKET = r'\]'
-t_LBRACE	= r'{'
-t_RBRACE	= r'}'
 t_COMMA	 	= r','
 t_LT		= r'<'
 t_LE		= r'<='
@@ -243,6 +263,7 @@ def my_next(ostring,pos):
 escapes_not_b = r'nrt\"'
 escapes = escapes_not_b + "b"
 def _replace_escape_codes(t):
+	not_error = True
 	newval = ""
 	ostring = t.value
 	olen = len(t.value)
@@ -254,6 +275,7 @@ def _replace_escape_codes(t):
 		rval = ""
 		if c=='"':
 			error(t.lexer.lineno, "Premature end of String at '%s'" % i,filename=sys.argv[1])
+			not_error = False
 		elif c=='\\':
 			c1 = my_next(ostring,i+1)
 			c2 = my_next(ostring,i+2)
@@ -261,6 +283,7 @@ def _replace_escape_codes(t):
 			#if c1 not in escapes_not_b:
 			if c1 not in escapes:
 				error(t.lexer.lineno,"Bad escape sequence code '%s'" % c1,filename=sys.argv[1])
+				not_error = False
 			else:
 				if c1=='n':
 					c='\n'
@@ -278,6 +301,7 @@ def _replace_escape_codes(t):
 						rval += (c1 + c2 +c3)
 					else:
 						error(t.lexer.lineno,"Bad escape sequence code '%s'" % c2+c3,filename=sys.argv[1])
+						not_error =  False
 			if(flag):
 				newval += rval
 				i= i+2
@@ -289,14 +313,17 @@ def _replace_escape_codes(t):
 			newval += c
 
 	t.value = newval
-	return t
+	if (not_error):
+		return t
+
 
 def t_STRING(t):
-	r'".*"'
+	#r'".*"'
+	r'"[^\n]*?(?<!\\)"'
 	# Convierta t.value a una cadena con codigo de escape reemplazado por valor actual.
 	t.value = t.value[1:-1]
-	_replace_escape_codes(t)	# Debe implementar arriba
-	return t
+	if(_replace_escape_codes(t) != None):	# Debe implementar arriba
+		return t
 
 def t_BOOLEAN(t):
 	r'(true|false)'
@@ -362,27 +389,6 @@ operators = {
 	r'!' : "LNOT",
 }
 
-# ----------------------------------------------------------------------
-# *** DEBE COMPLETAR : Escriba las regexps adecuadas ***
-#
-# Ignore texto.  Las siguientes reglas deben ser usadas para ignorar
-# texto en el archivo de entrada.  Esto incluye comentarios y lineas
-# en blanco.
-
-# Una o mas lineas en blanco
-def t_newline(t):
-	r'\n+'
-	t.lexer.lineno += t.value.count('\n')
-
-# Comentarios C-style (/* ... */)
-def t_COMMENT(t):
-	r'/\*(.|\n|\r|\t)*\*/'
-	t.lexer.lineno += t.value.count('\n')
-
-# Comentarios C++-style (//...)
-def t_CPPCOMMENT(t):
-	r'//.*\n'
-	t.lexer.lineno += 1
 
 # ----------------------------------------------------------------------
 # *** DEBE COMPLETAR : Agrege las regexps indicadas ***
@@ -399,13 +405,17 @@ def t_error(t):
 def t_COMMENT_UNTERM(t):
 	r'/\*[.\n]*(?!\*/)'
 	error(t.lexer.lineno,"unfinished commentary",filename=sys.argv[1])
+	t.lexer.skip(len(t.value))
 	t.lexer.lineno += t.value.count('\n')
 
 # Literal de cadena no terminada
 def t_STRING_UNTERM(t):
-	r'"["]+'
+	r'"((\\")|[^"])*'
 	error(t.lexer.lineno,"string literal not finished",filename=sys.argv[1])
 	t.lexer.lineno += 1
+	
+
+
 
 # ----------------------------------------------------------------------
 #				NO CAMBIE NADA DEBAJO DE ESTA PARTE
