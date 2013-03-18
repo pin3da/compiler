@@ -152,7 +152,7 @@ def t_newline(t):
 
 # Comentarios C-style (/* ... */)
 def t_COMMENT(t):
-	r'/\*(.|\n|\r|\t)*\*/'
+	r'/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/'
 	t.lexer.lineno += t.value.count('\n')
 	
 def t_PASCALCOMMENT(t):
