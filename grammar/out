@@ -1,0 +1,137 @@
+program -> function
+program -> functionprogram
+ -> 
+ -> FUNCIDLPARENargsRPARENlocalsBEGINstatementEND
+ -> 
+ -> :varCOMMAargs-->AQUIESTALADUDA!
+ -> var
+ -> 
+ -> 
+ -> :varassSEMICOLONlocals
+ -> 
+ -> 
+ -> :var
+ -> assignation
+ -> 
+ -> :IDCOLONTYPE
+ -> 
+ -> 
+ -> :IDCOLONEQUALINTEGER
+ -> IDCOLONEQUALFLOAT
+ -> IDCOLONEQUALSTRING
+ -> IDCOLONEQUALBOOLEAN
+ -> IDCOLONEQUALID
+ -> IDCOLONEQUALexpression
+ -> 
+ -> 
+ -> :controlstructurestatement
+ -> instructionstatement
+ -> 
+ -> 
+ -> :cif
+ -> cwhile
+ -> 
+ -> :WHILELPARENconditionalRPARENDOBEGINstatementENDSEMICOLON
+ -> WHILEconditionalDOBEGINstatementENDSEMICOLON
+ -> WHILELPARENconditionalRPARENDOinstructionSEMICOLON
+ -> WHILEconditionalDOinstructionSEMICOLON
+ -> 
+ -> 
+ -> :IFLPARENconditionalRPARENTHENBEGINstatementENDSEMICOLON
+ -> IFconditionalTHENBEGINstatementENDSEMICOLON
+ -> IFLPARENconditionalRPARENTHENinstruction
+ -> IFconditionalTHENinstruction
+ -> 
+ -> :expressionGREATERexpression
+ -> expressionLESSexpression
+ -> expressionGREATEREQUALexpression
+ -> expressionLESSEQUALexpression
+ -> expressionDISTINTexpression
+ -> expressionNOTexpression
+ -> expressionORexpression
+ -> expressionANDexpression
+ -> NOTexpression
+ -> LPARENTexpressionRPARENT
+ -> BOOLEAN
+ -> 
+ -> :expressionPLUSprod
+ -> expressionMINUSPprod
+ -> prod
+ -> 
+ -> :prodMULTIPLYterm
+ -> prodDIVIDEterm
+ -> term
+ -> 
+ -> :ID|FLOAT|INTEGER|LPARENexpressionRPAREN
+ -> LPARENIDRPAREN
+ -> LPARENIDRPAREN
+ -> 
+ -> return|print|assignation|SKIP|read|write|IDLPARENargsRPAREN|BREAK
+ -> 
+ -> RETURNINTEGER
+ -> FLOAT
+ -> STRING
+ -> ID
+ -> expression
+ -> 
+ -> PRINTLPARENSTRINGRPAREN
+ -> LPARENFLOATRPAREN
+ -> LPARENINTEGERRPAREN
+ -> LPARENBOOLEANRPAREN
+ -> 
+ -> READLPARENexpressionRPAREN
+ -> 
+ -> WRITELPARENexpressionRPAREN
+ -> 
+ -> 
+ -> FUNMAINLPARENRPARENlocalsBEGIN(statementlist)*END
+ -> 
+ -> 
+ -> 
+ -> 
+ -> 
+ -> 
+ -> :'if
+ELSE -> 'else'
+WHILE -> 'while'
+VAR -> 'var'
+CONST -> 'const'
+DO -> 'do'
+THEN -> 'then'
+FUNC -> 'func'
+EXTERN -> 'extern'
+PRINT -> 'print'
+BEGIN -> 'begin'
+INT_TYPE: -> 
+FLOAT_TYPE: -> 
+BOOLEAN_TYPE -> 'boolean'
+ -> 
+ -> :'string'
+PLUS -> '\+'
+PLUS -> :'-'
+PLUS -> :'\*'
+PLUS -> :'/'
+PLUS -> :'='
+COLON -> ':'
+COLON -> :':='
+COLON -> :'\('
+COLON -> :'\)'
+COLON -> :'\['
+COLON -> :'\]'
+COLON -> :','
+COLON -> :'<'
+COLON -> :'<='
+COLON -> :'=='
+COLON -> :'>='
+COLON -> :'>'
+COLON -> :'!='
+COLON -> :'&&'
+COLON -> :'\|\|'
+COLON -> :'!'
+COLON -> 
+COLON -> :'[a-zA-Z_]\w*'
+COLON -> :'(true|false)'
+COLON -> :'"[^\n]*?(?<!\\)"'
+COLON -> :'((\d*\.\d+)([eE][-+]?\d+)?)|(\d+\.\d*)|(\d+)([eE][-+]?\d+)'
+COLON -> :'(?:0[xX]?)?\d+'
+COLON -> 
