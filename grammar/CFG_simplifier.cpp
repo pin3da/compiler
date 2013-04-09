@@ -76,25 +76,22 @@ bool is_not_Unitary_valid(production p){
 production parse_prod(string input){
     stringstream buffer(input);
     string lhs,arrow, right;
-    buffer>>lhs>>arrow>>right;
+    buffer>>lhs>>arrow;
     
     vector<symbol> rhs;
     
-    if(right.size()==0) rhs.push_back(symbol("0",true)); // represents lambda/epsilon
-
     string sym = "";
-    string tt = "";
-    for(int i=0;i<right.size();++i){
-        if(isupper(right[i])){
-            if(sym.size()>0) rhs.push_back(symbol(sym,true));
-            rhs.push_back(symbol(tt+right[i],false));
-            sym="";
-        }else{
-            sym+=right[i];
-        }
-    }
+    string tt = ""; 
+    while(buffer>>sym){
+        if(isupper(sym[0]))
+            rhs.push_back(symbol(sym,true));
+        else
+            rhs.push_back(symbol(sym,false));
+    }    
+
+    if(rhs.size()==0) rhs.push_back(symbol("0",true)); // represents lambda/epsilon
     
-    if(sym.size()>0)rhs.push_back(symbol(sym,true));
+//    if(sym.size()>0)rhs.push_back(symbol(sym,true));
     
     return make_pair(symbol(lhs,false),rhs);
 }
@@ -369,9 +366,9 @@ struct cfg {
         set<production> tmp;
         foreach(T,terminals){
             encode[(*T)]=symbol("CNF"+T->name,false);
-vector<symbol> rhs;
-rhs.push_back((*T));
-tmp.insert(make_pair(encode[(*T)],rhs));
+            vector<symbol> rhs;
+            rhs.push_back((*T));
+            tmp.insert(make_pair(encode[(*T)],rhs));
         }
         
         foreach(pro,productions){
@@ -473,7 +470,22 @@ string CYK(cfg &grammar,string &query){
 }
 
 int main(){
-    int n_rules;
+
+    string line;
+    cfg grammar;
+    production actual;
+    int first = 1;
+    while(getline(cin,line)){
+        actual = parse_prod(line);
+        if(first)grammar.start_symb = actual.first,first=0;
+        grammar.insert(actual.first,actual.second);
+    }
+    
+    debug_grammar(grammar);
+    grammar.simplify();
+    cout<<endl<<"************Simplified**********"<<endl<<endl;
+    debug_grammar(grammar);
+/*    int n_rules;
     string tmp;
     getline(cin,tmp);
     n_rules = toInt(tmp);
@@ -494,7 +506,7 @@ int main(){
     while(getline(cin,query)){
      cout<<CYK(grammar,query)<<endl;
     }
-    
+    */
     /*********************************************
 * Test Code and algorithms *
 * Start Test *

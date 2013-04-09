@@ -1,7 +1,7 @@
 program ->  function
 program ->  function program
 function ->  FUNC ID LPAREN args RPAREN locals BEGIN statement END
-args ->  var COMMA args --> AQUI ESTA LA DUDA!
+args ->  var COMMA args
 args ->  var
 args -> 
 locals ->  varass SEMICOLON locals
@@ -45,10 +45,20 @@ expression ->  prod
 prod ->  prod MULTIPLY term
 prod ->  prod DIVIDE term
 prod ->  term
-term ->  ID | FLOAT | INTEGER | LPAREN expression RPAREN
+term ->  ID
+term ->  FLOAT
+term ->  INTEGER
+term ->  LPAREN expression RPAREN
 term ->  LPAREN ID RPAREN
 term ->  LPAREN ID RPAREN
-instruction ->  | print | assignation | SKIP | read | write | ID LPAREN args RPAREN | BREAK
+instruction ->  return
+instruction ->  print
+instruction ->  assignation
+instruction ->  SKIP
+instruction ->  read
+instruction ->  write
+instruction ->  ID LPAREN args RPAREN
+instruction ->  BREAK
 return ->  RETURN INTEGER
 return ->  RETURN FLOAT
 return ->  RETURN STRING
