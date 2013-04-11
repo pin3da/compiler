@@ -3,11 +3,11 @@ program	:	function
 		;
 
 function:	FUNC ID LPAREN args RPAREN locals BEGIN statement END
+		|FUNC ID LPAREN RPAREN locals BEGIN statement END
 		;
 
 args	:	var COMMA args --> AQUI ESTA LA DUDA!
 		| var
-		|
 		;
 
 locals	:	varass SEMICOLON locals
@@ -15,7 +15,7 @@ locals	:	varass SEMICOLON locals
 		;
 
 varass	: 	var
-		|	assignation
+		|assignation
 		;
 
 var		:	ID COLON TYPE
@@ -42,8 +42,8 @@ controlstructure	:	cif
 
 cwhile	: 	WHILE LPAREN conditional RPAREN DO BEGIN statement END SEMICOLON
 		|	WHILE conditional DO BEGIN statement END SEMICOLON
-		|	WHILE LPAREN conditional RPAREN DO instruction SEMICOLON
-		|	WHILE conditional DO instruction SEMICOLON
+		|	WHILE LPAREN conditional RPAREN DO instruction
+		|	WHILE conditional DO instruction 
 		;
 
 
@@ -57,12 +57,8 @@ conditional	: expression GREATER expression
 			| expression LESS expression
 			| expression GREATEREQUAL expression
 			| expression LESSEQUAL expression
-			| expression DISTINT expression
-			| expression NOT expression
-			| expression OR expression
-			| expression AND expression
-			| NOT expression
-			| LPARENT expression RPARENT 
+			| expression DIFFERENT expression
+			| expression EQUIVALENT expression
 			| BOOLEAN
 			;
 

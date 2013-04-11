@@ -91,11 +91,11 @@ class FuncPrototype(AST):
 	_fields = ['id', 'params', 'typename']
 
 @validate_fields(param_decls=list)
-class Parameters(AST):
-	_fields = ['param_decls']
+class Args(AST):
+	_fields = ['var_decls']
 
 	def append(self,e):
-		self.param_decls.append(e)
+		self.var_decls.append(e)
 
 class ParamDecl(AST):
 	_fields = ['id', 'typename']
