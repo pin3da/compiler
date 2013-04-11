@@ -31,97 +31,97 @@ def p_function_1(p):
 	'''
 	function : FUNC ID LPAREN RPAREN locals BEGIN statement END
 	'''
-	p[0] = Function(None,p[6],p[8])
+	p[0]=Function(None,p[6],p[8])
 
 def p_args(p):
 	'''
 	args : var COMMA args	
 	'''
  	p[3].append(p[1])
-	p[0] = p[3]
+	p[0]=p[3]
 
 def p_args_1(p):
 	'''
 	args : var
 	'''
-	p[0] = Args(p[1])
+	p[0]=Args(p[1])
 
 def p_locals(p):
 	'''
 	locals : varass SEMICOLON locals
 	'''
 	p[3].append(p[1]) #habría que hacer un nodo para esto
-	p[0] = p[3]
+	p[0]=p[3]
 
 def p_locals(p):
 	'''
 	locals : empty
 	'''
-	p[0] = Locals([])
+	p[0]=Locals([])
 
 def p_varass(p):
 	'''
 	varass : var
 	'''
-	p[0] = Varass(p[1]) #Hay que hacer un nodo pa esto
+	p[0]=Varass(p[1]) #Hay que hacer un nodo pa esto
 
 def p_varass_1(p):
 	'''
 	varass : assignation
 	'''
-	p[0] = Varass(p[1]) #Hay que hacer un nodo pa esto
+	p[0]=Varass(p[1]) #Hay que hacer un nodo pa esto
 
 def p_var(p):
 	'''
 	var : ID COLON INT_TYPE
 	'''
-	p[0] = Var(p[1], p[3])# no se si depronto sea redundante
-	p[0].datatype = p[3] #No se si ya hay un nodo pa esto
-	p[0].name = p[1]
+	p[0]=Var(p[1], p[3])# no se si depronto sea redundante
+	p[0].datatype=p[3] #No se si ya hay un nodo pa esto
+	p[0].name=p[1]
 
 def p_assignation_integer(p):
 	'''
 	assignation : ID COLONEQUAL INTEGER
 	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]
+	p[0]=Assignation(p[1], p[3])
+	p[0].name=p[1]
+	p[0].value=p[3]
 
 def p_assignation_float(p):
 	'''
 	assignation : ID COLONEQUAL FLOAT
 	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]	
+	p[0]=Assignation(p[1], p[3])
+	p[0].name=p[1]
+	p[0].value=p[3]	
 
 def p_assignation_string(p):
 	'''
 	assignation : ID COLONEQUAL STRING
 	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]	
+	p[0]=Assignation(p[1], p[3])
+	p[0].name=p[1]
+	p[0].value=p[3]	
 
 def p_assignation_boolean(p):
 	'''
 	assignation : ID COLONEQUAL BOOLEAN
 	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]	
+	p[0]=Assignation(p[1], p[3])
+	p[0].name=p[1]
+	p[0].value=p[3]	
 
 def p_assignation_ID(p):
 	'''
 	assignation : ID COLONEQUAL ID
 	'''
-	p[0] = Assignation(p[1], p[3])
+	p[0]=Assignation(p[1], p[3])
 
 def p_assignation_expression(p):
 	'''
 	assignation : ID COLONEQUAL expression
 	'''
-	p[0] = Assignation(p[1], p[3])
+	p[0]=Assignation(p[1], p[3])
 
 def p_statement_1(p):
 	'''
