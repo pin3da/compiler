@@ -2,8 +2,8 @@ program	:	function
 		|	function program
 		;
 
-function:	FUNC ID LPAREN arg_list RPAREN return_f locals block
-		|FUNC ID LPAREN RPAREN return_f locals block
+function : FUNC ID LPAREN arg_list RPAREN return_f locals block
+		| FUNC ID LPAREN RPAREN return_f locals block
 		;
 
 return_f : COLON type
@@ -14,7 +14,7 @@ block : BEGIN statements END
       ;  
 
 
-arg_list:	var COMMA arg_list
+arg_list :	var COMMA arg_list
 		| var
 	  ;
 
@@ -23,33 +23,26 @@ locals	:	local_list SEMICOLON locals
 		;
 
 local_list	: 	var
-						|   var_dec_as
-		;
+			|   var_dec_as
+		    ;
 
 var		:	ID COLON TYPE
 		;
 
 
 var_dec_as	:	ID COLONEQUAL types
-						|	ID COLONEQUAL expression
-			     ;
+			|	ID COLONEQUAL expression
+            ;
 
 
 statement	:	controlstructure SEMICOLON statement
-		|	instruction SEMICOLON statement
-		|
-		;
+	    	|	instruction SEMICOLON statement
+	    	|
+	    	;
 
-controlstructure	:	cif
-				|	cwhile
+controlstructure : WHILE LPAREN conditional RPAREN DO block SEMICOLON
+				| 	IF LPAREN conditional RPAREN THEN block else SEMICOLON
 				;
-
-cwhile  : 	WHILE LPAREN conditional RPAREN DO block SEMICOLON
-		 		;
-
-
-cif	:	IF LPAREN conditional RPAREN THEN block else SEMICOLON
-		;
 
 else : ELSE statement 
 		 | 
@@ -71,65 +64,68 @@ bool_expr	: expression GREATER expression
 			;
 
 expression	: 	expression PLUS prod
-		|	expression MINUS Pprod
+		|	expression MINUS prod
 		|	prod
 			;
 
-prod	:	prod MULTIPLY term
+prod	:	prod TIMES term
 	|	prod DIVIDE term
 	|	term
 		;
 
-term	:	ID | FLOAT | INTEGER | LPAREN expression RPAREN
-		|INT_TYPE LPAREN ID RPAREN
-		|FLOAT_TYPE LPAREN ID RPAREN
+term	:	ID 
+        | FLOAT 
+		| INTEGER 
+		| LPAREN expression RPAREN
+		| INT_TYPE LPAREN ID RPAREN
+		| FLOAT_TYPE LPAREN ID RPAREN
 		;
 		
 instruction :	write_d 
-			      | line_if 
-						| line_while
-						| return_d 
-						| print_d
-						| assignation
-						| SKIP 
-	          | BREAK
-					  | call_d
-		;
-
-return : RETURN expression
-		;
-
-print_d : PRINT LPAREN expression RPAREN
-				| PRINT LPAREN STRING RPAREN
+	        | line_if 
+			| line_while
+			| return_d 
+			| print_d
+			| assignation
+			| SKIP 
+	        | BREAK
+		    | call_d
 		    ;
 
-read_d:		READ LPAREN ID RPAREN
-		;
+return : RETURN expression
+	   ;
+
+print_d : PRINT LPAREN expression RPAREN
+		| PRINT LPAREN STRING RPAREN
+	    ;
+
+read_d  :	READ LPAREN ID RPAREN
+	    ;
 
 write_d : WRITE LPAREN expression RPAREN
-				| WRITE LPAREN STRING RPAREN
+		| WRITE LPAREN STRING RPAREN
 		;
 
-call_d : ID LPAREN list_var RPAREN
-			 ;
+call_d  : ID LPAREN list_var RPAREN
+	    ;
 
 list_var : ID list_var
-				 | expression list_var
-				 | 
-				 ;
+		 | expression list_var
+		 | 
+		 ;
 
 type  : INT_TYPE 
-			| FLOAT_TYPE
-			| STRING_TYPE
-			| BOOLEAN_TYPE
-			;
+      | FLOAT_TYPE
+	  | STRING_TYPE
+	  | BOOLEAN_TYPE
+	  ;
 		
 
 line_if : IF bool_expr THEN instruction
-			  ;
+	    ;
 
 line_while : WHILE bool_expr DO instruction
-			  ;
+	       ;
 
 assignation : ID EQUAL expression
 			      ;

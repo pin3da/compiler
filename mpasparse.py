@@ -11,284 +11,285 @@ from mpasast import *
 def p_program(p):
 	'''
 	program : function
+			| function program
 	'''
-	p[0] = Program(p[1])
-
-def p_program_1(p):
-	'''
-	program : program function
-	'''
-	p[1].append(p[2])
-	p[0] = p[1]
+	if(len(p) == 2):
+		p[0] = Program(p[1])
+	else:
+		p[2].append(p[1])
+		p[0] = p[2]
 
 def p_function(p):
 	'''
-	function : FUNC ID LPAREN args RPAREN locals BEGIN statement END
+	function : FUNC ID LPAREN arg_list RPAREN return_f locals block
+			 | FUNC ID LPAREN RPAREN return_f locals block
 	'''
-	p[0] = Function(p[4],p[6],p[8])
+	if(len (p) == 9):
+		p[0] = Function(p[4],p[6],p[7],p[8])
+	else:
+		p[0] = Function(None,p[6],p[7],p[8])
 
-def p_function_1(p):
+def p_empty(p):
 	'''
-	function : FUNC ID LPAREN RPAREN locals BEGIN statement END
+	empty :
 	'''
-	p[0] = Function(None,p[6],p[8])
+	pass
 
-def p_args(p):
+def p_return_f(p):
 	'''
-	args : var COMMA args	
+	return_f : COLON type
+			 | empty
 	'''
- 	p[3].append(p[1])
-	p[0] = p[3]
+	if(len(p) == 3):
+		p[0] = p[2]
+	else
+		p[0] = None
+		#Revisar.
 
-def p_args_1(p):
+def p_block(p):
 	'''
-	args : var
+	block: BEGIN statements END
 	'''
-	p[0] = Args(p[1])
+	p[0] = Block(p[2])
+
+def p_arg_list(p):
+	'''
+	arg_list : var COMMA arg_list
+			 | var
+	'''
+	if(len(p) == 4 ):
+		p[3].append(p[1])
+		p[0] = p[1]
+	else:
+		p[0] = Var(p[1])
+
 
 def p_locals(p):
 	'''
-	locals : varass SEMICOLON locals
+	locals : local_list SEMICOLON locals
+		   | empty
 	'''
-	p[3].append(p[1]) #habría que hacer un nodo para esto
-	p[0] = p[3]
+	if( len(p) == 4):
+		p[3].append(p[1])
+		p[0] = p[3]
+	else:
+		p[0] = None
+		#Revisar
 
-def p_locals(p):
+def p_local_list(p):
 	'''
-	locals : empty
+	local_list : var
+			   | var_dec_as
 	'''
-	p[0] = Locals([])
+	p[0] = p[1]
 
-def p_varass(p):
-	'''
-	varass : var
-	'''
-	p[0] = Varass(p[1]) #Hay que hacer un nodo pa esto
-
-def p_varass_1(p):
-	'''
-	varass : assignation
-	'''
-	p[0] = Varass(p[1]) #Hay que hacer un nodo pa esto
 
 def p_var(p):
 	'''
-	var : ID COLON INT_TYPE
+	var : ID COLON TYPE
 	'''
-	p[0] = Var(p[1], p[3])# no se si depronto sea redundante
-	p[0].datatype = p[3] #No se si ya hay un nodo pa esto
-	p[0].name = p[1]
+	p[0] =  Var(p[1],p[3])
+	# El type y name se definen en el constructor del nodo.
+	# TYPE deberia ser una produccion.
 
-def p_assignation_integer(p):
+def p_var_dec_as(p):
 	'''
-	assignation : ID COLONEQUAL INTEGER
+	var_dec_as : ID COLONEQUAL types
+			   | ID COLONEQUAL expression
 	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]
+	p[0] = Var_dec_as(p[1],p[3])
+	# Es mejor separarlas ?
 
-def p_assignation_float(p):
+def p_statement(p):
 	'''
-	assignation : ID COLONEQUAL FLOAT
-	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]	
+	statement : controlstructure SEMICOLON statement
+			  | instruction SEMICOLON statement
+			  | empty
+	'''	
+	if( len(p) == 4 ):
+		p[3].append(p[1])
+		p[0] = p[3]
+	else:
+		p[0] = None
+		#revisar.
 
-def p_assignation_string(p):
+def p_controlstructure(p):
 	'''
-	assignation : ID COLONEQUAL STRING
+	controlstructure : WHILE  LPAREN conditional RPAREN DO block SEMICOLON
+					 |  IF LPAREN conditional RPAREN THEN block else SEMICOLON
 	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]	
+	if( len(p) == 6):
+		p[0] = Cwhile(p[3],p[6])
+	else:
+		p[0] = Cif(p[3],p[6],p[7]) 
 
-def p_assignation_boolean(p):
+def p_else(p)
 	'''
-	assignation : ID COLONEQUAL BOOLEAN
+	else : ELSE statement
+		 | empty
 	'''
-	p[0] = Assignation(p[1], p[3])
-	p[0].name = p[1]
-	p[0].value = p[3]	
+	if ( len(p) == 3):
+		p[0] = Else(p[2])
+	else:
+		p[0] = None
 
-def p_assignation_ID(p):
+def p_conditional(p):
 	'''
-	assignation : ID COLONEQUAL ID
+	conditional :  bool_expr OR bool_expr
+				|  bool_expr AND bool_expr
+				|  NOT bool_expr
+				|  bool_expr
 	'''
-	p[0] = Assignation(p[1], p[3])
+	if( len(p) == 4):
+		if(p[2] == '||' ):
+			p[0] = Or(p[1], p[3])
+		else:
+			p[0] = And(p[1], p[3])
+	elif (len(p) == 3):
+		p[0] = Not(p[2])
+	else:
+		p[0] = p[1]
+	#Se podria poner como binaryop, o dejarlo en varias clases.
 
-def p_assignation_expression(p):
+def bool_expr(p):
 	'''
-	assignation : ID COLONEQUAL expression
+	bool_expr : expression GREATER expression
+			  | expression LESS expression
+			  | expression GREATEREQUAL expression
+			  | expression LESSEQUAL expression
+			  | expression DIFFERENT expression
+			  | expression EQUIVALENT expression
+			  | BOOLEAN
 	'''
-	p[0] = Assignation(p[1], p[3])
+	if (len (p) == 4):
+		if(p[2] == '>' ):
+			p[0] = BinaryOp(">",p[1],p[3])
+		elif (p[2] == '<'):
+			p[0] = BinaryOp("<",p[1],p[3])
+		elif (p[2] == '>=' ):
+			p[0] = BinaryOp(">=",p[1],p[3])
+		elif (p[2] == '<='):
+			p[0] = BinaryOp("<=",p[1],p[3])
+		elif (p[2] == '!='):
+			p[0] = BinaryOp("!=",p[1],p[3])
+		else:
+			p[0] = BinaryOp("==",p[1],p[3])
+	else:
+		p[0] = Boolean(p[1])
 
-def p_statement_1(p):
-	'''
-	statement : controlstructure statement
-	'''
-	p[2].append(p[1])
-	p[0]=p[2]
+########
+# BinaryOp para comparaciones, retorna boolean
+# Operation para operaciones, retorna valor
+########
 
-def p_statement_2(p):
-	'''
-	statement : instruction statement
-	'''
-	p[2].append(p[1])
-	p[0]=p[2]
 
-def p_statement_3(p):
-	'''
-	statement : empty
-	'''
-	p[0]=Statement([])
-
-def p_controlstructure_1(p):
-		'''
-		controlstructure : cif
-		'''
-		p[0]=Controlstructure(p[1])
-
-def p_controlstructure_2(p):
-		'''
-		controlstructure : cwhile
-		'''
-		p[0]=Controlstructure(p[1])	
-
-def p_cwhile_1(p):
-	'''
-	cwhile : WHILE LPAREN conditional RPAREN DO BEGIN statement END SEMICOLON
-	'''
-	p[0]=Cwhile(p[3], p[7])
-	
-
-def p_cwhile_2(p):
-	'''
-	cwhile : WHILE conditional DO BEGIN statement END SEMICOLON
-	'''
-	p[0]=Cwhile(p[2], p[5])
-
-def p_cwhile_3(p):
-	'''
-	cwhile : WHILE RPAREN conditional LPAREN DO instruction 
-	'''
-	p[0]=Cwhile(p[3], p[5])
-
-def p_cwhile_4(p):
-	'''
-	cwhile : WHILE conditional DO insruction
-	'''
-	p[0]=Cwhile(p[2], p[4])
-
-def p_cif_1(p):
-	'''
-	cif : IF RPAREN conditional LPAREN THEN BEGIN statement END SEMICOLON
-	'''
-	p[0]=Cif(p[3], p[7])
-
-def p_cif_2(p):
-	'''
-	cif : IF conditional THEN BEGIN statement END SEMICOLON
-	'''
-	p[0]=Cif(p[2], p[5])
-
-def p_cif_3(p):
-	'''
-	cif : IF RPAREN conditional LPAREN THEN instruction
-	'''
-	p[0]=Cif(p[3], p[5])
-
-def p_cif_4(p):
-	'''
-	cif : IF conditional THEN instruction
-	'''
-	p[0]=Cif(p[2], p[4])
-
-def p_conditional_greater(p):
-	'''
-	conditional : expression GREATER expression
-	'''
-	p[0]= BinaryOperator('>', p[1], p[3])
-
-def p_conditional_less(p):
-	'''
-	conditional : expression LESS expression
-	'''
-	p[0]= BinaryOperator('<', p[1], p[3])
-
-def p_conditional_greater_equal(p):
-	'''
-	conditional : expression GREATEREQUAL expression
-	'''
-	p[0]= BinaryOperator('>=', p[1], p[3])
-
-def p_conditional_less_equal(p):
-	'''
-	conditional : expression LESSEQUAL expression
-	'''
-	p[0]= BinaryOperator('<=', p[1], p[3])
-
-def p_conditional_different(p):
-	'''
-	conditional : expression DIFFERENT expression
-	'''
-	p[0]= BinaryOperator('!=', p[1], p[3])
-
-def p_conditional_different(p):
-	'''
-	conditional : expression DIFFERENT expression
-	'''
-	p[0]= BinaryOperator('!=', p[1], p[3])
-
-def p_conditional_equivalent(p):
-	'''
-	conditional : expression EQUIVALENT expression
-	'''
-	p[0]= BinaryOperator('==', p[1], p[3])
-
-def p_conditional_boolean(p):
-	'''
-	conditional : BOOLEAN
-	'''
-	p[0]= Boolean(p[1])	#no se si esto esta bien
-	p[0].value=p[1]
-
-def p_expression_plus(p):
+def p_expression(p):
 	'''
 	expression : expression PLUS prod
+			   | expression MINUS prod
+			   | prod			   
 	'''
-	p[0]=  BinaryOperator('+', p[1], p[3])
+	if(len(p) == 4):
+		if(p[2]== '+'):
+			p[0] = Operation("+",p[1],p[3])
+		else:
+			p[0] = Operation("-",p[1],p[3])
+	else:
+		p[0] =  Prod(p[1])
 
-def p_expression_minus(p):
+def p_prod(p):
 	'''
-	expression : expression PLUS prod
+	prod : prod TIMES term
+	 	 | prod DIVIDE term
+		 | term
 	'''
-	p[0]=  BinaryOperator('-', p[1], p[3])
+	if(len(p) == 4):
+		if(p[2]== '*'):
+			p[0] = Operation("*",p[1],p[3])
+		else:
+			p[0] = Operation("/",p[1],p[3])
+	else:
+		p[0] =  Term(p[1])
 
-def p_expression_prod(p):
-	'''
-	expression : prod
-	'''
-	p[0]=  Expression(p[1])	#de nuevo no se si sea correcto
-	
+############
+# la expresion dentro de parentesis debe estar en expresion no en term, es decir,
+# expression : LPAREN expression RPARENT
+#			 | las otras cosas
+#
+# Que es INT_TYPE LPAREN ID RPAREN  y el otro?
+# Para que los parentesis ?
+###########
 
-def p_prod_multiply(p):
+def p_term(p):
 	'''
-	prod : prod MULTIPLY term
+	term : ID
+		 | FLOAT
+		 | INTEGER
 	'''
-	p[0]=  BinaryOperator('*', p[1], p[3])
+	#toca individual para crear los nodos adecuados
 
-def p_prod_divided(p):
-	'''
-	prod : prod DIVIDED term
-	'''
-	p[0]=  BinaryOperator('/', p[1], p[3])
 
-def p_prod_term(p):
+def p_return(p):
 	'''
-	expression : term
+	return : RETURN expression
 	'''
-	p[0]=  Prod(p[1])	#de nuevo no se si sea correcto	
+	p[0] = Return(p[2])
+
+def p_print_d_e(p):
+	'''
+	print_d : PRINT LPARENT expression RPARENT
+	'''
+	p[0] = PrintExpression(p[3])
+
+def p_print_d_s(p):
+	'''
+	print_d : PRINT LPARENT STRNG RPARENT
+	'''
+	p[0] = PrintString(p[3])
+
+def p_call_d(p):
+	'''
+	call_d : ID LPAREN list_var RPARENT
+	'''
+	p[0] = Call_d(p[1],p[3])
+	#Nombre y argumentos funcion
+
+def list_var(p):
+	'''
+	list_var : ID list_var
+			 | expression list_var
+			 | empty
+	'''
+	#terminar, separar
+
+def type(p):
+	'''
+	type : INT_TYPE
+		 | FLOAT_TYPE
+		 | STRING_TYPE
+		 | BOOLEAN_TYPE
+	'''
+	#terminar, separar para crear nodos del tipo correspondiente
+
+def line_if(p):
+	'''
+	line_if : IF bool_expr THEN instructrion
+	'''
+	p[0] =  Line_if(p[2],p[4])
+
+def line_while(p):
+	'''
+	line_while : WHILE bool_expr DO instruction
+	'''
+	p[0] =  Line_while(p[2],p[4])
+
+def assignation(p):
+	'''
+	assignation : ID EQUAL expression
+	'''
+	p[0] = Assignation(p[1],p[3])
+	#se puede convertir en nodo var
+
 
 def p_error(p):
 	if p:
