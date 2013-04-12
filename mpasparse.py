@@ -19,9 +19,9 @@ def p_program(p):
             | function program
     '''
     if(len(p) == 2):
-        p[0] = Function ( (p[1]) )
-    else:
-        p[2].append( Function(p[1]) )
+        p[0] = Program((p[1]) )#lo voy a dejar como  Program, function funciona con otros parametros, y ps como pa no perdernos
+	else:
+        p[2].append(Program(p[1]) )
         p[0] = p[2]
 
 def p_function(p):
@@ -52,7 +52,7 @@ def p_return_f(p):
 
 def p_block(p):
     '''
-    block: BEGIN statements END
+    block: BEGIN statement END
     '''
     p[0] = Block(p[2])
 
@@ -62,10 +62,10 @@ def p_arg_list(p):
              | var
     '''
     if(len(p) == 4 ):
-        p[3].append(Var( p[1]) )
+        p[3].append(Arg_list( p[1]) )
         p[0] = p[3]
     else:
-        p[0] = [ Var(p[1]) ]
+        p[0] = [ Arg_list(p[1]) ] #voy a dejar el nodo como arg_list, asi es como funciona
 
 
 def p_locals(p):
@@ -74,7 +74,7 @@ def p_locals(p):
            | empty
     '''
     if( len(p) == 4):
-        p[3].append( Local_list(p[1]) )
+        p[3].append( Locals(p[1]) )#voy a dejar el nodo como locals
         p[0] = p[3]
     else:
         p[0] = []
@@ -103,14 +103,14 @@ def p_var_dec_as(p):
 
 def p_statement(p):
     '''
-    statement : controlstructure SEMICOLON statement
+    statement : controlstructure SEMICOLON statement 
               | instruction SEMICOLON statement
               | empty
     '''    
     if( len(p) == 4 ):
-        p[3].append( p[1] ) # aca no se crea un nodo porque controlstructure se encarga de eso
-        p[0] = p[3]
-    else:
+        p[3].append( p[1] ) # aca no se crea un nodo porque controlstructure se encarga de eso, pero hay que hacerlo pa manejar la recursividad, asi sea un dummy
+        p[0] = p[3] #no lo voy a instanciar, pero al menos si hay que tenerlo creado, pa definir que carajos e va a apendear
+    else:           # falta instruction 
         p[0] = [ ]
 
 def p_controlstructure(p):
@@ -146,7 +146,7 @@ def p_conditional(p):
         else:
             p[0] = BinaryOp('&&', p[1], p[3])
     elif (len(p) == 3):
-        p[0] = Not(p[2])
+        p[0] = UnaryOp(p[2]) #deberia ser UnaryOp
     else:
         p[0] = Bool_expr( p[1] )
     
@@ -175,6 +175,7 @@ def bool_expr(p):
             p[0] = BinaryOp("==",p[1],p[3])
     else:
         p[0] = Boolean(p[1])
+		
 
 ########
 # BinaryOp para comparaciones, retorna boolean
@@ -198,7 +199,7 @@ def p_expression(p):
             p[0] = p[2]
 
     else:
-        p[0] =  Prod(p[1])
+        p[0] =  Expression(p[1])
 
 def p_prod(p):
     '''
@@ -212,7 +213,7 @@ def p_prod(p):
         else:
             p[0] = Operation("/",p[1],p[3])
     else:
-        p[0] =  Term(p[1])
+        p[0] =  Prod(p[1])
 
 ############
 # la expresion dentro de parentesis debe estar en expresion no en term, es decir,
@@ -230,11 +231,12 @@ def p_term(p):
          | FLOAT
          | INTEGER
     '''
-    p[0] = Term( p[1] )
+    p[0] = Term( p[1] ) #esto no puede ser term entonces cambie los de arriba
 
 def p_return(p):
     '''
     return : RETURN expression
+		   | RETURN ID 
     '''
     p[0] = Return(p[2]) 
 
@@ -259,7 +261,7 @@ def list_var(p):
              | empty
     '''
     if( len(p) == 3):
-        p[2].append(p[1]) # no se crea nodo, la gramatica lo devuelve
+        p[2].append(p[1]) # no se crea nodo, la gramatica lo devuelve, again para metodo append hay que hacerlo
         p[0] = p[2]
     else:
         p[0] = [ ]
