@@ -116,18 +116,18 @@ from ply.lex import lex
 
 tokens = (
     # keywords
-    'ID', 'CONST', 'VAR', 'PRINT', 'FUNC', 'EXTERN','BEGIN','DO','THEN',
+    'ID', 'CONST', 'VAR', 'PRINT', 'FUNC', 'EXTERN','BEGIN','DO','THEN','END',
 
     # Control flow
-    'IF', 'ELSE', 'WHILE', 'READ', 'WRITE','SKIP', 'RETURN',
+    'IF', 'ELSE', 'WHILE', 'READ', 'WRITE','SKIP', 'RETURN','BREAK',
 
     # Operators and delimiters
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
-    'ASSIGN', 'SEMI', 'LPAREN', 'RPAREN', 'COMMA', 'COLON', 
+    'ASSIGN', 'SEMICOLON', 'LPAREN', 'RPAREN', 'COMMA', 'COLON',
     'LSBRACKET' , 'RSBRACKET','COLONEQUAL',
 
     # Boolean operators
-    'LT', 'LE', 'GT', 'GE', 'LAND', 'LOR', 'LNOT',
+    'LT', 'LE', 'GT', 'GE', 'AND', 'OR', 'NOT',
     'EQ', 'NE',
 
     # Literals
@@ -150,7 +150,7 @@ t_MINUS         = r'-'
 t_TIMES         = r'\*'
 t_DIVIDE    = r'/'
 t_ASSIGN    = r'='
-t_SEMI         = r';'
+t_SEMICOLON        = r';'
 t_COLON         = r':'
 t_COLONEQUAL= r':='
 t_LPAREN    = r'\('
@@ -164,9 +164,9 @@ t_EQ        = r'=='
 t_GE        = r'>='
 t_GT        = r'>'
 t_NE        = r'!='
-t_LAND          = r'&&'
-t_LOR           = r'\|\|'
-t_LNOT          = r'!'
+t_AND          = r'&&'
+t_OR           = r'\|\|'
+t_NOT          = r'!'
 
 # ----------------------------------------------------------------------
 # Ignorando caracteres (whitespace)
@@ -396,6 +396,7 @@ reserved = {
     'write':'WRITE', 
     'skip':'SKIP',
     'return':'RETURN',
+    'break': 'BREAK',
 }
 
 # En realidad este diccionario no se usa
@@ -405,7 +406,7 @@ operators = {
     r'*' : "TIMES",
     r'/' : "DIVIDE",
     r'=' : "ASSIGN",
-    r';' : "SEMI",
+    r';' : "SEMICOLON",
     r'(' : "LPAREN",
     r')' : "RPAREN",
     r',' : "COMMA",
@@ -415,9 +416,9 @@ operators = {
     r'>=' : "GE",
     r'>' : "GT",
     r'!=' : "NE",
-    r'&&' : "LAND",
-    r'||' : "LOR",
-    r'!' : "LNOT",
+    r'&&' : "AND",
+    r'||' : "OR",
+    r'!' : "NOT",
 }
 
 

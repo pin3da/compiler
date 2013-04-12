@@ -10,18 +10,33 @@ from mpasast import *
 
 
 #########
-# Revisar, faltaria root
-#
+# Se agrega nodo initial para tener una unica raiz.
 #########
+
+precedence = (
+		('left', 'OR'),
+		('left', 'AND'),
+		('left', 'NOT'),
+		('left', 'PLUS','MINUS'),
+		('left', 'TIMES','DIVIDE'),
+        ('right', 'ELSE'),
+)
+
+def p_initial(p):
+    '''
+    initial : program
+    '''
+    p[0] = Program(p[1])
+
 def p_program(p):
     '''
     program : function
             | function program
     '''
     if(len(p) == 2):
-        p[0] = Program((p[1]) )#lo voy a dejar como  Program, function funciona con otros parametros, y ps como pa no perdernos
-	else:
-        p[2].append(Program(p[1]) )
+        p[0] = [ p[1] ] 
+    else:
+        p[2].append( p[1] )
         p[0] = p[2]
 
 def p_function(p):
@@ -47,12 +62,12 @@ def p_return_f(p):
     '''
     if(len(p) == 3):
         p[0] = p[2]
-    else
+    else:
         p[0] = Empty()
 
 def p_block(p):
     '''
-    block: BEGIN statement END
+    block : BEGIN statement END
     '''
     p[0] = Block(p[2])
 
@@ -65,7 +80,7 @@ def p_arg_list(p):
         p[3].append(Arg_list( p[1]) )
         p[0] = p[3]
     else:
-        p[0] = [ Arg_list(p[1]) ] #voy a dejar el nodo como arg_list, asi es como funciona
+        p[0] = [ Arg_list(p[1]) ]
 
 
 def p_locals(p):
@@ -74,7 +89,7 @@ def p_locals(p):
            | empty
     '''
     if( len(p) == 4):
-        p[3].append( Locals(p[1]) )#voy a dejar el nodo como locals
+        p[3].append( Locals(p[1]) )
         p[0] = p[3]
     else:
         p[0] = []
@@ -95,7 +110,7 @@ def p_var(p):
 
 def p_var_dec_as(p):
     '''
-    var_dec_as : ID COLONEQUAL value_type 
+    var_dec_as : ID COLONEQUAL type 
                | ID COLONEQUAL expression
     '''
     p[0] = Var_dec_as(p[1],p[3])
@@ -108,9 +123,9 @@ def p_statement(p):
               | empty
     '''    
     if( len(p) == 4 ):
-        p[3].append( p[1] ) # aca no se crea un nodo porque controlstructure se encarga de eso, pero hay que hacerlo pa manejar la recursividad, asi sea un dummy
-        p[0] = p[3] #no lo voy a instanciar, pero al menos si hay que tenerlo creado, pa definir que carajos e va a apendear
-    else:           # falta instruction 
+        p[3].append( p[1] ) # aca no se crea un nodo porque controlstructure se encarga de eso
+        p[0] = p[3]
+    else:
         p[0] = [ ]
 
 def p_controlstructure(p):
@@ -123,7 +138,22 @@ def p_controlstructure(p):
     else:
         p[0] = Cif(p[3],p[6],p[7]) 
 
-def p_else(p)
+def p_instruction(p):
+    '''
+        instruction : write_d
+                    | read_d
+                    | line_if
+                    | line_while
+                    | return_d
+                    | print_d
+                    | assignation
+                    | SKIP
+                    | BREAK
+                    | call_d
+    '''
+    p[0] = Instruction(p[1])
+
+def p_else(p):
     '''
     else : ELSE statement
          | empty
@@ -141,23 +171,23 @@ def p_conditional(p):
                 |  bool_expr
     '''
     if( len(p) == 4):
-        if(p[2] == '||' ):
+        if(p[2] == '|' ):
             p[0] = BinaryOp('||', p[1], p[3])
         else:
             p[0] = BinaryOp('&&', p[1], p[3])
     elif (len(p) == 3):
-        p[0] = UnaryOp(p[2]) #deberia ser UnaryOp
+        p[0] = UnaryOp('!',p[2])
     else:
         p[0] = Bool_expr( p[1] )
     
-def bool_expr(p):
+def p_bool_expr(p):
     '''
-    bool_expr : expression GREATER expression
-              | expression LESS expression
-              | expression GREATEREQUAL expression
-              | expression LESSEQUAL expression
-              | expression DIFFERENT expression
-              | expression EQUIVALENT expression
+    bool_expr : expression GT expression
+              | expression LT expression
+              | expression GE expression
+              | expression LE expression
+              | expression NE expression
+              | expression EQ expression
               | BOOLEAN
     '''
     if (len (p) == 4):
@@ -187,7 +217,8 @@ def p_expression(p):
     '''
     expression : expression PLUS prod
                | expression MINUS prod
-               | LPAREN expression RPARENT
+               | LPAREN expression RPAREN
+               | MINUS expression 
                | prod               
     '''
     if(len(p) == 4):
@@ -198,8 +229,9 @@ def p_expression(p):
         else:
             p[0] = p[2]
 
-    else:
-        p[0] =  Expression(p[1])
+    elif(len (p) == 3):
+        p[0] = UnaryOp('-',p[2])
+        p[0] = p[1]
 
 def p_prod(p):
     '''
@@ -213,17 +245,7 @@ def p_prod(p):
         else:
             p[0] = Operation("/",p[1],p[3])
     else:
-        p[0] =  Prod(p[1])
-
-############
-# la expresion dentro de parentesis debe estar en expresion no en term, es decir,
-# expression : LPAREN expression RPARENT
-#             | las otras cosas
-#
-# Que es INT_TYPE LPAREN ID RPAREN  y el otro?
-# Para que los parentesis ? para cuando hay toda una expresion encerrada entre parentesis
-# por ejemplo ud puede escribir 5+3 o (5+3), y ambos estan bien
-###########
+        p[0] =  p[1]
 
 def p_term(p):
     '''
@@ -233,41 +255,55 @@ def p_term(p):
     '''
     p[0] = Term( p[1] ) #esto no puede ser term entonces cambie los de arriba
 
-def p_return(p):
+def p_return_d(p):
     '''
-    return : RETURN expression
+    return_d : RETURN expression
 		   | RETURN ID 
     '''
     p[0] = Return(p[2]) 
 
+def p_write_d(p):
+    '''
+    write_d : WRITE LPAREN expression RPAREN
+            | WRITE LPAREN STRING RPAREN
+    '''
+    p[0] = Write_d(p[3])
+
+def p_read_d(p):
+    '''
+    read_d : READ LPAREN ID RPAREN
+    '''
+    p[0] = Read_d(p[3])
+
+
 def p_print_d(p):
     '''
-    print_d : PRINT LPARENT expression RPARENT 
-            | PRINT LAPRENT STRING RPARENT
-            | PRINT LPARENT ID RPARENT
+    print_d : PRINT LPAREN expression RPAREN
+            | PRINT LPAREN STRING RPAREN
+            | PRINT LPAREN ID RPAREN
     '''
     p[0] = Print_d(p[3])
 
 def p_call_d(p):
     '''
-    call_d : ID LPAREN list_var RPARENT
+    call_d : ID LPAREN list_var RPAREN
     '''
     p[0] = Call_d(p[1],p[3])
 
-def list_var(p):
+def p_list_var(p):
     '''
     list_var : ID list_var
              | expression list_var
              | empty
     '''
     if( len(p) == 3):
-        p[2].append(p[1]) # no se crea nodo, la gramatica lo devuelve, again para metodo append hay que hacerlo
+        p[2].append(p[1])
         p[0] = p[2]
     else:
         p[0] = [ ]
 
 
-def type(p):
+def p_type(p):
     '''
     type : INT_TYPE
          | FLOAT_TYPE
@@ -276,21 +312,21 @@ def type(p):
     '''
     p[0] = Type(p[1])
 
-def line_if(p):
+def p_line_if(p):
     '''
-    line_if : IF conditional THEN instructrion
+    line_if : IF conditional THEN instruction
     '''
     p[0] =  Line_if(p[2],p[4])
 
-def line_while(p):
+def p_line_while(p):
     '''
     line_while : WHILE conditional DO instruction
     '''
     p[0] =  Line_while(p[2],p[4])
 
-def assignation(p):
+def p_assignation(p):
     '''
-    assignation : ID EQUAL expression
+    assignation : ID EQ expression
     '''
     p[0] = Assignation(p[1],p[3])
     #se puede convertir en nodo var, a esto le faltan cosas: ID=ID, faltan var_dec_as vendrian siendo ctes
@@ -300,9 +336,29 @@ def p_error(p):
     if p:
         error(p.lineno, "Error de sintaxis en la linea")
 
+def make_parser():
+    "Funcion para crear parser"
+    return yacc.yacc()
+
 if __name__=='__main__':
     import mpaslex
     import sys
-    from errors import suscribe_errors
+    from errors import *
+       
+    if len(sys.argv) != 2:
+        sys.stderr.write("Usage: %s filename\n" % sys.argv[0])
+        raise SystemExit(1)
+    
+    f = open(sys.argv[1])
+    s = f.read()
+
     lexer = mpaslex.make_lexer()
-    parser = make_parser() 
+    parser = make_parser()
+    result = parser.parse(s)
+    if result :
+        #Plot
+        print ("ok")
+    else:
+        print ("wrong")
+
+    

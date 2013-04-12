@@ -59,7 +59,7 @@ def validate_fields(**fields):
 
 # Unos pocos nodos ejemplos
 
-#Revisado
+
 @validate_fields(functions=list)
 class Program(AST):
     _fields = ['functions']
@@ -67,15 +67,12 @@ class Program(AST):
     def append(self,e):
         sef.functions.append(e)
 
-#Revisado
 class Function(AST):
     _fields = ['arglist', 'typename', 'locals', 'block']
 
-#R
 class Block(AST):
     _fields = ['statements']
 
-#R
 @validate_fields(variables=list)
 class Arg_list(AST):
     _fields = ['variables']
@@ -83,102 +80,89 @@ class Arg_list(AST):
     def append(self,e):
         self.variables.append(e)	
 	
-
-#R
 @validate_fields(local_list=list)
 class Locals(AST):
-    _fields = ['local_list']
+    _fields = ['locals_l']
     
     def append(self,e):
-        self.local_list.append(e)	
+        self.locals_l.append(e)	
 		
-#Revisado
 class Var(AST):
     _fields = ['id', 'typename']	
 
-#Revisado
 class Var_dec_as(AST):
-    _fields = ['value']	
-	
-#Revisado
+    _fields = ['id','value' ]
+
 class Cwhile(AST):
     _fields =['conditional', 'block']
 
-#Revisado
 class Cif(AST):
     _fields =['conditional', 'block', 'else']
 
-#Revisado
+class Instruction(AST):
+    _fields = ['instruction']
+
 class Else(AST):
     _fields =['statement']
-	
-#Revisado, operaciones logicas, comparativas
+
 class BinaryOp(AST):
     _fields = ['op', 'left', 'right']	
-	
-#Revisado, operaciones Unarias
+
 class UnaryOp(AST):
     _fields = ['op', 'left']
-	
-#R
+
 class Bool_expr(AST):
     _fields=['expression']
 
-#R, peor em quedan dudas
+#Preguntar
 class Boolean(AST):
 		_fields=['value']
 
-#Revisado, operaciones aritmeticas, falta soporte en Parse
 class Operation(AST):
     _fields = ['op', 'left', 'right']
-	
-#R
+
 class Expression(AST):
-    _fields['value']
-	
-#R
+    _fields = ['value']
+
 class Prod(AST):
-    _fields['value']	
+    _fields = ['value']	
 	
-#R
 class Term(AST):
-    _fields['value']
+    _fields = ['value']
 
-#R?
 class Return(AST):
-    _fields['value']
+    _fields = ['value']
 
-#R
 class Print_d(AST):
-    _fields=['value']
+    _fields = ['value']
+
+class Read_d(AST):
+    _fields = ['var_id']
 	
-#R
 class Call_d(AST):
-    _fields=['funcid', 'varlist']
+    _fields = ['func_id', 'varlist']
 
-#R
 class Type(AST):
-    _fields=['type']
+    _fields = ['type']
 
-#R
 class Line_if(AST):
-    _fields=['condition', 'statement']
+    _fields = ['condition', 'statement']
 
-#R
 class Line_while(AST):
-    _fields=['condition', 'statement']
-    	
-#R
+    _fields = ['condition', 'statement']
+
 class Assignation(AST):
-    _fields = ['id', 'value']		
+    _fields = ['id', 'value']
 	
+
 class Literal(AST):
     '''
     #Un valor constante como 2, 2.5, o "dos"
     '''
     _fields = ['value']
 
-
+class Empty(AST):
+    _fields = []
 
 #NU: Not Used but needed
 #R
@@ -194,25 +178,15 @@ class Statement(AST):
 class List_var(AST):
     _fields=['arguments']
 	
-	def append(self,e):
+    def append(self,e):
         self.arguments.append(e)
 		
 		
-#Revisado    
-class Instruction(AST): #falta en parse
-    _fields = ['instruction']
-	
-
 	
 '''
 class Extern(AST):
     _fields = ['func_prototype']
 '''
-
-
-
-
-
 
 class ConstDeclaration(AST):
     _fields = ['id', 'value']
@@ -229,10 +203,6 @@ class StoreVar(AST):
 
 
 
-
-
-
-
 class Group(AST):
     _fields = ['expression']
 
@@ -242,9 +212,6 @@ class ExprList(AST):
 
     def append(self, e):
         self.expressions.append(e)
-
-class Empty(AST):
-    _fields = []
 
 
 # Usted deberá añadir mas nodos aquí.  Algunos nodos sugeridos son
