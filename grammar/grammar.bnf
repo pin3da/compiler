@@ -66,7 +66,8 @@ bool_expr	: expression GREATER expression
 expression	: 	expression PLUS prod
 		|	expression MINUS prod
 		|	prod
-			;
+		| LPAREN expression RPAREN	
+        ;
 
 prod	:	prod TIMES term
 	|	prod DIVIDE term
@@ -76,7 +77,6 @@ prod	:	prod TIMES term
 term	:	ID 
         | FLOAT 
 		| INTEGER 
-		| LPAREN expression RPAREN
 		| INT_TYPE LPAREN ID RPAREN
 		| FLOAT_TYPE LPAREN ID RPAREN
 		;

@@ -8,15 +8,20 @@ from mpaslex import tokens
 
 from mpasast import *
 
+
+#########
+# Revisar, faltaria root
+#
+#########
 def p_program(p):
     '''
     program : function
             | function program
     '''
     if(len(p) == 2):
-        p[0] = Program(p[1])
+        p[0] = Function ( (p[1]) )
     else:
-        p[2].append(p[1])
+        p[2].append( Function(p[1]) )
         p[0] = p[2]
 
 def p_function(p):
@@ -27,7 +32,7 @@ def p_function(p):
     if(len (p) == 9):
         p[0] = Function(p[4],p[6],p[7],p[8])
     else:
-        p[0] = Function(None,p[6],p[7],p[8])
+        p[0] = Function([],p[6],p[7],p[8])
 
 def p_empty(p):
     '''
@@ -43,8 +48,7 @@ def p_return_f(p):
     if(len(p) == 3):
         p[0] = p[2]
     else
-        p[0] = None
-        #Revisar.
+        p[0] = Empty()
 
 def p_block(p):
     '''
@@ -58,10 +62,10 @@ def p_arg_list(p):
              | var
     '''
     if(len(p) == 4 ):
-        p[3].append(p[1])
-        p[0] = p[1]
+        p[3].append(Var( p[1]) )
+        p[0] = p[3]
     else:
-        p[0] = Arg_list(p[1])
+        p[0] = [ Var(p[1]) ]
 
 
 def p_locals(p):
@@ -70,18 +74,17 @@ def p_locals(p):
            | empty
     '''
     if( len(p) == 4):
-        p[3].append(p[1])
+        p[3].append( Local_list(p[1]) )
         p[0] = p[3]
     else:
-        p[0] = Locals([])#nuevo no se esto que tal
-        #Hay que hacer un nodo pa esto, o espera que el metodo append aparezca por obra y gracia del espiritu santo?? jajajaja
+        p[0] = []
 
 def p_local_list(p):
     '''
     local_list : var
                | var_dec_as
     '''
-    p[0] = p[1]#?
+    p[0] = p[1]
 
 
 def p_var(p):
@@ -89,17 +92,15 @@ def p_var(p):
     var : ID COLON type
     '''
     p[0] =  Var(p[1],p[3])
-    # El type y name se definen en el constructor del nodo.
-    # TYPE deberia ser una produccion.
 
 def p_var_dec_as(p):
     '''
     var_dec_as : ID COLONEQUAL value_type 
                | ID COLONEQUAL expression
     '''
-    p[0] = Var_dec_as(p[1],p[3]) #value_type seria como los tipos de valores que hay booleano, int, etc, el valor comotal
-    # Es mejor separarlas ?
-    #parce porque type o expression, esto que hace exactamente?
+    p[0] = Var_dec_as(p[1],p[3])
+    #En el constructor del nodo podemos usar "isinstance(segundo_argumento, Clase)"
+
 def p_statement(p):
     '''
     statement : controlstructure SEMICOLON statement
@@ -107,13 +108,12 @@ def p_statement(p):
               | empty
     '''    
     if( len(p) == 4 ):
-        p[3].append(p[1])
+        p[3].append( p[1] ) # aca no se crea un nodo porque controlstructure se encarga de eso
         p[0] = p[3]
     else:
-        p[0] = Statement([]) #a lo mejor Statement p[0].instructions, para llenar los fields 
-        #Esto estaba retostado XD, de hecho aun no se si esta bien
+        p[0] = [ ]
 
-def p_controlstructure(p): #ahorrandose reglas a toda hora home jajajaja
+def p_controlstructure(p):
     '''
     controlstructure : WHILE  LPAREN conditional RPAREN DO block SEMICOLON
                      |  IF LPAREN conditional RPAREN THEN block else SEMICOLON
@@ -142,15 +142,14 @@ def p_conditional(p):
     '''
     if( len(p) == 4):
         if(p[2] == '||' ):
-            p[0] = Or(p[1], p[3])
+            p[0] = BinaryOp('||', p[1], p[3])
         else:
-            p[0] = And(p[1], p[3])
+            p[0] = BinaryOp('&&', p[1], p[3])
     elif (len(p) == 3):
         p[0] = Not(p[2])
     else:
-        p[0] = p[1]
-    #Se podria poner como binaryop, o dejarlo en varias clases, yo opto por el Relational Op que ya esta y enviamos ademas el signo?.
-
+        p[0] = Bool_expr( p[1] )
+    
 def bool_expr(p):
     '''
     bool_expr : expression GREATER expression
@@ -187,20 +186,24 @@ def p_expression(p):
     '''
     expression : expression PLUS prod
                | expression MINUS prod
+               | LPAREN expression RPARENT
                | prod               
     '''
     if(len(p) == 4):
         if(p[2]== '+'):
-            p[0] = Operation("+",p[1],p[3]) #Esto se puede meter en BinaryOP
-        else:
+            p[0] = Operation("+",p[1],p[3])
+        elif (p[2] == '-'):
             p[0] = Operation("-",p[1],p[3])
+        else:
+            p[0] = p[2]
+
     else:
-        p[0] =  Prod(p[1]) #voy a hacer el nodo de esto, pero creo que se puede hacer con un nodo propio (expression)
+        p[0] =  Prod(p[1])
 
 def p_prod(p):
     '''
     prod : prod TIMES term
-          | prod DIVIDE term
+         | prod DIVIDE term
          | term
     '''
     if(len(p) == 4):
@@ -209,7 +212,7 @@ def p_prod(p):
         else:
             p[0] = Operation("/",p[1],p[3])
     else:
-        p[0] =  Term(p[1]) #voy a hacer el nodo de esto, pero creo que se puede hacer con un nodo propio 
+        p[0] =  Term(p[1])
 
 ############
 # la expresion dentro de parentesis debe estar en expresion no en term, es decir,
@@ -227,8 +230,7 @@ def p_term(p):
          | FLOAT
          | INTEGER
     '''
-    #toca individual para crear los nodos adecuados... No creo, simplemente un value no?, a la final esto ya e suna hojita no?
-
+    p[0] = Term( p[1] )
 
 def p_return(p):
     '''
@@ -236,24 +238,19 @@ def p_return(p):
     '''
     p[0] = Return(p[2]) 
 
-def p_print_d_e(p):
+def p_print_d(p):
     '''
     print_d : PRINT LPARENT expression RPARENT 
-    ''' #falta imprimir con ID, y d enuevo creo que todo s epued ehacer con un mismo nodo con Value... peor voy a hacer todos
-    p[0] = PrintExpression(p[3])
-
-def p_print_d_s(p):
+            | PRINT LAPRENT STRING RPARENT
+            | PRINT LPARENT ID RPARENT
     '''
-    print_d : PRINT LPARENT STRNG RPARENT
-    '''
-    p[0] = PrintString(p[3])
+    p[0] = Print_d(p[3])
 
 def p_call_d(p):
     '''
     call_d : ID LPAREN list_var RPARENT
     '''
     p[0] = Call_d(p[1],p[3])
-    #Nombre y argumentos funcion
 
 def list_var(p):
     '''
@@ -261,7 +258,12 @@ def list_var(p):
              | expression list_var
              | empty
     '''
-    #terminar, separar
+    if( len(p) == 3):
+        p[2].append(p[1]) # no se crea nodo, la gramatica lo devuelve
+        p[0] = p[2]
+    else:
+        p[0] = [ ]
+
 
 def type(p):
     '''
@@ -270,7 +272,7 @@ def type(p):
          | STRING_TYPE
          | BOOLEAN_TYPE
     '''
-    #terminar, separar para crear nodos del tipo correspondiente
+    p[0] = Type(p[1])
 
 def line_if(p):
     '''
@@ -301,6 +303,4 @@ if __name__=='__main__':
     import sys
     from errors import suscribe_errors
     lexer = mpaslex.make_lexer()
-    parser = make_parser()
-
-        
+    parser = make_parser() 
