@@ -64,44 +64,107 @@ class PrintStatement(AST):
 	print expression ;
 	'''
 	_fields = ['expr']
-
+    '''
 class Literal(AST):
 	'''
-	Un valor constante como 2, 2.5, o "dos"
+	#Un valor constante como 2, 2.5, o "dos"
 	'''
 	_fields = ['value']
+'''
 
+#Revisado
+@validate_fields(functions=list)
 class Program(AST):
-	_fields = ['program']
-
-@validate_fields(statements=list)
-class Statements(AST):
-	_fields = ['statements']
+	_fields = ['functions']
 
 	def append(self,e):
-		self.statements.append(e)
-	
+		sef.functions.append(e)
+#Revisado
+@validate_fields(instructions=list)
 class Statement(AST):
-	_fields = ['statement']
+	_fields = ['instructions']
 
+	def append(self,e):
+		self.instructions.append(e)
+#Revisado	
+class Instruction(AST):
+	_fields = ['instruction']
+
+'''
 class Extern(AST):
 	_fields = ['func_prototype']
-
-class FuncPrototype(AST):
-	_fields = ['id', 'params', 'typename']
-
-@validate_fields(param_decls=list)
-class Args(AST):
-	_fields = ['var_decls']
+'''
+#Revisado
+class Function(AST):
+	_fields = ['arglist', 'typename', 'locals', 'block']
+#Revisado
+@validate_fields(variables=list)
+class Arg_list(AST):
+	_fields = ['variables']
 
 	def append(self,e):
-		self.var_decls.append(e)
-
-class ParamDecl(AST):
+		self.variables.append(e)
+#Revisado
+class Var(AST):
 	_fields = ['id', 'typename']
 
-class AssignmentStatement(AST):
-	_fields = ['location', 'value']
+#Revisado
+class Var_dec_as(AST):
+	_fields = ['value']
+
+#R
+@validate_fields(local_list=list)
+class Locals(AST):
+	_fields = ['local_list']
+	
+	def append(self,e):
+		self.local_list.append(e)
+
+#Revisado
+class Cwhile(AST):
+	_fields =['conditional', 'block']
+
+#Revisado
+class Cif(AST):
+	_fields =['conditional', 'block', 'else']
+
+#Revisado
+class Else(AST):
+	_fields =['statement']
+
+#R
+class Prod(AST):
+	_fields['value']
+#R
+class Term(AST):
+	_fields['value']
+#R?
+class Return(AST):
+	_fields['value'] #solo se puede retornar una expresion?
+
+#R
+class PrintExpression(AST):
+	_fields=['expression']
+
+#R
+class PrintString(AST):
+	_fields=['value']
+
+#R
+class Call_d(AST):
+	_fields=['funcid', 'varlist']
+
+#R
+class Line_if(AST):
+	_fields=['condition', 'statement']
+
+#R
+class Line_while(AST):
+	_fields=['condition', 'statement']
+	
+
+class Assignation(AST):
+	_fields = ['id', 'value']
 
 class ConstDeclaration(AST):
 	_fields = ['id', 'value']
@@ -109,11 +172,6 @@ class ConstDeclaration(AST):
 class VarDeclaration(AST):
 	_fields = ['id', 'typename', 'value']
 
-class IfStatement(AST):
-	_fields = ['condition', 'then_b', 'else_b']
-
-class WhileStatement(AST):
-	_fields = ['condition', 'body']
 
 class LoadLocation(AST):
 	_fields = ['name']
@@ -121,20 +179,22 @@ class LoadLocation(AST):
 class StoreVar(AST):
 	_fields = ['name']
 
+#Revisado, operaciones Unarias
 class UnaryOp(AST):
 	_fields = ['op', 'left']
 
+#Revisado, operaciones aritmeticas, comparativas
 class BinaryOp(AST):
 	_fields = ['op', 'left', 'right']
 
+#Revisado, operaciones lógicas, falta soporte en Parse
 class RelationalOp(AST):
 	_fields = ['op', 'left', 'right']
-	
+
+
 class Group(AST):
 	_fields = ['expression']
 
-class FunCall(AST):
-	_fields = ['id', 'params']
 
 class ExprList(AST):
 	_fields = ['expressions']

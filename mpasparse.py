@@ -61,7 +61,7 @@ def p_arg_list(p):
 		p[3].append(p[1])
 		p[0] = p[1]
 	else:
-		p[0] = Var(p[1])
+		p[0] = Arg_list(p[1])
 
 
 def p_locals(p):
@@ -73,20 +73,20 @@ def p_locals(p):
 		p[3].append(p[1])
 		p[0] = p[3]
 	else:
-		p[0] = None
-		#Revisar
+		p[0] = Locals(p[1].local_list)#nuevo no se esto que tal
+		#Hay que hacer un nodo pa esto, o espera que el metodo append aparezca por obra y gracia del espiritu santo?? jajajaja
 
 def p_local_list(p):
 	'''
 	local_list : var
 			   | var_dec_as
 	'''
-	p[0] = p[1]
+	p[0] = p[1]#?
 
 
 def p_var(p):
 	'''
-	var : ID COLON TYPE
+	var : ID COLON type
 	'''
 	p[0] =  Var(p[1],p[3])
 	# El type y name se definen en el constructor del nodo.
@@ -94,12 +94,12 @@ def p_var(p):
 
 def p_var_dec_as(p):
 	'''
-	var_dec_as : ID COLONEQUAL types
+	var_dec_as : ID COLONEQUAL value_type 
 			   | ID COLONEQUAL expression
 	'''
-	p[0] = Var_dec_as(p[1],p[3])
+	p[0] = Var_dec_as(p[1],p[3]) #value_type seria como los tipos de valores que hay booleano, int, etc, el valor comotal
 	# Es mejor separarlas ?
-
+	#parce porque type o expression, esto que hace exactamente?
 def p_statement(p):
 	'''
 	statement : controlstructure SEMICOLON statement
@@ -110,10 +110,10 @@ def p_statement(p):
 		p[3].append(p[1])
 		p[0] = p[3]
 	else:
-		p[0] = None
-		#revisar.
+		p[0] = Statement(p[0].instructions) #a lo mejor Statement p[0].instructions, para llenar los fields 
+		#Esto estaba retostado XD, de hecho aun no se si esta bien
 
-def p_controlstructure(p):
+def p_controlstructure(p): #ahorrandose reglas a toda hora home jajajaja
 	'''
 	controlstructure : WHILE  LPAREN conditional RPAREN DO block SEMICOLON
 					 |  IF LPAREN conditional RPAREN THEN block else SEMICOLON
@@ -149,7 +149,7 @@ def p_conditional(p):
 		p[0] = Not(p[2])
 	else:
 		p[0] = p[1]
-	#Se podria poner como binaryop, o dejarlo en varias clases.
+	#Se podria poner como binaryop, o dejarlo en varias clases, yo opto por el Relational Op que ya esta y enviamos ademas el signo?.
 
 def bool_expr(p):
 	'''
@@ -191,11 +191,11 @@ def p_expression(p):
 	'''
 	if(len(p) == 4):
 		if(p[2]== '+'):
-			p[0] = Operation("+",p[1],p[3])
+			p[0] = Operation("+",p[1],p[3]) #Esto se puede meter en BinaryOP
 		else:
 			p[0] = Operation("-",p[1],p[3])
 	else:
-		p[0] =  Prod(p[1])
+		p[0] =  Prod(p[1]) #voy a hacer el nodo de esto, pero creo que se puede hacer con un nodo propio (expression)
 
 def p_prod(p):
 	'''
@@ -209,7 +209,7 @@ def p_prod(p):
 		else:
 			p[0] = Operation("/",p[1],p[3])
 	else:
-		p[0] =  Term(p[1])
+		p[0] =  Term(p[1]) #voy a hacer el nodo de esto, pero creo que se puede hacer con un nodo propio 
 
 ############
 # la expresion dentro de parentesis debe estar en expresion no en term, es decir,
@@ -217,7 +217,8 @@ def p_prod(p):
 #			 | las otras cosas
 #
 # Que es INT_TYPE LPAREN ID RPAREN  y el otro?
-# Para que los parentesis ?
+# Para que los parentesis ? para cuando hay toda una expresion encerrada entre parentesis
+# por ejemplo ud puede escribir 5+3 o (5+3), y ambos estan bien
 ###########
 
 def p_term(p):
@@ -226,19 +227,19 @@ def p_term(p):
 		 | FLOAT
 		 | INTEGER
 	'''
-	#toca individual para crear los nodos adecuados
+	#toca individual para crear los nodos adecuados... No creo, simplemente un value no?, a la final esto ya e suna hojita no?
 
 
 def p_return(p):
 	'''
 	return : RETURN expression
 	'''
-	p[0] = Return(p[2])
+	p[0] = Return(p[2]) 
 
 def p_print_d_e(p):
 	'''
-	print_d : PRINT LPARENT expression RPARENT
-	'''
+	print_d : PRINT LPARENT expression RPARENT 
+	''' #falta imprimir con ID, y d enuevo creo que todo s epued ehacer con un mismo nodo con Value... peor voy a hacer todos
 	p[0] = PrintExpression(p[3])
 
 def p_print_d_s(p):
@@ -273,13 +274,13 @@ def type(p):
 
 def line_if(p):
 	'''
-	line_if : IF bool_expr THEN instructrion
+	line_if : IF conditional THEN instructrion
 	'''
 	p[0] =  Line_if(p[2],p[4])
 
 def line_while(p):
 	'''
-	line_while : WHILE bool_expr DO instruction
+	line_while : WHILE conditional DO instruction
 	'''
 	p[0] =  Line_while(p[2],p[4])
 
@@ -288,7 +289,7 @@ def assignation(p):
 	assignation : ID EQUAL expression
 	'''
 	p[0] = Assignation(p[1],p[3])
-	#se puede convertir en nodo var
+	#se puede convertir en nodo var, a esto le faltan cosas: ID=ID, faltan var_dec_as vendrian siendo ctes
 
 
 def p_error(p):

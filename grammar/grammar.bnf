@@ -30,8 +30,8 @@ var		:	ID COLON TYPE
 		;
 
 
-var_dec_as	:	ID COLONEQUAL types
-			|	ID COLONEQUAL expression
+var_dec_as	:	ID COLONEQUAL type
+			|ID COLONEQUAL expression
             ;
 
 
