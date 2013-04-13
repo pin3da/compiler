@@ -58,36 +58,35 @@ Rule 43    bool_expr -> expression LE expression
 Rule 44    bool_expr -> expression NE expression
 Rule 45    bool_expr -> expression EQ expression
 Rule 46    bool_expr -> BOOLEAN
-Rule 47    expression -> expression PLUS prod
-Rule 48    expression -> expression MINUS prod
+Rule 47    expression -> expression PLUS expression
+Rule 48    expression -> expression MINUS expression
 Rule 49    expression -> LPAREN expression RPAREN
-Rule 50    expression -> MINUS expression
+Rule 50    expression -> UMINUS expression
 Rule 51    expression -> prod
-Rule 52    prod -> prod TIMES term
-Rule 53    prod -> prod DIVIDE term
+Rule 52    prod -> prod TIMES prod
+Rule 53    prod -> prod DIVIDE prod
 Rule 54    prod -> term
 Rule 55    term -> ID
 Rule 56    term -> FLOAT
 Rule 57    term -> INTEGER
 Rule 58    return_d -> RETURN expression
-Rule 59    return_d -> RETURN ID
-Rule 60    write_d -> WRITE LPAREN expression RPAREN
-Rule 61    write_d -> WRITE LPAREN STRING RPAREN
-Rule 62    read_d -> READ LPAREN ID RPAREN
-Rule 63    print_d -> PRINT LPAREN expression RPAREN
-Rule 64    print_d -> PRINT LPAREN STRING RPAREN
-Rule 65    print_d -> PRINT LPAREN ID RPAREN
-Rule 66    call_d -> ID LPAREN list_var RPAREN
-Rule 67    list_var -> ID list_var
-Rule 68    list_var -> expression list_var
-Rule 69    list_var -> empty
-Rule 70    type -> INT_TYPE
-Rule 71    type -> FLOAT_TYPE
-Rule 72    type -> STRING_TYPE
-Rule 73    type -> BOOLEAN_TYPE
-Rule 74    line_if -> IF conditional THEN instruction
-Rule 75    line_while -> WHILE conditional DO instruction
-Rule 76    assignation -> ID EQ expression
+Rule 59    write_d -> WRITE LPAREN expression RPAREN
+Rule 60    write_d -> WRITE LPAREN STRING RPAREN
+Rule 61    read_d -> READ LPAREN ID RPAREN
+Rule 62    print_d -> PRINT LPAREN expression RPAREN
+Rule 63    print_d -> PRINT LPAREN STRING RPAREN
+Rule 64    print_d -> PRINT LPAREN ID RPAREN
+Rule 65    call_d -> ID LPAREN list_var RPAREN
+Rule 66    list_var -> ID list_var
+Rule 67    list_var -> expression list_var
+Rule 68    list_var -> empty
+Rule 69    type -> INT_TYPE
+Rule 70    type -> FLOAT_TYPE
+Rule 71    type -> STRING_TYPE
+Rule 72    type -> BOOLEAN_TYPE
+Rule 73    line_if -> IF conditional THEN instruction
+Rule 74    line_while -> WHILE conditional DO instruction
+Rule 75    assignation -> ID EQ expression
 
 Terminals, with rules where they appear
 
@@ -95,50 +94,51 @@ AND                  : 37
 ASSIGN               : 
 BEGIN                : 9
 BOOLEAN              : 46
-BOOLEAN_TYPE         : 73
+BOOLEAN_TYPE         : 72
 BREAK                : 32
 COLON                : 7 16
 COLONEQUAL           : 17 18
 COMMA                : 10
 CONST                : 
 DIVIDE               : 53
-DO                   : 22 75
+DO                   : 22 74
 ELSE                 : 34
 END                  : 9
-EQ                   : 45 76
+EQ                   : 45 75
 EXTERN               : 
 FLOAT                : 56
-FLOAT_TYPE           : 71
+FLOAT_TYPE           : 70
 FUNC                 : 4 5
 GE                   : 42
 GT                   : 40
-ID                   : 4 5 16 17 18 55 59 62 65 66 67 76
-IF                   : 23 74
+ID                   : 4 5 16 17 18 55 61 64 65 66 75
+IF                   : 23 73
 INTEGER              : 57
-INT_TYPE             : 70
+INT_TYPE             : 69
 LE                   : 43
-LPAREN               : 4 5 22 23 49 60 61 62 63 64 65 66
+LPAREN               : 4 5 22 23 49 59 60 61 62 63 64 65
 LSBRACKET            : 
 LT                   : 41
-MINUS                : 48 50
+MINUS                : 48
 NE                   : 44
 NOT                  : 38
 OR                   : 36
 PLUS                 : 47
-PRINT                : 63 64 65
-READ                 : 62
-RETURN               : 58 59
-RPAREN               : 4 5 22 23 49 60 61 62 63 64 65 66
+PRINT                : 62 63 64
+READ                 : 61
+RETURN               : 58
+RPAREN               : 4 5 22 23 49 59 60 61 62 63 64 65
 RSBRACKET            : 
 SEMICOLON            : 12 19 20 22 23
 SKIP                 : 31
-STRING               : 61 64
-STRING_TYPE          : 72
-THEN                 : 23 74
+STRING               : 60 63
+STRING_TYPE          : 71
+THEN                 : 23 73
 TIMES                : 52
+UMINUS               : 50
 VAR                  : 
-WHILE                : 22 75
-WRITE                : 60 61
+WHILE                : 22 74
+WRITE                : 59 60
 error                : 
 
 Nonterminals, with rules where they appear
@@ -148,27 +148,27 @@ assignation          : 30
 block                : 4 5 22 23
 bool_expr            : 36 36 37 37 38 39
 call_d               : 33
-conditional          : 22 23 74 75
+conditional          : 22 23 73 74
 controlstructure     : 19
 else                 : 23
-empty                : 8 13 21 35 69
-expression           : 18 40 40 41 41 42 42 43 43 44 44 45 45 47 48 49 50 58 60 63 68 76
+empty                : 8 13 21 35 68
+expression           : 18 40 40 41 41 42 42 43 43 44 44 45 45 47 47 48 48 49 50 58 59 62 67 75
 function             : 2 3
 initial              : 0
-instruction          : 20 74 75
+instruction          : 20 73 74
 line_if              : 26
 line_while           : 27
-list_var             : 66 67 68
+list_var             : 65 66 67
 local_list           : 12
 locals               : 4 5 12
 print_d              : 29
-prod                 : 47 48 51 52 53
+prod                 : 51 52 52 53 53
 program              : 1 3
 read_d               : 25
 return_d             : 28
 return_f             : 4 5
 statement            : 9 19 20 34
-term                 : 52 53 54
+term                 : 54
 type                 : 7 16 17
 var                  : 10 11 14
 var_dec_as           : 15
@@ -304,10 +304,10 @@ state 12
 state 13
 
     (7) return_f -> COLON . type
-    (70) type -> . INT_TYPE
-    (71) type -> . FLOAT_TYPE
-    (72) type -> . STRING_TYPE
-    (73) type -> . BOOLEAN_TYPE
+    (69) type -> . INT_TYPE
+    (70) type -> . FLOAT_TYPE
+    (71) type -> . STRING_TYPE
+    (72) type -> . BOOLEAN_TYPE
 
     INT_TYPE        shift and go to state 21
     FLOAT_TYPE      shift and go to state 19
@@ -352,10 +352,10 @@ state 15
 state 16
 
     (16) var -> ID COLON . type
-    (70) type -> . INT_TYPE
-    (71) type -> . FLOAT_TYPE
-    (72) type -> . STRING_TYPE
-    (73) type -> . BOOLEAN_TYPE
+    (69) type -> . INT_TYPE
+    (70) type -> . FLOAT_TYPE
+    (71) type -> . STRING_TYPE
+    (72) type -> . BOOLEAN_TYPE
 
     INT_TYPE        shift and go to state 21
     FLOAT_TYPE      shift and go to state 19
@@ -380,46 +380,46 @@ state 17
 
 state 18
 
-    (73) type -> BOOLEAN_TYPE .
+    (72) type -> BOOLEAN_TYPE .
 
-    COMMA           reduce using rule 73 (type -> BOOLEAN_TYPE .)
-    RPAREN          reduce using rule 73 (type -> BOOLEAN_TYPE .)
-    SEMICOLON       reduce using rule 73 (type -> BOOLEAN_TYPE .)
-    ID              reduce using rule 73 (type -> BOOLEAN_TYPE .)
-    BEGIN           reduce using rule 73 (type -> BOOLEAN_TYPE .)
+    COMMA           reduce using rule 72 (type -> BOOLEAN_TYPE .)
+    RPAREN          reduce using rule 72 (type -> BOOLEAN_TYPE .)
+    SEMICOLON       reduce using rule 72 (type -> BOOLEAN_TYPE .)
+    ID              reduce using rule 72 (type -> BOOLEAN_TYPE .)
+    BEGIN           reduce using rule 72 (type -> BOOLEAN_TYPE .)
 
 
 state 19
 
-    (71) type -> FLOAT_TYPE .
+    (70) type -> FLOAT_TYPE .
 
-    COMMA           reduce using rule 71 (type -> FLOAT_TYPE .)
-    RPAREN          reduce using rule 71 (type -> FLOAT_TYPE .)
-    SEMICOLON       reduce using rule 71 (type -> FLOAT_TYPE .)
-    ID              reduce using rule 71 (type -> FLOAT_TYPE .)
-    BEGIN           reduce using rule 71 (type -> FLOAT_TYPE .)
+    COMMA           reduce using rule 70 (type -> FLOAT_TYPE .)
+    RPAREN          reduce using rule 70 (type -> FLOAT_TYPE .)
+    SEMICOLON       reduce using rule 70 (type -> FLOAT_TYPE .)
+    ID              reduce using rule 70 (type -> FLOAT_TYPE .)
+    BEGIN           reduce using rule 70 (type -> FLOAT_TYPE .)
 
 
 state 20
 
-    (72) type -> STRING_TYPE .
+    (71) type -> STRING_TYPE .
 
-    COMMA           reduce using rule 72 (type -> STRING_TYPE .)
-    RPAREN          reduce using rule 72 (type -> STRING_TYPE .)
-    SEMICOLON       reduce using rule 72 (type -> STRING_TYPE .)
-    ID              reduce using rule 72 (type -> STRING_TYPE .)
-    BEGIN           reduce using rule 72 (type -> STRING_TYPE .)
+    COMMA           reduce using rule 71 (type -> STRING_TYPE .)
+    RPAREN          reduce using rule 71 (type -> STRING_TYPE .)
+    SEMICOLON       reduce using rule 71 (type -> STRING_TYPE .)
+    ID              reduce using rule 71 (type -> STRING_TYPE .)
+    BEGIN           reduce using rule 71 (type -> STRING_TYPE .)
 
 
 state 21
 
-    (70) type -> INT_TYPE .
+    (69) type -> INT_TYPE .
 
-    COMMA           reduce using rule 70 (type -> INT_TYPE .)
-    RPAREN          reduce using rule 70 (type -> INT_TYPE .)
-    SEMICOLON       reduce using rule 70 (type -> INT_TYPE .)
-    ID              reduce using rule 70 (type -> INT_TYPE .)
-    BEGIN           reduce using rule 70 (type -> INT_TYPE .)
+    COMMA           reduce using rule 69 (type -> INT_TYPE .)
+    RPAREN          reduce using rule 69 (type -> INT_TYPE .)
+    SEMICOLON       reduce using rule 69 (type -> INT_TYPE .)
+    ID              reduce using rule 69 (type -> INT_TYPE .)
+    BEGIN           reduce using rule 69 (type -> INT_TYPE .)
 
 
 state 22
@@ -539,17 +539,17 @@ state 33
 
     (17) var_dec_as -> ID COLONEQUAL . type
     (18) var_dec_as -> ID COLONEQUAL . expression
-    (70) type -> . INT_TYPE
-    (71) type -> . FLOAT_TYPE
-    (72) type -> . STRING_TYPE
-    (73) type -> . BOOLEAN_TYPE
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (69) type -> . INT_TYPE
+    (70) type -> . FLOAT_TYPE
+    (71) type -> . STRING_TYPE
+    (72) type -> . BOOLEAN_TYPE
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
@@ -560,7 +560,7 @@ state 33
     STRING_TYPE     shift and go to state 20
     BOOLEAN_TYPE    shift and go to state 18
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -589,18 +589,17 @@ state 34
     (32) instruction -> . BREAK
     (33) instruction -> . call_d
     (6) empty -> .
-    (60) write_d -> . WRITE LPAREN expression RPAREN
-    (61) write_d -> . WRITE LPAREN STRING RPAREN
-    (62) read_d -> . READ LPAREN ID RPAREN
-    (74) line_if -> . IF conditional THEN instruction
-    (75) line_while -> . WHILE conditional DO instruction
+    (59) write_d -> . WRITE LPAREN expression RPAREN
+    (60) write_d -> . WRITE LPAREN STRING RPAREN
+    (61) read_d -> . READ LPAREN ID RPAREN
+    (73) line_if -> . IF conditional THEN instruction
+    (74) line_while -> . WHILE conditional DO instruction
     (58) return_d -> . RETURN expression
-    (59) return_d -> . RETURN ID
-    (63) print_d -> . PRINT LPAREN expression RPAREN
-    (64) print_d -> . PRINT LPAREN STRING RPAREN
-    (65) print_d -> . PRINT LPAREN ID RPAREN
-    (76) assignation -> . ID EQ expression
-    (66) call_d -> . ID LPAREN list_var RPAREN
+    (62) print_d -> . PRINT LPAREN expression RPAREN
+    (63) print_d -> . PRINT LPAREN STRING RPAREN
+    (64) print_d -> . PRINT LPAREN ID RPAREN
+    (75) assignation -> . ID EQ expression
+    (65) call_d -> . ID LPAREN list_var RPAREN
 
     WHILE           shift and go to state 49
     IF              shift and go to state 61
@@ -656,18 +655,19 @@ state 38
 
     TIMES           reduce using rule 54 (prod -> term .)
     DIVIDE          reduce using rule 54 (prod -> term .)
+    RPAREN          reduce using rule 54 (prod -> term .)
     PLUS            reduce using rule 54 (prod -> term .)
     MINUS           reduce using rule 54 (prod -> term .)
-    SEMICOLON       reduce using rule 54 (prod -> term .)
-    RPAREN          reduce using rule 54 (prod -> term .)
     GT              reduce using rule 54 (prod -> term .)
     LT              reduce using rule 54 (prod -> term .)
     GE              reduce using rule 54 (prod -> term .)
     LE              reduce using rule 54 (prod -> term .)
     NE              reduce using rule 54 (prod -> term .)
     EQ              reduce using rule 54 (prod -> term .)
+    SEMICOLON       reduce using rule 54 (prod -> term .)
     ID              reduce using rule 54 (prod -> term .)
     LPAREN          reduce using rule 54 (prod -> term .)
+    UMINUS          reduce using rule 54 (prod -> term .)
     FLOAT           reduce using rule 54 (prod -> term .)
     INTEGER         reduce using rule 54 (prod -> term .)
     OR              reduce using rule 54 (prod -> term .)
@@ -689,36 +689,37 @@ state 39
     DO              reduce using rule 56 (term -> FLOAT .)
     THEN            reduce using rule 56 (term -> FLOAT .)
     RPAREN          reduce using rule 56 (term -> FLOAT .)
-    ID              reduce using rule 56 (term -> FLOAT .)
-    LPAREN          reduce using rule 56 (term -> FLOAT .)
-    FLOAT           reduce using rule 56 (term -> FLOAT .)
-    INTEGER         reduce using rule 56 (term -> FLOAT .)
     GT              reduce using rule 56 (term -> FLOAT .)
     LT              reduce using rule 56 (term -> FLOAT .)
     GE              reduce using rule 56 (term -> FLOAT .)
     LE              reduce using rule 56 (term -> FLOAT .)
     NE              reduce using rule 56 (term -> FLOAT .)
     EQ              reduce using rule 56 (term -> FLOAT .)
+    ID              reduce using rule 56 (term -> FLOAT .)
+    LPAREN          reduce using rule 56 (term -> FLOAT .)
+    UMINUS          reduce using rule 56 (term -> FLOAT .)
+    FLOAT           reduce using rule 56 (term -> FLOAT .)
+    INTEGER         reduce using rule 56 (term -> FLOAT .)
     SEMICOLON       reduce using rule 56 (term -> FLOAT .)
 
 
 state 40
 
     (49) expression -> LPAREN . expression RPAREN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -729,21 +730,21 @@ state 40
 
 state 41
 
-    (50) expression -> MINUS . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (50) expression -> UMINUS . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -772,24 +773,25 @@ state 43
     DO              reduce using rule 57 (term -> INTEGER .)
     THEN            reduce using rule 57 (term -> INTEGER .)
     RPAREN          reduce using rule 57 (term -> INTEGER .)
-    ID              reduce using rule 57 (term -> INTEGER .)
-    LPAREN          reduce using rule 57 (term -> INTEGER .)
-    FLOAT           reduce using rule 57 (term -> INTEGER .)
-    INTEGER         reduce using rule 57 (term -> INTEGER .)
     GT              reduce using rule 57 (term -> INTEGER .)
     LT              reduce using rule 57 (term -> INTEGER .)
     GE              reduce using rule 57 (term -> INTEGER .)
     LE              reduce using rule 57 (term -> INTEGER .)
     NE              reduce using rule 57 (term -> INTEGER .)
     EQ              reduce using rule 57 (term -> INTEGER .)
+    ID              reduce using rule 57 (term -> INTEGER .)
+    LPAREN          reduce using rule 57 (term -> INTEGER .)
+    UMINUS          reduce using rule 57 (term -> INTEGER .)
+    FLOAT           reduce using rule 57 (term -> INTEGER .)
+    INTEGER         reduce using rule 57 (term -> INTEGER .)
     SEMICOLON       reduce using rule 57 (term -> INTEGER .)
 
 
 state 44
 
     (51) expression -> prod .
-    (52) prod -> prod . TIMES term
-    (53) prod -> prod . DIVIDE term
+    (52) prod -> prod . TIMES prod
+    (53) prod -> prod . DIVIDE prod
 
     GT              reduce using rule 51 (expression -> prod .)
     LT              reduce using rule 51 (expression -> prod .)
@@ -807,6 +809,7 @@ state 44
     SEMICOLON       reduce using rule 51 (expression -> prod .)
     ID              reduce using rule 51 (expression -> prod .)
     LPAREN          reduce using rule 51 (expression -> prod .)
+    UMINUS          reduce using rule 51 (expression -> prod .)
     FLOAT           reduce using rule 51 (expression -> prod .)
     INTEGER         reduce using rule 51 (expression -> prod .)
     TIMES           shift and go to state 72
@@ -816,8 +819,8 @@ state 44
 state 45
 
     (18) var_dec_as -> ID COLONEQUAL expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     SEMICOLON       reduce using rule 18 (var_dec_as -> ID COLONEQUAL expression .)
     PLUS            shift and go to state 74
@@ -843,32 +846,32 @@ state 46
     LE              reduce using rule 55 (term -> ID .)
     NE              reduce using rule 55 (term -> ID .)
     EQ              reduce using rule 55 (term -> ID .)
+    SEMICOLON       reduce using rule 55 (term -> ID .)
     ID              reduce using rule 55 (term -> ID .)
     LPAREN          reduce using rule 55 (term -> ID .)
+    UMINUS          reduce using rule 55 (term -> ID .)
     FLOAT           reduce using rule 55 (term -> ID .)
     INTEGER         reduce using rule 55 (term -> ID .)
-    SEMICOLON       reduce using rule 55 (term -> ID .)
 
 
 state 47
 
     (58) return_d -> RETURN . expression
-    (59) return_d -> RETURN . ID
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    ID              shift and go to state 76
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
+    ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
@@ -878,15 +881,15 @@ state 47
 
 state 48
 
-    (62) read_d -> READ . LPAREN ID RPAREN
+    (61) read_d -> READ . LPAREN ID RPAREN
 
-    LPAREN          shift and go to state 77
+    LPAREN          shift and go to state 76
 
 
 state 49
 
     (22) controlstructure -> WHILE . LPAREN conditional RPAREN DO block SEMICOLON
-    (75) line_while -> WHILE . conditional DO instruction
+    (74) line_while -> WHILE . conditional DO instruction
     (36) conditional -> . bool_expr OR bool_expr
     (37) conditional -> . bool_expr AND bool_expr
     (38) conditional -> . NOT bool_expr
@@ -898,31 +901,31 @@ state 49
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    LPAREN          shift and go to state 80
-    NOT             shift and go to state 82
-    BOOLEAN         shift and go to state 81
-    MINUS           shift and go to state 41
+    LPAREN          shift and go to state 79
+    NOT             shift and go to state 81
+    BOOLEAN         shift and go to state 80
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    conditional                    shift and go to state 78
-    bool_expr                      shift and go to state 79
+    conditional                    shift and go to state 77
+    bool_expr                      shift and go to state 78
     prod                           shift and go to state 44
-    expression                     shift and go to state 83
+    expression                     shift and go to state 82
 
 state 50
 
@@ -933,11 +936,11 @@ state 50
 
 state 51
 
-    (63) print_d -> PRINT . LPAREN expression RPAREN
-    (64) print_d -> PRINT . LPAREN STRING RPAREN
-    (65) print_d -> PRINT . LPAREN ID RPAREN
+    (62) print_d -> PRINT . LPAREN expression RPAREN
+    (63) print_d -> PRINT . LPAREN STRING RPAREN
+    (64) print_d -> PRINT . LPAREN ID RPAREN
 
-    LPAREN          shift and go to state 84
+    LPAREN          shift and go to state 83
 
 
 state 52
@@ -951,15 +954,15 @@ state 53
 
     (9) block -> BEGIN statement . END
 
-    END             shift and go to state 85
+    END             shift and go to state 84
 
 
 state 54
 
     (21) statement -> empty .
 
-    END             reduce using rule 21 (statement -> empty .)
     SEMICOLON       reduce using rule 21 (statement -> empty .)
+    END             reduce using rule 21 (statement -> empty .)
 
 
 state 55
@@ -971,17 +974,17 @@ state 55
 
 state 56
 
-    (60) write_d -> WRITE . LPAREN expression RPAREN
-    (61) write_d -> WRITE . LPAREN STRING RPAREN
+    (59) write_d -> WRITE . LPAREN expression RPAREN
+    (60) write_d -> WRITE . LPAREN STRING RPAREN
 
-    LPAREN          shift and go to state 86
+    LPAREN          shift and go to state 85
 
 
 state 57
 
     (19) statement -> controlstructure . SEMICOLON statement
 
-    SEMICOLON       shift and go to state 87
+    SEMICOLON       shift and go to state 86
 
 
 state 58
@@ -1000,17 +1003,17 @@ state 59
 
 state 60
 
-    (76) assignation -> ID . EQ expression
-    (66) call_d -> ID . LPAREN list_var RPAREN
+    (75) assignation -> ID . EQ expression
+    (65) call_d -> ID . LPAREN list_var RPAREN
 
-    EQ              shift and go to state 88
-    LPAREN          shift and go to state 89
+    EQ              shift and go to state 87
+    LPAREN          shift and go to state 88
 
 
 state 61
 
     (23) controlstructure -> IF . LPAREN conditional RPAREN THEN block else SEMICOLON
-    (74) line_if -> IF . conditional THEN instruction
+    (73) line_if -> IF . conditional THEN instruction
     (36) conditional -> . bool_expr OR bool_expr
     (37) conditional -> . bool_expr AND bool_expr
     (38) conditional -> . NOT bool_expr
@@ -1022,31 +1025,31 @@ state 61
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    LPAREN          shift and go to state 91
-    NOT             shift and go to state 82
-    BOOLEAN         shift and go to state 81
-    MINUS           shift and go to state 41
+    LPAREN          shift and go to state 90
+    NOT             shift and go to state 81
+    BOOLEAN         shift and go to state 80
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    conditional                    shift and go to state 90
-    bool_expr                      shift and go to state 79
+    conditional                    shift and go to state 89
+    bool_expr                      shift and go to state 78
     prod                           shift and go to state 44
-    expression                     shift and go to state 83
+    expression                     shift and go to state 82
 
 state 62
 
@@ -1080,7 +1083,7 @@ state 66
 
     (20) statement -> instruction . SEMICOLON statement
 
-    SEMICOLON       shift and go to state 92
+    SEMICOLON       shift and go to state 91
 
 
 state 67
@@ -1101,46 +1104,50 @@ state 68
 state 69
 
     (49) expression -> LPAREN expression . RPAREN
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
-    RPAREN          shift and go to state 93
+    RPAREN          shift and go to state 92
     PLUS            shift and go to state 74
     MINUS           shift and go to state 73
 
 
 state 70
 
-    (50) expression -> MINUS expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (50) expression -> UMINUS expression .
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
-    GT              reduce using rule 50 (expression -> MINUS expression .)
-    LT              reduce using rule 50 (expression -> MINUS expression .)
-    GE              reduce using rule 50 (expression -> MINUS expression .)
-    LE              reduce using rule 50 (expression -> MINUS expression .)
-    NE              reduce using rule 50 (expression -> MINUS expression .)
-    EQ              reduce using rule 50 (expression -> MINUS expression .)
-    PLUS            reduce using rule 50 (expression -> MINUS expression .)
-    MINUS           reduce using rule 50 (expression -> MINUS expression .)
-    OR              reduce using rule 50 (expression -> MINUS expression .)
-    AND             reduce using rule 50 (expression -> MINUS expression .)
-    DO              reduce using rule 50 (expression -> MINUS expression .)
-    THEN            reduce using rule 50 (expression -> MINUS expression .)
-    RPAREN          reduce using rule 50 (expression -> MINUS expression .)
-    SEMICOLON       reduce using rule 50 (expression -> MINUS expression .)
-    ID              reduce using rule 50 (expression -> MINUS expression .)
-    LPAREN          reduce using rule 50 (expression -> MINUS expression .)
-    FLOAT           reduce using rule 50 (expression -> MINUS expression .)
-    INTEGER         reduce using rule 50 (expression -> MINUS expression .)
+    GT              reduce using rule 50 (expression -> UMINUS expression .)
+    LT              reduce using rule 50 (expression -> UMINUS expression .)
+    GE              reduce using rule 50 (expression -> UMINUS expression .)
+    LE              reduce using rule 50 (expression -> UMINUS expression .)
+    NE              reduce using rule 50 (expression -> UMINUS expression .)
+    EQ              reduce using rule 50 (expression -> UMINUS expression .)
+    OR              reduce using rule 50 (expression -> UMINUS expression .)
+    AND             reduce using rule 50 (expression -> UMINUS expression .)
+    DO              reduce using rule 50 (expression -> UMINUS expression .)
+    THEN            reduce using rule 50 (expression -> UMINUS expression .)
+    RPAREN          reduce using rule 50 (expression -> UMINUS expression .)
+    SEMICOLON       reduce using rule 50 (expression -> UMINUS expression .)
+    ID              reduce using rule 50 (expression -> UMINUS expression .)
+    LPAREN          reduce using rule 50 (expression -> UMINUS expression .)
+    UMINUS          reduce using rule 50 (expression -> UMINUS expression .)
+    FLOAT           reduce using rule 50 (expression -> UMINUS expression .)
+    INTEGER         reduce using rule 50 (expression -> UMINUS expression .)
+    PLUS            shift and go to state 74
+    MINUS           shift and go to state 73
 
-  ! PLUS            [ shift and go to state 74 ]
-  ! MINUS           [ shift and go to state 73 ]
+  ! PLUS            [ reduce using rule 50 (expression -> UMINUS expression .) ]
+  ! MINUS           [ reduce using rule 50 (expression -> UMINUS expression .) ]
 
 
 state 71
 
-    (53) prod -> prod DIVIDE . term
+    (53) prod -> prod DIVIDE . prod
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
+    (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
@@ -1149,11 +1156,15 @@ state 71
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
-    term                           shift and go to state 94
+    term                           shift and go to state 38
+    prod                           shift and go to state 93
 
 state 72
 
-    (52) prod -> prod TIMES . term
+    (52) prod -> prod TIMES . prod
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
+    (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
@@ -1162,47 +1173,64 @@ state 72
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
-    term                           shift and go to state 95
+    term                           shift and go to state 38
+    prod                           shift and go to state 94
 
 state 73
 
-    (48) expression -> expression MINUS . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (48) expression -> expression MINUS . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
+    (49) expression -> . LPAREN expression RPAREN
+    (50) expression -> . UMINUS expression
+    (51) expression -> . prod
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
+    LPAREN          shift and go to state 40
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    prod                           shift and go to state 96
+    prod                           shift and go to state 44
+    expression                     shift and go to state 95
 
 state 74
 
-    (47) expression -> expression PLUS . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (47) expression -> expression PLUS . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
+    (49) expression -> . LPAREN expression RPAREN
+    (50) expression -> . UMINUS expression
+    (51) expression -> . prod
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
+    LPAREN          shift and go to state 40
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    prod                           shift and go to state 97
+    prod                           shift and go to state 44
+    expression                     shift and go to state 96
 
 state 75
 
     (58) return_d -> RETURN expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     SEMICOLON       reduce using rule 58 (return_d -> RETURN expression .)
     PLUS            shift and go to state 74
@@ -1211,47 +1239,32 @@ state 75
 
 state 76
 
-    (59) return_d -> RETURN ID .
-    (55) term -> ID .
+    (61) read_d -> READ LPAREN . ID RPAREN
 
-  ! reduce/reduce conflict for SEMICOLON resolved using rule 55 (term -> ID .)
-    TIMES           reduce using rule 55 (term -> ID .)
-    DIVIDE          reduce using rule 55 (term -> ID .)
-    PLUS            reduce using rule 55 (term -> ID .)
-    MINUS           reduce using rule 55 (term -> ID .)
-    SEMICOLON       reduce using rule 55 (term -> ID .)
-
-  ! SEMICOLON       [ reduce using rule 59 (return_d -> RETURN ID .) ]
+    ID              shift and go to state 97
 
 
 state 77
 
-    (62) read_d -> READ LPAREN . ID RPAREN
+    (74) line_while -> WHILE conditional . DO instruction
 
-    ID              shift and go to state 98
+    DO              shift and go to state 98
 
 
 state 78
-
-    (75) line_while -> WHILE conditional . DO instruction
-
-    DO              shift and go to state 99
-
-
-state 79
 
     (36) conditional -> bool_expr . OR bool_expr
     (37) conditional -> bool_expr . AND bool_expr
     (39) conditional -> bool_expr .
 
-    OR              shift and go to state 101
-    AND             shift and go to state 100
-    RPAREN          reduce using rule 39 (conditional -> bool_expr .)
+    OR              shift and go to state 100
+    AND             shift and go to state 99
     DO              reduce using rule 39 (conditional -> bool_expr .)
+    RPAREN          reduce using rule 39 (conditional -> bool_expr .)
     THEN            reduce using rule 39 (conditional -> bool_expr .)
 
 
-state 80
+state 79
 
     (22) controlstructure -> WHILE LPAREN . conditional RPAREN DO block SEMICOLON
     (49) expression -> LPAREN . expression RPAREN
@@ -1259,10 +1272,10 @@ state 80
     (37) conditional -> . bool_expr AND bool_expr
     (38) conditional -> . NOT bool_expr
     (39) conditional -> . bool_expr
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
     (40) bool_expr -> . expression GT expression
     (41) bool_expr -> . expression LT expression
@@ -1271,28 +1284,28 @@ state 80
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    NOT             shift and go to state 82
+    NOT             shift and go to state 81
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
-    BOOLEAN         shift and go to state 81
+    UMINUS          shift and go to state 41
+    BOOLEAN         shift and go to state 80
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    conditional                    shift and go to state 102
-    bool_expr                      shift and go to state 79
+    conditional                    shift and go to state 101
+    bool_expr                      shift and go to state 78
     prod                           shift and go to state 44
-    expression                     shift and go to state 103
+    expression                     shift and go to state 102
 
-state 81
+state 80
 
     (46) bool_expr -> BOOLEAN .
 
@@ -1303,7 +1316,7 @@ state 81
     RPAREN          reduce using rule 46 (bool_expr -> BOOLEAN .)
 
 
-state 82
+state 81
 
     (38) conditional -> NOT . bool_expr
     (40) bool_expr -> . expression GT expression
@@ -1313,31 +1326,31 @@ state 82
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    BOOLEAN         shift and go to state 81
+    BOOLEAN         shift and go to state 80
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    bool_expr                      shift and go to state 104
-    expression                     shift and go to state 83
+    bool_expr                      shift and go to state 103
+    expression                     shift and go to state 82
     prod                           shift and go to state 44
 
-state 83
+state 82
 
     (40) bool_expr -> expression . GT expression
     (41) bool_expr -> expression . LT expression
@@ -1345,48 +1358,48 @@ state 83
     (43) bool_expr -> expression . LE expression
     (44) bool_expr -> expression . NE expression
     (45) bool_expr -> expression . EQ expression
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
-    GT              shift and go to state 105
-    LT              shift and go to state 109
-    GE              shift and go to state 107
-    LE              shift and go to state 110
-    NE              shift and go to state 108
-    EQ              shift and go to state 106
+    GT              shift and go to state 104
+    LT              shift and go to state 108
+    GE              shift and go to state 106
+    LE              shift and go to state 109
+    NE              shift and go to state 107
+    EQ              shift and go to state 105
     PLUS            shift and go to state 74
     MINUS           shift and go to state 73
 
 
-state 84
+state 83
 
-    (63) print_d -> PRINT LPAREN . expression RPAREN
-    (64) print_d -> PRINT LPAREN . STRING RPAREN
-    (65) print_d -> PRINT LPAREN . ID RPAREN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (62) print_d -> PRINT LPAREN . expression RPAREN
+    (63) print_d -> PRINT LPAREN . STRING RPAREN
+    (64) print_d -> PRINT LPAREN . ID RPAREN
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    STRING          shift and go to state 111
-    ID              shift and go to state 113
+    STRING          shift and go to state 110
+    ID              shift and go to state 112
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
     prod                           shift and go to state 44
-    expression                     shift and go to state 112
+    expression                     shift and go to state 111
 
-state 85
+state 84
 
     (9) block -> BEGIN statement END .
 
@@ -1396,34 +1409,34 @@ state 85
     SEMICOLON       reduce using rule 9 (block -> BEGIN statement END .)
 
 
-state 86
+state 85
 
-    (60) write_d -> WRITE LPAREN . expression RPAREN
-    (61) write_d -> WRITE LPAREN . STRING RPAREN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (59) write_d -> WRITE LPAREN . expression RPAREN
+    (60) write_d -> WRITE LPAREN . STRING RPAREN
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    STRING          shift and go to state 114
+    STRING          shift and go to state 113
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
     prod                           shift and go to state 44
-    expression                     shift and go to state 115
+    expression                     shift and go to state 114
 
-state 87
+state 86
 
     (19) statement -> controlstructure SEMICOLON . statement
     (19) statement -> . controlstructure SEMICOLON statement
@@ -1442,18 +1455,17 @@ state 87
     (32) instruction -> . BREAK
     (33) instruction -> . call_d
     (6) empty -> .
-    (60) write_d -> . WRITE LPAREN expression RPAREN
-    (61) write_d -> . WRITE LPAREN STRING RPAREN
-    (62) read_d -> . READ LPAREN ID RPAREN
-    (74) line_if -> . IF conditional THEN instruction
-    (75) line_while -> . WHILE conditional DO instruction
+    (59) write_d -> . WRITE LPAREN expression RPAREN
+    (60) write_d -> . WRITE LPAREN STRING RPAREN
+    (61) read_d -> . READ LPAREN ID RPAREN
+    (73) line_if -> . IF conditional THEN instruction
+    (74) line_while -> . WHILE conditional DO instruction
     (58) return_d -> . RETURN expression
-    (59) return_d -> . RETURN ID
-    (63) print_d -> . PRINT LPAREN expression RPAREN
-    (64) print_d -> . PRINT LPAREN STRING RPAREN
-    (65) print_d -> . PRINT LPAREN ID RPAREN
-    (76) assignation -> . ID EQ expression
-    (66) call_d -> . ID LPAREN list_var RPAREN
+    (62) print_d -> . PRINT LPAREN expression RPAREN
+    (63) print_d -> . PRINT LPAREN STRING RPAREN
+    (64) print_d -> . PRINT LPAREN ID RPAREN
+    (75) assignation -> . ID EQ expression
+    (65) call_d -> . ID LPAREN list_var RPAREN
 
     WHILE           shift and go to state 49
     IF              shift and go to state 61
@@ -1476,75 +1488,75 @@ state 87
     controlstructure               shift and go to state 57
     write_d                        shift and go to state 62
     empty                          shift and go to state 54
-    statement                      shift and go to state 116
+    statement                      shift and go to state 115
     call_d                         shift and go to state 59
     print_d                        shift and go to state 52
 
-state 88
+state 87
 
-    (76) assignation -> ID EQ . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (75) assignation -> ID EQ . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
     prod                           shift and go to state 44
-    expression                     shift and go to state 117
+    expression                     shift and go to state 116
 
-state 89
+state 88
 
-    (66) call_d -> ID LPAREN . list_var RPAREN
-    (67) list_var -> . ID list_var
-    (68) list_var -> . expression list_var
-    (69) list_var -> . empty
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (65) call_d -> ID LPAREN . list_var RPAREN
+    (66) list_var -> . ID list_var
+    (67) list_var -> . expression list_var
+    (68) list_var -> . empty
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
     (6) empty -> .
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    ID              shift and go to state 120
+    ID              shift and go to state 119
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     RPAREN          reduce using rule 6 (empty -> .)
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
-    list_var                       shift and go to state 118
+    list_var                       shift and go to state 117
     prod                           shift and go to state 44
-    expression                     shift and go to state 119
+    expression                     shift and go to state 118
     term                           shift and go to state 38
-    empty                          shift and go to state 121
+    empty                          shift and go to state 120
+
+state 89
+
+    (73) line_if -> IF conditional . THEN instruction
+
+    THEN            shift and go to state 121
+
 
 state 90
-
-    (74) line_if -> IF conditional . THEN instruction
-
-    THEN            shift and go to state 122
-
-
-state 91
 
     (23) controlstructure -> IF LPAREN . conditional RPAREN THEN block else SEMICOLON
     (49) expression -> LPAREN . expression RPAREN
@@ -1552,10 +1564,10 @@ state 91
     (37) conditional -> . bool_expr AND bool_expr
     (38) conditional -> . NOT bool_expr
     (39) conditional -> . bool_expr
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
     (40) bool_expr -> . expression GT expression
     (41) bool_expr -> . expression LT expression
@@ -1564,28 +1576,28 @@ state 91
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    NOT             shift and go to state 82
+    NOT             shift and go to state 81
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
-    BOOLEAN         shift and go to state 81
+    UMINUS          shift and go to state 41
+    BOOLEAN         shift and go to state 80
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    conditional                    shift and go to state 123
-    bool_expr                      shift and go to state 79
+    conditional                    shift and go to state 122
+    bool_expr                      shift and go to state 78
     prod                           shift and go to state 44
-    expression                     shift and go to state 103
+    expression                     shift and go to state 102
 
-state 92
+state 91
 
     (20) statement -> instruction SEMICOLON . statement
     (19) statement -> . controlstructure SEMICOLON statement
@@ -1604,18 +1616,17 @@ state 92
     (32) instruction -> . BREAK
     (33) instruction -> . call_d
     (6) empty -> .
-    (60) write_d -> . WRITE LPAREN expression RPAREN
-    (61) write_d -> . WRITE LPAREN STRING RPAREN
-    (62) read_d -> . READ LPAREN ID RPAREN
-    (74) line_if -> . IF conditional THEN instruction
-    (75) line_while -> . WHILE conditional DO instruction
+    (59) write_d -> . WRITE LPAREN expression RPAREN
+    (60) write_d -> . WRITE LPAREN STRING RPAREN
+    (61) read_d -> . READ LPAREN ID RPAREN
+    (73) line_if -> . IF conditional THEN instruction
+    (74) line_while -> . WHILE conditional DO instruction
     (58) return_d -> . RETURN expression
-    (59) return_d -> . RETURN ID
-    (63) print_d -> . PRINT LPAREN expression RPAREN
-    (64) print_d -> . PRINT LPAREN STRING RPAREN
-    (65) print_d -> . PRINT LPAREN ID RPAREN
-    (76) assignation -> . ID EQ expression
-    (66) call_d -> . ID LPAREN list_var RPAREN
+    (62) print_d -> . PRINT LPAREN expression RPAREN
+    (63) print_d -> . PRINT LPAREN STRING RPAREN
+    (64) print_d -> . PRINT LPAREN ID RPAREN
+    (75) assignation -> . ID EQ expression
+    (65) call_d -> . ID LPAREN list_var RPAREN
 
     WHILE           shift and go to state 49
     IF              shift and go to state 61
@@ -1638,11 +1649,11 @@ state 92
     controlstructure               shift and go to state 57
     write_d                        shift and go to state 62
     empty                          shift and go to state 54
-    statement                      shift and go to state 124
+    statement                      shift and go to state 123
     call_d                         shift and go to state 59
     print_d                        shift and go to state 52
 
-state 93
+state 92
 
     (49) expression -> LPAREN expression RPAREN .
 
@@ -1662,128 +1673,145 @@ state 93
     SEMICOLON       reduce using rule 49 (expression -> LPAREN expression RPAREN .)
     ID              reduce using rule 49 (expression -> LPAREN expression RPAREN .)
     LPAREN          reduce using rule 49 (expression -> LPAREN expression RPAREN .)
+    UMINUS          reduce using rule 49 (expression -> LPAREN expression RPAREN .)
     FLOAT           reduce using rule 49 (expression -> LPAREN expression RPAREN .)
     INTEGER         reduce using rule 49 (expression -> LPAREN expression RPAREN .)
 
 
+state 93
+
+    (53) prod -> prod DIVIDE prod .
+    (52) prod -> prod . TIMES prod
+    (53) prod -> prod . DIVIDE prod
+
+    TIMES           reduce using rule 53 (prod -> prod DIVIDE prod .)
+    DIVIDE          reduce using rule 53 (prod -> prod DIVIDE prod .)
+    RPAREN          reduce using rule 53 (prod -> prod DIVIDE prod .)
+    PLUS            reduce using rule 53 (prod -> prod DIVIDE prod .)
+    MINUS           reduce using rule 53 (prod -> prod DIVIDE prod .)
+    GT              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    LT              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    GE              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    LE              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    NE              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    EQ              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    SEMICOLON       reduce using rule 53 (prod -> prod DIVIDE prod .)
+    ID              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    LPAREN          reduce using rule 53 (prod -> prod DIVIDE prod .)
+    UMINUS          reduce using rule 53 (prod -> prod DIVIDE prod .)
+    FLOAT           reduce using rule 53 (prod -> prod DIVIDE prod .)
+    INTEGER         reduce using rule 53 (prod -> prod DIVIDE prod .)
+    OR              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    AND             reduce using rule 53 (prod -> prod DIVIDE prod .)
+    DO              reduce using rule 53 (prod -> prod DIVIDE prod .)
+    THEN            reduce using rule 53 (prod -> prod DIVIDE prod .)
+
+  ! TIMES           [ shift and go to state 72 ]
+  ! DIVIDE          [ shift and go to state 71 ]
+
+
 state 94
 
-    (53) prod -> prod DIVIDE term .
+    (52) prod -> prod TIMES prod .
+    (52) prod -> prod . TIMES prod
+    (53) prod -> prod . DIVIDE prod
 
-    TIMES           reduce using rule 53 (prod -> prod DIVIDE term .)
-    DIVIDE          reduce using rule 53 (prod -> prod DIVIDE term .)
-    PLUS            reduce using rule 53 (prod -> prod DIVIDE term .)
-    MINUS           reduce using rule 53 (prod -> prod DIVIDE term .)
-    SEMICOLON       reduce using rule 53 (prod -> prod DIVIDE term .)
-    RPAREN          reduce using rule 53 (prod -> prod DIVIDE term .)
-    GT              reduce using rule 53 (prod -> prod DIVIDE term .)
-    LT              reduce using rule 53 (prod -> prod DIVIDE term .)
-    GE              reduce using rule 53 (prod -> prod DIVIDE term .)
-    LE              reduce using rule 53 (prod -> prod DIVIDE term .)
-    NE              reduce using rule 53 (prod -> prod DIVIDE term .)
-    EQ              reduce using rule 53 (prod -> prod DIVIDE term .)
-    ID              reduce using rule 53 (prod -> prod DIVIDE term .)
-    LPAREN          reduce using rule 53 (prod -> prod DIVIDE term .)
-    FLOAT           reduce using rule 53 (prod -> prod DIVIDE term .)
-    INTEGER         reduce using rule 53 (prod -> prod DIVIDE term .)
-    OR              reduce using rule 53 (prod -> prod DIVIDE term .)
-    AND             reduce using rule 53 (prod -> prod DIVIDE term .)
-    DO              reduce using rule 53 (prod -> prod DIVIDE term .)
-    THEN            reduce using rule 53 (prod -> prod DIVIDE term .)
+    TIMES           reduce using rule 52 (prod -> prod TIMES prod .)
+    DIVIDE          reduce using rule 52 (prod -> prod TIMES prod .)
+    RPAREN          reduce using rule 52 (prod -> prod TIMES prod .)
+    PLUS            reduce using rule 52 (prod -> prod TIMES prod .)
+    MINUS           reduce using rule 52 (prod -> prod TIMES prod .)
+    GT              reduce using rule 52 (prod -> prod TIMES prod .)
+    LT              reduce using rule 52 (prod -> prod TIMES prod .)
+    GE              reduce using rule 52 (prod -> prod TIMES prod .)
+    LE              reduce using rule 52 (prod -> prod TIMES prod .)
+    NE              reduce using rule 52 (prod -> prod TIMES prod .)
+    EQ              reduce using rule 52 (prod -> prod TIMES prod .)
+    SEMICOLON       reduce using rule 52 (prod -> prod TIMES prod .)
+    ID              reduce using rule 52 (prod -> prod TIMES prod .)
+    LPAREN          reduce using rule 52 (prod -> prod TIMES prod .)
+    UMINUS          reduce using rule 52 (prod -> prod TIMES prod .)
+    FLOAT           reduce using rule 52 (prod -> prod TIMES prod .)
+    INTEGER         reduce using rule 52 (prod -> prod TIMES prod .)
+    OR              reduce using rule 52 (prod -> prod TIMES prod .)
+    AND             reduce using rule 52 (prod -> prod TIMES prod .)
+    DO              reduce using rule 52 (prod -> prod TIMES prod .)
+    THEN            reduce using rule 52 (prod -> prod TIMES prod .)
+
+  ! TIMES           [ shift and go to state 72 ]
+  ! DIVIDE          [ shift and go to state 71 ]
 
 
 state 95
 
-    (52) prod -> prod TIMES term .
+    (48) expression -> expression MINUS expression .
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
-    TIMES           reduce using rule 52 (prod -> prod TIMES term .)
-    DIVIDE          reduce using rule 52 (prod -> prod TIMES term .)
-    PLUS            reduce using rule 52 (prod -> prod TIMES term .)
-    MINUS           reduce using rule 52 (prod -> prod TIMES term .)
-    SEMICOLON       reduce using rule 52 (prod -> prod TIMES term .)
-    RPAREN          reduce using rule 52 (prod -> prod TIMES term .)
-    GT              reduce using rule 52 (prod -> prod TIMES term .)
-    LT              reduce using rule 52 (prod -> prod TIMES term .)
-    GE              reduce using rule 52 (prod -> prod TIMES term .)
-    LE              reduce using rule 52 (prod -> prod TIMES term .)
-    NE              reduce using rule 52 (prod -> prod TIMES term .)
-    EQ              reduce using rule 52 (prod -> prod TIMES term .)
-    ID              reduce using rule 52 (prod -> prod TIMES term .)
-    LPAREN          reduce using rule 52 (prod -> prod TIMES term .)
-    FLOAT           reduce using rule 52 (prod -> prod TIMES term .)
-    INTEGER         reduce using rule 52 (prod -> prod TIMES term .)
-    OR              reduce using rule 52 (prod -> prod TIMES term .)
-    AND             reduce using rule 52 (prod -> prod TIMES term .)
-    DO              reduce using rule 52 (prod -> prod TIMES term .)
-    THEN            reduce using rule 52 (prod -> prod TIMES term .)
+    GT              reduce using rule 48 (expression -> expression MINUS expression .)
+    LT              reduce using rule 48 (expression -> expression MINUS expression .)
+    GE              reduce using rule 48 (expression -> expression MINUS expression .)
+    LE              reduce using rule 48 (expression -> expression MINUS expression .)
+    NE              reduce using rule 48 (expression -> expression MINUS expression .)
+    EQ              reduce using rule 48 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 48 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 48 (expression -> expression MINUS expression .)
+    OR              reduce using rule 48 (expression -> expression MINUS expression .)
+    AND             reduce using rule 48 (expression -> expression MINUS expression .)
+    DO              reduce using rule 48 (expression -> expression MINUS expression .)
+    THEN            reduce using rule 48 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 48 (expression -> expression MINUS expression .)
+    SEMICOLON       reduce using rule 48 (expression -> expression MINUS expression .)
+    ID              reduce using rule 48 (expression -> expression MINUS expression .)
+    LPAREN          reduce using rule 48 (expression -> expression MINUS expression .)
+    UMINUS          reduce using rule 48 (expression -> expression MINUS expression .)
+    FLOAT           reduce using rule 48 (expression -> expression MINUS expression .)
+    INTEGER         reduce using rule 48 (expression -> expression MINUS expression .)
+
+  ! PLUS            [ shift and go to state 74 ]
+  ! MINUS           [ shift and go to state 73 ]
 
 
 state 96
 
-    (48) expression -> expression MINUS prod .
-    (52) prod -> prod . TIMES term
-    (53) prod -> prod . DIVIDE term
+    (47) expression -> expression PLUS expression .
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
-    GT              reduce using rule 48 (expression -> expression MINUS prod .)
-    LT              reduce using rule 48 (expression -> expression MINUS prod .)
-    GE              reduce using rule 48 (expression -> expression MINUS prod .)
-    LE              reduce using rule 48 (expression -> expression MINUS prod .)
-    NE              reduce using rule 48 (expression -> expression MINUS prod .)
-    EQ              reduce using rule 48 (expression -> expression MINUS prod .)
-    PLUS            reduce using rule 48 (expression -> expression MINUS prod .)
-    MINUS           reduce using rule 48 (expression -> expression MINUS prod .)
-    OR              reduce using rule 48 (expression -> expression MINUS prod .)
-    AND             reduce using rule 48 (expression -> expression MINUS prod .)
-    DO              reduce using rule 48 (expression -> expression MINUS prod .)
-    THEN            reduce using rule 48 (expression -> expression MINUS prod .)
-    RPAREN          reduce using rule 48 (expression -> expression MINUS prod .)
-    SEMICOLON       reduce using rule 48 (expression -> expression MINUS prod .)
-    ID              reduce using rule 48 (expression -> expression MINUS prod .)
-    LPAREN          reduce using rule 48 (expression -> expression MINUS prod .)
-    FLOAT           reduce using rule 48 (expression -> expression MINUS prod .)
-    INTEGER         reduce using rule 48 (expression -> expression MINUS prod .)
-    TIMES           shift and go to state 72
-    DIVIDE          shift and go to state 71
+    GT              reduce using rule 47 (expression -> expression PLUS expression .)
+    LT              reduce using rule 47 (expression -> expression PLUS expression .)
+    GE              reduce using rule 47 (expression -> expression PLUS expression .)
+    LE              reduce using rule 47 (expression -> expression PLUS expression .)
+    NE              reduce using rule 47 (expression -> expression PLUS expression .)
+    EQ              reduce using rule 47 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 47 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 47 (expression -> expression PLUS expression .)
+    OR              reduce using rule 47 (expression -> expression PLUS expression .)
+    AND             reduce using rule 47 (expression -> expression PLUS expression .)
+    DO              reduce using rule 47 (expression -> expression PLUS expression .)
+    THEN            reduce using rule 47 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 47 (expression -> expression PLUS expression .)
+    SEMICOLON       reduce using rule 47 (expression -> expression PLUS expression .)
+    ID              reduce using rule 47 (expression -> expression PLUS expression .)
+    LPAREN          reduce using rule 47 (expression -> expression PLUS expression .)
+    UMINUS          reduce using rule 47 (expression -> expression PLUS expression .)
+    FLOAT           reduce using rule 47 (expression -> expression PLUS expression .)
+    INTEGER         reduce using rule 47 (expression -> expression PLUS expression .)
+
+  ! PLUS            [ shift and go to state 74 ]
+  ! MINUS           [ shift and go to state 73 ]
 
 
 state 97
 
-    (47) expression -> expression PLUS prod .
-    (52) prod -> prod . TIMES term
-    (53) prod -> prod . DIVIDE term
+    (61) read_d -> READ LPAREN ID . RPAREN
 
-    GT              reduce using rule 47 (expression -> expression PLUS prod .)
-    LT              reduce using rule 47 (expression -> expression PLUS prod .)
-    GE              reduce using rule 47 (expression -> expression PLUS prod .)
-    LE              reduce using rule 47 (expression -> expression PLUS prod .)
-    NE              reduce using rule 47 (expression -> expression PLUS prod .)
-    EQ              reduce using rule 47 (expression -> expression PLUS prod .)
-    PLUS            reduce using rule 47 (expression -> expression PLUS prod .)
-    MINUS           reduce using rule 47 (expression -> expression PLUS prod .)
-    OR              reduce using rule 47 (expression -> expression PLUS prod .)
-    AND             reduce using rule 47 (expression -> expression PLUS prod .)
-    DO              reduce using rule 47 (expression -> expression PLUS prod .)
-    THEN            reduce using rule 47 (expression -> expression PLUS prod .)
-    RPAREN          reduce using rule 47 (expression -> expression PLUS prod .)
-    SEMICOLON       reduce using rule 47 (expression -> expression PLUS prod .)
-    ID              reduce using rule 47 (expression -> expression PLUS prod .)
-    LPAREN          reduce using rule 47 (expression -> expression PLUS prod .)
-    FLOAT           reduce using rule 47 (expression -> expression PLUS prod .)
-    INTEGER         reduce using rule 47 (expression -> expression PLUS prod .)
-    TIMES           shift and go to state 72
-    DIVIDE          shift and go to state 71
+    RPAREN          shift and go to state 124
 
 
 state 98
 
-    (62) read_d -> READ LPAREN ID . RPAREN
-
-    RPAREN          shift and go to state 125
-
-
-state 99
-
-    (75) line_while -> WHILE conditional DO . instruction
+    (74) line_while -> WHILE conditional DO . instruction
     (24) instruction -> . write_d
     (25) instruction -> . read_d
     (26) instruction -> . line_if
@@ -1794,30 +1822,29 @@ state 99
     (31) instruction -> . SKIP
     (32) instruction -> . BREAK
     (33) instruction -> . call_d
-    (60) write_d -> . WRITE LPAREN expression RPAREN
-    (61) write_d -> . WRITE LPAREN STRING RPAREN
-    (62) read_d -> . READ LPAREN ID RPAREN
-    (74) line_if -> . IF conditional THEN instruction
-    (75) line_while -> . WHILE conditional DO instruction
+    (59) write_d -> . WRITE LPAREN expression RPAREN
+    (60) write_d -> . WRITE LPAREN STRING RPAREN
+    (61) read_d -> . READ LPAREN ID RPAREN
+    (73) line_if -> . IF conditional THEN instruction
+    (74) line_while -> . WHILE conditional DO instruction
     (58) return_d -> . RETURN expression
-    (59) return_d -> . RETURN ID
-    (63) print_d -> . PRINT LPAREN expression RPAREN
-    (64) print_d -> . PRINT LPAREN STRING RPAREN
-    (65) print_d -> . PRINT LPAREN ID RPAREN
-    (76) assignation -> . ID EQ expression
-    (66) call_d -> . ID LPAREN list_var RPAREN
+    (62) print_d -> . PRINT LPAREN expression RPAREN
+    (63) print_d -> . PRINT LPAREN STRING RPAREN
+    (64) print_d -> . PRINT LPAREN ID RPAREN
+    (75) assignation -> . ID EQ expression
+    (65) call_d -> . ID LPAREN list_var RPAREN
 
     SKIP            shift and go to state 55
     BREAK           shift and go to state 67
     WRITE           shift and go to state 56
     READ            shift and go to state 48
-    IF              shift and go to state 127
-    WHILE           shift and go to state 126
+    IF              shift and go to state 126
+    WHILE           shift and go to state 125
     RETURN          shift and go to state 47
     PRINT           shift and go to state 51
     ID              shift and go to state 60
 
-    instruction                    shift and go to state 128
+    instruction                    shift and go to state 127
     assignation                    shift and go to state 63
     return_d                       shift and go to state 64
     line_while                     shift and go to state 65
@@ -1827,7 +1854,7 @@ state 99
     print_d                        shift and go to state 52
     write_d                        shift and go to state 62
 
-state 100
+state 99
 
     (37) conditional -> bool_expr AND . bool_expr
     (40) bool_expr -> . expression GT expression
@@ -1837,31 +1864,31 @@ state 100
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    BOOLEAN         shift and go to state 81
+    BOOLEAN         shift and go to state 80
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    bool_expr                      shift and go to state 129
-    expression                     shift and go to state 83
+    bool_expr                      shift and go to state 128
+    expression                     shift and go to state 82
     prod                           shift and go to state 44
 
-state 101
+state 100
 
     (36) conditional -> bool_expr OR . bool_expr
     (40) bool_expr -> . expression GT expression
@@ -1871,42 +1898,42 @@ state 101
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    BOOLEAN         shift and go to state 81
+    BOOLEAN         shift and go to state 80
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    bool_expr                      shift and go to state 130
-    expression                     shift and go to state 83
+    bool_expr                      shift and go to state 129
+    expression                     shift and go to state 82
     prod                           shift and go to state 44
 
-state 102
+state 101
 
     (22) controlstructure -> WHILE LPAREN conditional . RPAREN DO block SEMICOLON
 
-    RPAREN          shift and go to state 131
+    RPAREN          shift and go to state 130
 
 
-state 103
+state 102
 
     (49) expression -> LPAREN expression . RPAREN
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
     (40) bool_expr -> expression . GT expression
     (41) bool_expr -> expression . LT expression
     (42) bool_expr -> expression . GE expression
@@ -1914,43 +1941,68 @@ state 103
     (44) bool_expr -> expression . NE expression
     (45) bool_expr -> expression . EQ expression
 
-    RPAREN          shift and go to state 93
+    RPAREN          shift and go to state 92
     PLUS            shift and go to state 74
     MINUS           shift and go to state 73
-    GT              shift and go to state 105
-    LT              shift and go to state 109
-    GE              shift and go to state 107
-    LE              shift and go to state 110
-    NE              shift and go to state 108
-    EQ              shift and go to state 106
+    GT              shift and go to state 104
+    LT              shift and go to state 108
+    GE              shift and go to state 106
+    LE              shift and go to state 109
+    NE              shift and go to state 107
+    EQ              shift and go to state 105
+
+
+state 103
+
+    (38) conditional -> NOT bool_expr .
+
+    DO              reduce using rule 38 (conditional -> NOT bool_expr .)
+    RPAREN          reduce using rule 38 (conditional -> NOT bool_expr .)
+    THEN            reduce using rule 38 (conditional -> NOT bool_expr .)
 
 
 state 104
 
-    (38) conditional -> NOT bool_expr .
-
-    RPAREN          reduce using rule 38 (conditional -> NOT bool_expr .)
-    DO              reduce using rule 38 (conditional -> NOT bool_expr .)
-    THEN            reduce using rule 38 (conditional -> NOT bool_expr .)
-
-
-state 105
-
     (40) bool_expr -> expression GT . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
+    ID              shift and go to state 46
+    FLOAT           shift and go to state 39
+    INTEGER         shift and go to state 43
+
+    term                           shift and go to state 38
+    prod                           shift and go to state 44
+    expression                     shift and go to state 131
+
+state 105
+
+    (45) bool_expr -> expression EQ . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
+    (49) expression -> . LPAREN expression RPAREN
+    (50) expression -> . UMINUS expression
+    (51) expression -> . prod
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
+    (54) prod -> . term
+    (55) term -> . ID
+    (56) term -> . FLOAT
+    (57) term -> . INTEGER
+
+    LPAREN          shift and go to state 40
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -1961,21 +2013,21 @@ state 105
 
 state 106
 
-    (45) bool_expr -> expression EQ . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (42) bool_expr -> expression GE . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -1986,21 +2038,21 @@ state 106
 
 state 107
 
-    (42) bool_expr -> expression GE . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (44) bool_expr -> expression NE . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -2011,21 +2063,21 @@ state 107
 
 state 108
 
-    (44) bool_expr -> expression NE . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (41) bool_expr -> expression LT . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -2036,21 +2088,21 @@ state 108
 
 state 109
 
-    (41) bool_expr -> expression LT . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (43) bool_expr -> expression LE . expression
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
@@ -2061,54 +2113,29 @@ state 109
 
 state 110
 
-    (43) bool_expr -> expression LE . expression
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
-    (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
-    (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
-    (54) prod -> . term
-    (55) term -> . ID
-    (56) term -> . FLOAT
-    (57) term -> . INTEGER
+    (63) print_d -> PRINT LPAREN STRING . RPAREN
 
-    LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
-    ID              shift and go to state 46
-    FLOAT           shift and go to state 39
-    INTEGER         shift and go to state 43
+    RPAREN          shift and go to state 137
 
-    term                           shift and go to state 38
-    prod                           shift and go to state 44
-    expression                     shift and go to state 137
 
 state 111
 
-    (64) print_d -> PRINT LPAREN STRING . RPAREN
+    (62) print_d -> PRINT LPAREN expression . RPAREN
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     RPAREN          shift and go to state 138
-
-
-state 112
-
-    (63) print_d -> PRINT LPAREN expression . RPAREN
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
-
-    RPAREN          shift and go to state 139
     PLUS            shift and go to state 74
     MINUS           shift and go to state 73
 
 
-state 113
+state 112
 
-    (65) print_d -> PRINT LPAREN ID . RPAREN
+    (64) print_d -> PRINT LPAREN ID . RPAREN
     (55) term -> ID .
 
   ! shift/reduce conflict for RPAREN resolved as shift
-    RPAREN          shift and go to state 140
+    RPAREN          shift and go to state 139
     TIMES           reduce using rule 55 (term -> ID .)
     DIVIDE          reduce using rule 55 (term -> ID .)
     PLUS            reduce using rule 55 (term -> ID .)
@@ -2117,144 +2144,141 @@ state 113
   ! RPAREN          [ reduce using rule 55 (term -> ID .) ]
 
 
+state 113
+
+    (60) write_d -> WRITE LPAREN STRING . RPAREN
+
+    RPAREN          shift and go to state 140
+
+
 state 114
 
-    (61) write_d -> WRITE LPAREN STRING . RPAREN
+    (59) write_d -> WRITE LPAREN expression . RPAREN
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     RPAREN          shift and go to state 141
+    PLUS            shift and go to state 74
+    MINUS           shift and go to state 73
 
 
 state 115
 
-    (60) write_d -> WRITE LPAREN expression . RPAREN
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (19) statement -> controlstructure SEMICOLON statement .
 
-    RPAREN          shift and go to state 142
-    PLUS            shift and go to state 74
-    MINUS           shift and go to state 73
+    SEMICOLON       reduce using rule 19 (statement -> controlstructure SEMICOLON statement .)
+    END             reduce using rule 19 (statement -> controlstructure SEMICOLON statement .)
 
 
 state 116
 
-    (19) statement -> controlstructure SEMICOLON statement .
+    (75) assignation -> ID EQ expression .
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
-    END             reduce using rule 19 (statement -> controlstructure SEMICOLON statement .)
-    SEMICOLON       reduce using rule 19 (statement -> controlstructure SEMICOLON statement .)
-
-
-state 117
-
-    (76) assignation -> ID EQ expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
-
-    SEMICOLON       reduce using rule 76 (assignation -> ID EQ expression .)
+    SEMICOLON       reduce using rule 75 (assignation -> ID EQ expression .)
     PLUS            shift and go to state 74
     MINUS           shift and go to state 73
 
 
+state 117
+
+    (65) call_d -> ID LPAREN list_var . RPAREN
+
+    RPAREN          shift and go to state 142
+
+
 state 118
 
-    (66) call_d -> ID LPAREN list_var . RPAREN
-
-    RPAREN          shift and go to state 143
-
-
-state 119
-
-    (68) list_var -> expression . list_var
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
-    (67) list_var -> . ID list_var
-    (68) list_var -> . expression list_var
-    (69) list_var -> . empty
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (67) list_var -> expression . list_var
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
+    (66) list_var -> . ID list_var
+    (67) list_var -> . expression list_var
+    (68) list_var -> . empty
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
     (6) empty -> .
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
     PLUS            shift and go to state 74
-    MINUS           shift and go to state 145
-    ID              shift and go to state 120
+    MINUS           shift and go to state 73
+    ID              shift and go to state 119
     LPAREN          shift and go to state 40
+    UMINUS          shift and go to state 41
     RPAREN          reduce using rule 6 (empty -> .)
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
-    list_var                       shift and go to state 144
+    list_var                       shift and go to state 143
     prod                           shift and go to state 44
-    expression                     shift and go to state 119
+    expression                     shift and go to state 118
     term                           shift and go to state 38
-    empty                          shift and go to state 121
+    empty                          shift and go to state 120
 
-state 120
+state 119
 
-    (67) list_var -> ID . list_var
+    (66) list_var -> ID . list_var
     (55) term -> ID .
-    (67) list_var -> . ID list_var
-    (68) list_var -> . expression list_var
-    (69) list_var -> . empty
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (66) list_var -> . ID list_var
+    (67) list_var -> . expression list_var
+    (68) list_var -> . empty
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
     (6) empty -> .
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-  ! shift/reduce conflict for ID resolved as shift
-  ! shift/reduce conflict for LPAREN resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
   ! reduce/reduce conflict for RPAREN resolved using rule 6 (empty -> .)
-  ! shift/reduce conflict for FLOAT resolved as shift
-  ! shift/reduce conflict for INTEGER resolved as shift
     TIMES           reduce using rule 55 (term -> ID .)
     DIVIDE          reduce using rule 55 (term -> ID .)
     PLUS            reduce using rule 55 (term -> ID .)
-    ID              shift and go to state 120
-    LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    MINUS           reduce using rule 55 (term -> ID .)
+    ID              reduce using rule 55 (term -> ID .)
+    LPAREN          reduce using rule 55 (term -> ID .)
+    FLOAT           reduce using rule 55 (term -> ID .)
+    INTEGER         reduce using rule 55 (term -> ID .)
+    UMINUS          shift and go to state 41
     RPAREN          reduce using rule 6 (empty -> .)
-    FLOAT           shift and go to state 39
-    INTEGER         shift and go to state 43
 
-  ! MINUS           [ reduce using rule 55 (term -> ID .) ]
-  ! ID              [ reduce using rule 55 (term -> ID .) ]
-  ! LPAREN          [ reduce using rule 55 (term -> ID .) ]
-  ! FLOAT           [ reduce using rule 55 (term -> ID .) ]
-  ! INTEGER         [ reduce using rule 55 (term -> ID .) ]
+  ! UMINUS          [ reduce using rule 55 (term -> ID .) ]
   ! RPAREN          [ reduce using rule 55 (term -> ID .) ]
+  ! ID              [ shift and go to state 119 ]
+  ! LPAREN          [ shift and go to state 40 ]
+  ! FLOAT           [ shift and go to state 39 ]
+  ! INTEGER         [ shift and go to state 43 ]
 
-    list_var                       shift and go to state 146
+    list_var                       shift and go to state 144
     prod                           shift and go to state 44
-    expression                     shift and go to state 119
+    expression                     shift and go to state 118
     term                           shift and go to state 38
-    empty                          shift and go to state 121
+    empty                          shift and go to state 120
+
+state 120
+
+    (68) list_var -> empty .
+
+    RPAREN          reduce using rule 68 (list_var -> empty .)
+
 
 state 121
 
-    (69) list_var -> empty .
-
-    RPAREN          reduce using rule 69 (list_var -> empty .)
-
-
-state 122
-
-    (74) line_if -> IF conditional THEN . instruction
+    (73) line_if -> IF conditional THEN . instruction
     (24) instruction -> . write_d
     (25) instruction -> . read_d
     (26) instruction -> . line_if
@@ -2265,30 +2289,29 @@ state 122
     (31) instruction -> . SKIP
     (32) instruction -> . BREAK
     (33) instruction -> . call_d
-    (60) write_d -> . WRITE LPAREN expression RPAREN
-    (61) write_d -> . WRITE LPAREN STRING RPAREN
-    (62) read_d -> . READ LPAREN ID RPAREN
-    (74) line_if -> . IF conditional THEN instruction
-    (75) line_while -> . WHILE conditional DO instruction
+    (59) write_d -> . WRITE LPAREN expression RPAREN
+    (60) write_d -> . WRITE LPAREN STRING RPAREN
+    (61) read_d -> . READ LPAREN ID RPAREN
+    (73) line_if -> . IF conditional THEN instruction
+    (74) line_while -> . WHILE conditional DO instruction
     (58) return_d -> . RETURN expression
-    (59) return_d -> . RETURN ID
-    (63) print_d -> . PRINT LPAREN expression RPAREN
-    (64) print_d -> . PRINT LPAREN STRING RPAREN
-    (65) print_d -> . PRINT LPAREN ID RPAREN
-    (76) assignation -> . ID EQ expression
-    (66) call_d -> . ID LPAREN list_var RPAREN
+    (62) print_d -> . PRINT LPAREN expression RPAREN
+    (63) print_d -> . PRINT LPAREN STRING RPAREN
+    (64) print_d -> . PRINT LPAREN ID RPAREN
+    (75) assignation -> . ID EQ expression
+    (65) call_d -> . ID LPAREN list_var RPAREN
 
     SKIP            shift and go to state 55
     BREAK           shift and go to state 67
     WRITE           shift and go to state 56
     READ            shift and go to state 48
-    IF              shift and go to state 127
-    WHILE           shift and go to state 126
+    IF              shift and go to state 126
+    WHILE           shift and go to state 125
     RETURN          shift and go to state 47
     PRINT           shift and go to state 51
     ID              shift and go to state 60
 
-    instruction                    shift and go to state 147
+    instruction                    shift and go to state 145
     assignation                    shift and go to state 63
     return_d                       shift and go to state 64
     line_while                     shift and go to state 65
@@ -2298,31 +2321,71 @@ state 122
     print_d                        shift and go to state 52
     write_d                        shift and go to state 62
 
-state 123
+state 122
 
     (23) controlstructure -> IF LPAREN conditional . RPAREN THEN block else SEMICOLON
 
-    RPAREN          shift and go to state 148
+    RPAREN          shift and go to state 146
+
+
+state 123
+
+    (20) statement -> instruction SEMICOLON statement .
+
+    SEMICOLON       reduce using rule 20 (statement -> instruction SEMICOLON statement .)
+    END             reduce using rule 20 (statement -> instruction SEMICOLON statement .)
 
 
 state 124
 
-    (20) statement -> instruction SEMICOLON statement .
+    (61) read_d -> READ LPAREN ID RPAREN .
 
-    END             reduce using rule 20 (statement -> instruction SEMICOLON statement .)
-    SEMICOLON       reduce using rule 20 (statement -> instruction SEMICOLON statement .)
+    SEMICOLON       reduce using rule 61 (read_d -> READ LPAREN ID RPAREN .)
 
 
 state 125
 
-    (62) read_d -> READ LPAREN ID RPAREN .
+    (74) line_while -> WHILE . conditional DO instruction
+    (36) conditional -> . bool_expr OR bool_expr
+    (37) conditional -> . bool_expr AND bool_expr
+    (38) conditional -> . NOT bool_expr
+    (39) conditional -> . bool_expr
+    (40) bool_expr -> . expression GT expression
+    (41) bool_expr -> . expression LT expression
+    (42) bool_expr -> . expression GE expression
+    (43) bool_expr -> . expression LE expression
+    (44) bool_expr -> . expression NE expression
+    (45) bool_expr -> . expression EQ expression
+    (46) bool_expr -> . BOOLEAN
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
+    (49) expression -> . LPAREN expression RPAREN
+    (50) expression -> . UMINUS expression
+    (51) expression -> . prod
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
+    (54) prod -> . term
+    (55) term -> . ID
+    (56) term -> . FLOAT
+    (57) term -> . INTEGER
 
-    SEMICOLON       reduce using rule 62 (read_d -> READ LPAREN ID RPAREN .)
+    NOT             shift and go to state 81
+    BOOLEAN         shift and go to state 80
+    LPAREN          shift and go to state 40
+    UMINUS          shift and go to state 41
+    ID              shift and go to state 46
+    FLOAT           shift and go to state 39
+    INTEGER         shift and go to state 43
 
+    term                           shift and go to state 38
+    conditional                    shift and go to state 77
+    bool_expr                      shift and go to state 78
+    prod                           shift and go to state 44
+    expression                     shift and go to state 82
 
 state 126
 
-    (75) line_while -> WHILE . conditional DO instruction
+    (73) line_if -> IF . conditional THEN instruction
     (36) conditional -> . bool_expr OR bool_expr
     (37) conditional -> . bool_expr AND bool_expr
     (38) conditional -> . NOT bool_expr
@@ -2334,109 +2397,69 @@ state 126
     (44) bool_expr -> . expression NE expression
     (45) bool_expr -> . expression EQ expression
     (46) bool_expr -> . BOOLEAN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
+    (47) expression -> . expression PLUS expression
+    (48) expression -> . expression MINUS expression
     (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
+    (50) expression -> . UMINUS expression
     (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
+    (52) prod -> . prod TIMES prod
+    (53) prod -> . prod DIVIDE prod
     (54) prod -> . term
     (55) term -> . ID
     (56) term -> . FLOAT
     (57) term -> . INTEGER
 
-    NOT             shift and go to state 82
-    BOOLEAN         shift and go to state 81
+    NOT             shift and go to state 81
+    BOOLEAN         shift and go to state 80
     LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
+    UMINUS          shift and go to state 41
     ID              shift and go to state 46
     FLOAT           shift and go to state 39
     INTEGER         shift and go to state 43
 
     term                           shift and go to state 38
-    conditional                    shift and go to state 78
-    bool_expr                      shift and go to state 79
+    conditional                    shift and go to state 89
+    bool_expr                      shift and go to state 78
     prod                           shift and go to state 44
-    expression                     shift and go to state 83
+    expression                     shift and go to state 82
 
 state 127
 
-    (74) line_if -> IF . conditional THEN instruction
-    (36) conditional -> . bool_expr OR bool_expr
-    (37) conditional -> . bool_expr AND bool_expr
-    (38) conditional -> . NOT bool_expr
-    (39) conditional -> . bool_expr
-    (40) bool_expr -> . expression GT expression
-    (41) bool_expr -> . expression LT expression
-    (42) bool_expr -> . expression GE expression
-    (43) bool_expr -> . expression LE expression
-    (44) bool_expr -> . expression NE expression
-    (45) bool_expr -> . expression EQ expression
-    (46) bool_expr -> . BOOLEAN
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
-    (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
-    (51) expression -> . prod
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
-    (54) prod -> . term
-    (55) term -> . ID
-    (56) term -> . FLOAT
-    (57) term -> . INTEGER
+    (74) line_while -> WHILE conditional DO instruction .
 
-    NOT             shift and go to state 82
-    BOOLEAN         shift and go to state 81
-    LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
-    ID              shift and go to state 46
-    FLOAT           shift and go to state 39
-    INTEGER         shift and go to state 43
+    SEMICOLON       reduce using rule 74 (line_while -> WHILE conditional DO instruction .)
 
-    term                           shift and go to state 38
-    conditional                    shift and go to state 90
-    bool_expr                      shift and go to state 79
-    prod                           shift and go to state 44
-    expression                     shift and go to state 83
 
 state 128
 
-    (75) line_while -> WHILE conditional DO instruction .
+    (37) conditional -> bool_expr AND bool_expr .
 
-    SEMICOLON       reduce using rule 75 (line_while -> WHILE conditional DO instruction .)
+    DO              reduce using rule 37 (conditional -> bool_expr AND bool_expr .)
+    RPAREN          reduce using rule 37 (conditional -> bool_expr AND bool_expr .)
+    THEN            reduce using rule 37 (conditional -> bool_expr AND bool_expr .)
 
 
 state 129
 
-    (37) conditional -> bool_expr AND bool_expr .
+    (36) conditional -> bool_expr OR bool_expr .
 
-    RPAREN          reduce using rule 37 (conditional -> bool_expr AND bool_expr .)
-    DO              reduce using rule 37 (conditional -> bool_expr AND bool_expr .)
-    THEN            reduce using rule 37 (conditional -> bool_expr AND bool_expr .)
+    DO              reduce using rule 36 (conditional -> bool_expr OR bool_expr .)
+    RPAREN          reduce using rule 36 (conditional -> bool_expr OR bool_expr .)
+    THEN            reduce using rule 36 (conditional -> bool_expr OR bool_expr .)
 
 
 state 130
 
-    (36) conditional -> bool_expr OR bool_expr .
+    (22) controlstructure -> WHILE LPAREN conditional RPAREN . DO block SEMICOLON
 
-    RPAREN          reduce using rule 36 (conditional -> bool_expr OR bool_expr .)
-    DO              reduce using rule 36 (conditional -> bool_expr OR bool_expr .)
-    THEN            reduce using rule 36 (conditional -> bool_expr OR bool_expr .)
+    DO              shift and go to state 147
 
 
 state 131
 
-    (22) controlstructure -> WHILE LPAREN conditional RPAREN . DO block SEMICOLON
-
-    DO              shift and go to state 149
-
-
-state 132
-
     (40) bool_expr -> expression GT expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     OR              reduce using rule 40 (bool_expr -> expression GT expression .)
     AND             reduce using rule 40 (bool_expr -> expression GT expression .)
@@ -2447,11 +2470,11 @@ state 132
     MINUS           shift and go to state 73
 
 
-state 133
+state 132
 
     (45) bool_expr -> expression EQ expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     OR              reduce using rule 45 (bool_expr -> expression EQ expression .)
     AND             reduce using rule 45 (bool_expr -> expression EQ expression .)
@@ -2462,11 +2485,11 @@ state 133
     MINUS           shift and go to state 73
 
 
-state 134
+state 133
 
     (42) bool_expr -> expression GE expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     OR              reduce using rule 42 (bool_expr -> expression GE expression .)
     AND             reduce using rule 42 (bool_expr -> expression GE expression .)
@@ -2477,11 +2500,11 @@ state 134
     MINUS           shift and go to state 73
 
 
-state 135
+state 134
 
     (44) bool_expr -> expression NE expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     OR              reduce using rule 44 (bool_expr -> expression NE expression .)
     AND             reduce using rule 44 (bool_expr -> expression NE expression .)
@@ -2492,11 +2515,11 @@ state 135
     MINUS           shift and go to state 73
 
 
-state 136
+state 135
 
     (41) bool_expr -> expression LT expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     OR              reduce using rule 41 (bool_expr -> expression LT expression .)
     AND             reduce using rule 41 (bool_expr -> expression LT expression .)
@@ -2507,11 +2530,11 @@ state 136
     MINUS           shift and go to state 73
 
 
-state 137
+state 136
 
     (43) bool_expr -> expression LE expression .
-    (47) expression -> expression . PLUS prod
-    (48) expression -> expression . MINUS prod
+    (47) expression -> expression . PLUS expression
+    (48) expression -> expression . MINUS expression
 
     OR              reduce using rule 43 (bool_expr -> expression LE expression .)
     AND             reduce using rule 43 (bool_expr -> expression LE expression .)
@@ -2522,195 +2545,136 @@ state 137
     MINUS           shift and go to state 73
 
 
+state 137
+
+    (63) print_d -> PRINT LPAREN STRING RPAREN .
+
+    SEMICOLON       reduce using rule 63 (print_d -> PRINT LPAREN STRING RPAREN .)
+
+
 state 138
 
-    (64) print_d -> PRINT LPAREN STRING RPAREN .
+    (62) print_d -> PRINT LPAREN expression RPAREN .
 
-    SEMICOLON       reduce using rule 64 (print_d -> PRINT LPAREN STRING RPAREN .)
+    SEMICOLON       reduce using rule 62 (print_d -> PRINT LPAREN expression RPAREN .)
 
 
 state 139
 
-    (63) print_d -> PRINT LPAREN expression RPAREN .
+    (64) print_d -> PRINT LPAREN ID RPAREN .
 
-    SEMICOLON       reduce using rule 63 (print_d -> PRINT LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 64 (print_d -> PRINT LPAREN ID RPAREN .)
 
 
 state 140
 
-    (65) print_d -> PRINT LPAREN ID RPAREN .
+    (60) write_d -> WRITE LPAREN STRING RPAREN .
 
-    SEMICOLON       reduce using rule 65 (print_d -> PRINT LPAREN ID RPAREN .)
+    SEMICOLON       reduce using rule 60 (write_d -> WRITE LPAREN STRING RPAREN .)
 
 
 state 141
 
-    (61) write_d -> WRITE LPAREN STRING RPAREN .
+    (59) write_d -> WRITE LPAREN expression RPAREN .
 
-    SEMICOLON       reduce using rule 61 (write_d -> WRITE LPAREN STRING RPAREN .)
+    SEMICOLON       reduce using rule 59 (write_d -> WRITE LPAREN expression RPAREN .)
 
 
 state 142
 
-    (60) write_d -> WRITE LPAREN expression RPAREN .
+    (65) call_d -> ID LPAREN list_var RPAREN .
 
-    SEMICOLON       reduce using rule 60 (write_d -> WRITE LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 65 (call_d -> ID LPAREN list_var RPAREN .)
 
 
 state 143
 
-    (66) call_d -> ID LPAREN list_var RPAREN .
+    (67) list_var -> expression list_var .
 
-    SEMICOLON       reduce using rule 66 (call_d -> ID LPAREN list_var RPAREN .)
+    RPAREN          reduce using rule 67 (list_var -> expression list_var .)
 
 
 state 144
 
-    (68) list_var -> expression list_var .
+    (66) list_var -> ID list_var .
 
-    RPAREN          reduce using rule 68 (list_var -> expression list_var .)
+    RPAREN          reduce using rule 66 (list_var -> ID list_var .)
 
 
 state 145
 
-    (48) expression -> expression MINUS . prod
-    (50) expression -> MINUS . expression
-    (52) prod -> . prod TIMES term
-    (53) prod -> . prod DIVIDE term
-    (54) prod -> . term
-    (47) expression -> . expression PLUS prod
-    (48) expression -> . expression MINUS prod
-    (49) expression -> . LPAREN expression RPAREN
-    (50) expression -> . MINUS expression
-    (51) expression -> . prod
-    (55) term -> . ID
-    (56) term -> . FLOAT
-    (57) term -> . INTEGER
+    (73) line_if -> IF conditional THEN instruction .
 
-    LPAREN          shift and go to state 40
-    MINUS           shift and go to state 41
-    ID              shift and go to state 46
-    FLOAT           shift and go to state 39
-    INTEGER         shift and go to state 43
+    SEMICOLON       reduce using rule 73 (line_if -> IF conditional THEN instruction .)
 
-    term                           shift and go to state 38
-    prod                           shift and go to state 150
-    expression                     shift and go to state 70
 
 state 146
 
-    (67) list_var -> ID list_var .
+    (23) controlstructure -> IF LPAREN conditional RPAREN . THEN block else SEMICOLON
 
-    RPAREN          reduce using rule 67 (list_var -> ID list_var .)
+    THEN            shift and go to state 148
 
 
 state 147
-
-    (74) line_if -> IF conditional THEN instruction .
-
-    SEMICOLON       reduce using rule 74 (line_if -> IF conditional THEN instruction .)
-
-
-state 148
-
-    (23) controlstructure -> IF LPAREN conditional RPAREN . THEN block else SEMICOLON
-
-    THEN            shift and go to state 151
-
-
-state 149
 
     (22) controlstructure -> WHILE LPAREN conditional RPAREN DO . block SEMICOLON
     (9) block -> . BEGIN statement END
 
     BEGIN           shift and go to state 34
 
-    block                          shift and go to state 152
+    block                          shift and go to state 149
 
-state 150
-
-    (48) expression -> expression MINUS prod .
-    (52) prod -> prod . TIMES term
-    (53) prod -> prod . DIVIDE term
-    (51) expression -> prod .
-
-  ! reduce/reduce conflict for PLUS resolved using rule 48 (expression -> expression MINUS prod .)
-  ! reduce/reduce conflict for MINUS resolved using rule 48 (expression -> expression MINUS prod .)
-  ! reduce/reduce conflict for ID resolved using rule 48 (expression -> expression MINUS prod .)
-  ! reduce/reduce conflict for LPAREN resolved using rule 48 (expression -> expression MINUS prod .)
-  ! reduce/reduce conflict for FLOAT resolved using rule 48 (expression -> expression MINUS prod .)
-  ! reduce/reduce conflict for INTEGER resolved using rule 48 (expression -> expression MINUS prod .)
-  ! reduce/reduce conflict for RPAREN resolved using rule 48 (expression -> expression MINUS prod .)
-    PLUS            reduce using rule 48 (expression -> expression MINUS prod .)
-    MINUS           reduce using rule 48 (expression -> expression MINUS prod .)
-    ID              reduce using rule 48 (expression -> expression MINUS prod .)
-    LPAREN          reduce using rule 48 (expression -> expression MINUS prod .)
-    FLOAT           reduce using rule 48 (expression -> expression MINUS prod .)
-    INTEGER         reduce using rule 48 (expression -> expression MINUS prod .)
-    RPAREN          reduce using rule 48 (expression -> expression MINUS prod .)
-    TIMES           shift and go to state 72
-    DIVIDE          shift and go to state 71
-
-  ! PLUS            [ reduce using rule 51 (expression -> prod .) ]
-  ! MINUS           [ reduce using rule 51 (expression -> prod .) ]
-  ! ID              [ reduce using rule 51 (expression -> prod .) ]
-  ! LPAREN          [ reduce using rule 51 (expression -> prod .) ]
-  ! FLOAT           [ reduce using rule 51 (expression -> prod .) ]
-  ! INTEGER         [ reduce using rule 51 (expression -> prod .) ]
-  ! RPAREN          [ reduce using rule 51 (expression -> prod .) ]
-
-
-state 151
+state 148
 
     (23) controlstructure -> IF LPAREN conditional RPAREN THEN . block else SEMICOLON
     (9) block -> . BEGIN statement END
 
     BEGIN           shift and go to state 34
 
-    block                          shift and go to state 153
+    block                          shift and go to state 150
 
-state 152
+state 149
 
     (22) controlstructure -> WHILE LPAREN conditional RPAREN DO block . SEMICOLON
 
-    SEMICOLON       shift and go to state 154
+    SEMICOLON       shift and go to state 151
 
 
-state 153
+state 150
 
     (23) controlstructure -> IF LPAREN conditional RPAREN THEN block . else SEMICOLON
     (34) else -> . ELSE statement
     (35) else -> . empty
     (6) empty -> .
 
-    ELSE            shift and go to state 157
+    ELSE            shift and go to state 154
     SEMICOLON       reduce using rule 6 (empty -> .)
 
-    empty                          shift and go to state 156
-    else                           shift and go to state 155
+    empty                          shift and go to state 153
+    else                           shift and go to state 152
 
-state 154
+state 151
 
     (22) controlstructure -> WHILE LPAREN conditional RPAREN DO block SEMICOLON .
 
     SEMICOLON       reduce using rule 22 (controlstructure -> WHILE LPAREN conditional RPAREN DO block SEMICOLON .)
 
 
-state 155
+state 152
 
     (23) controlstructure -> IF LPAREN conditional RPAREN THEN block else . SEMICOLON
 
-    SEMICOLON       shift and go to state 158
+    SEMICOLON       shift and go to state 155
 
 
-state 156
+state 153
 
     (35) else -> empty .
 
     SEMICOLON       reduce using rule 35 (else -> empty .)
 
 
-state 157
+state 154
 
     (34) else -> ELSE . statement
     (19) statement -> . controlstructure SEMICOLON statement
@@ -2729,18 +2693,17 @@ state 157
     (32) instruction -> . BREAK
     (33) instruction -> . call_d
     (6) empty -> .
-    (60) write_d -> . WRITE LPAREN expression RPAREN
-    (61) write_d -> . WRITE LPAREN STRING RPAREN
-    (62) read_d -> . READ LPAREN ID RPAREN
-    (74) line_if -> . IF conditional THEN instruction
-    (75) line_while -> . WHILE conditional DO instruction
+    (59) write_d -> . WRITE LPAREN expression RPAREN
+    (60) write_d -> . WRITE LPAREN STRING RPAREN
+    (61) read_d -> . READ LPAREN ID RPAREN
+    (73) line_if -> . IF conditional THEN instruction
+    (74) line_while -> . WHILE conditional DO instruction
     (58) return_d -> . RETURN expression
-    (59) return_d -> . RETURN ID
-    (63) print_d -> . PRINT LPAREN expression RPAREN
-    (64) print_d -> . PRINT LPAREN STRING RPAREN
-    (65) print_d -> . PRINT LPAREN ID RPAREN
-    (76) assignation -> . ID EQ expression
-    (66) call_d -> . ID LPAREN list_var RPAREN
+    (62) print_d -> . PRINT LPAREN expression RPAREN
+    (63) print_d -> . PRINT LPAREN STRING RPAREN
+    (64) print_d -> . PRINT LPAREN ID RPAREN
+    (75) assignation -> . ID EQ expression
+    (65) call_d -> . ID LPAREN list_var RPAREN
 
     WHILE           shift and go to state 49
     IF              shift and go to state 61
@@ -2762,18 +2725,18 @@ state 157
     controlstructure               shift and go to state 57
     write_d                        shift and go to state 62
     empty                          shift and go to state 54
-    statement                      shift and go to state 159
+    statement                      shift and go to state 156
     call_d                         shift and go to state 59
     print_d                        shift and go to state 52
 
-state 158
+state 155
 
     (23) controlstructure -> IF LPAREN conditional RPAREN THEN block else SEMICOLON .
 
     SEMICOLON       reduce using rule 23 (controlstructure -> IF LPAREN conditional RPAREN THEN block else SEMICOLON .)
 
 
-state 159
+state 156
 
     (34) else -> ELSE statement .
 
@@ -2782,16 +2745,6 @@ state 159
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for RPAREN in state 113 resolved as shift
-WARNING: shift/reduce conflict for ID in state 120 resolved as shift
-WARNING: shift/reduce conflict for LPAREN in state 120 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 120 resolved as shift
-WARNING: shift/reduce conflict for FLOAT in state 120 resolved as shift
-WARNING: shift/reduce conflict for INTEGER in state 120 resolved as shift
-WARNING: reduce/reduce conflict in state 76 resolved using rule (term -> ID)
-WARNING: rejected rule (return_d -> RETURN ID) in state 76
-WARNING: reduce/reduce conflict in state 120 resolved using rule (empty -> <empty>)
-WARNING: rejected rule (term -> ID) in state 120
-WARNING: reduce/reduce conflict in state 150 resolved using rule (expression -> expression MINUS prod)
-WARNING: rejected rule (expression -> prod) in state 150
-WARNING: Rule (return_d -> RETURN ID) is never reduced
+WARNING: shift/reduce conflict for RPAREN in state 112 resolved as shift
+WARNING: reduce/reduce conflict in state 119 resolved using rule (empty -> <empty>)
+WARNING: rejected rule (term -> ID) in state 119

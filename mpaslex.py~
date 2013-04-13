@@ -122,7 +122,7 @@ tokens = (
     'IF', 'ELSE', 'WHILE', 'READ', 'WRITE','SKIP', 'RETURN','BREAK',
 
     # Operators and delimiters
-    'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'UMINUS',
+    'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'UMINUS'
     'ASSIGN', 'SEMICOLON', 'LPAREN', 'RPAREN', 'COMMA', 'COLON',
     'LSBRACKET' , 'RSBRACKET','COLONEQUAL',
 
