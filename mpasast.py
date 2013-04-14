@@ -68,13 +68,16 @@ class Program(AST):
 class Func_list(AST):
     _fields = ['functions']
 
+    def append(self,e):
+        self.functions.append(e)
+
 class Function(AST):
-    _fields = ['ID', 'arglist', 'typename', 'locals', 'block']
+    _fields = ['ID', 'arglist', 'locals', 'block']
     def append(self,e):
         self.functions.append(e)
 
 class Empty_arguments(AST):
-    _fields : = ['arguments', 'empty']
+    _fields = ['arguments', 'empty']
 
 @validate_fields(variables=list)
 class Arguments(AST):
@@ -101,7 +104,7 @@ class Local_fun(AST):
     _fields = ['local_fun']
     
     def append(self,e):
-        self.local_var.append(e)
+        self.local_fun.append(e)
 
 class Error_locals_def(AST):
     _fields = ['error']		
@@ -112,13 +115,13 @@ class Var_dec(AST):
 class Type(AST):
     _fields = ['type']
 
-class Vector(AST)
+class Vector(AST):
     _fields = ['type', 'length']
 
 class While(AST):
     _fields =['conditional', 'then']
 
-class Assignation(AST):
+class Asignation(AST):
     _fields = ['ubication', 'value']
 
 class Print(AST):
@@ -151,6 +154,9 @@ class Ifthenelse(AST):
 class Dec_list(AST):
     _fields = ['declarations_list']
 
+    def append(self,e):
+        self.declarations_list.append(e)
+        
 class Ubication(AST):
     _fields = ['ID', 'boolean']
 
@@ -178,6 +184,10 @@ class Empty_expr_list(AST):
 class Expression_list(AST):
     _fields = ['expr']
 
+    def append(self,e):
+        self.expr.append(e)
+
+
 class Integer(AST):
     _fields=['value']
 
@@ -192,8 +202,6 @@ class Instruction(AST):
 
 class Else(AST):
     _fields =['statement']
-
-
 
 class UnaryOp(AST):
     _fields = ['op', 'left']
@@ -211,13 +219,20 @@ class Operation(AST):
 class Expression(AST):
     _fields = ['value']
 
+class Position(AST):
+    _fields = ['expr']
+
+class Condition(AST):
+    _fields = ['relation']
+
+class Then(AST):
+    _fields = ['declaration']
+
 class Prod(AST):
     _fields = ['value']	
 	
 class Term(AST):
     _fields = ['value']
-
-
 
 class Read(AST):
     _fields = ['var_id']

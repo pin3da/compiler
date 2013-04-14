@@ -4,7 +4,7 @@ import ply.lex as lex
 import mpaslex
 from mpaslex import tokens
 import sys
-from ast import *
+from mpasast import *
 
 
 precedence = (
@@ -26,7 +26,7 @@ def p_program(p):
 
 def p_func_list(p):
     'func_list : function'
-    p[0] = Func_list(p[1])
+    p[0] = Func_list([p[1]])
     p[0].lineno = lexer.lineno
 
 def p_func_list2(p):
@@ -36,12 +36,12 @@ def p_func_list2(p):
 
 def p_function(p):
     'function : FUNC ID LPAREN argsop RPAREN locals_op BEGIN dec_list END'
-    p[0] = Function([p[2], p[4], p[6]], p[8])
+    p[0] = Function(p[2], p[4], p[6], p[8])
     p[0].lineno = lexer.lineno
 
 def p_errorFuncion(p):
     'function : FUNC ID LPAREN argsop RPAREN locals_op BEGIN dec_list SEMICOLON END'
-    p[0] = Function([p[2], p[4], p[6]], p[8])
+    p[0] = Function(p[2], p[4], p[6], p[8])
     p[0].lineno = lexer.lineno
     print ("Warning: Line %d. Statments ends with semicolon" %p.lineno(9))
 
@@ -57,7 +57,7 @@ def p_argsop2(p):
 
 def p_arguments1(p):
     'arguments : var_dec'
-    p[0] = Arguments( p[1] )
+    p[0] = Arguments([p[1]])
     p[0].lineno = lexer.lineno
 
 def p_arguments2(p):
@@ -88,17 +88,17 @@ def p_locals_op2(p):
 
 def p_locals1(p):
     'locals : var_dec SEMICOLON'
-    p[0] = Local_var( p[1])
+    p[0] = Local_var( [p[1]])
     p[0].lineno = lexer.lineno
 
 def p_locals2(p):
     'locals : function SEMICOLON'
-    p[0] = Local_fun(p[1])
+    p[0] = Local_fun([p[1]])
     p[0].lineno = lexer.lineno
 
 def p_locals3(p):
     'locals : locals var_dec SEMICOLON'
-    p[1].append(p[2])
+    p[1].append([p[2]])
     p[0] = p[1]
     p[0].lineno = lexer.lineno
 
@@ -352,7 +352,7 @@ def p_relation2(p):
 
 def p_relation3(p):
     'relation : expression GT expression'
-    p[0] = BinaryOp('>',p[1],p[3])
+    p[0] = Binary_op('>',p[1],p[3])
     p[0].lineno = lexer.lineno
 
 def p_relation4(p):
@@ -372,7 +372,7 @@ def p_relation6(p):
 
 def p_relation7(p):
     'relation : relation AND relation'
-    p[0] = Binary_op('and',p[1],p[3]])
+    p[0] = Binary_op('and',p[1],p[3])
     p[0].lineno = lexer.lineno
 
 def p_relation8(p):
@@ -412,6 +412,36 @@ def p_error(p):
         print ("Syntax error at line %d:  %s" % (lexer.lineno,p.type))
 
 parser = yacc.yacc(debug=1)
+
+def dump_tree(node, indent = ""):
+    #print node
+    if not hasattr(node, "datatype"):
+		datatype = ""
+    else:
+		datatype = node.datatype
+
+    if(node.__class__.__name__ != "str" and node.__class__.__name__ != "list"):
+        print "%s%s  %s" % (indent, node.__class__.__name__, datatype)
+
+    indent = indent.replace("-"," ")
+    indent = indent.replace("+"," ")
+    if hasattr(node,'_fields'):
+        mio = node._fields
+    else:
+        mio = node
+    if(isinstance(mio,list)):
+        for i in range(len(mio)):
+            if(isinstance(mio[i],str) ):
+                c = getattr(node,mio[i])
+            else:
+             c = mio[i]
+            if i == len(mio)-1:
+		    	dump_tree(c, indent + "  +-- ")
+            else:
+		    	dump_tree(c, indent + "  |-- ")
+    else:
+        print indent, mio
+        
 
 # Build the parser
 if __name__ == "__main__":

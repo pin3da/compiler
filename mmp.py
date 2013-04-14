@@ -473,4 +473,4 @@ if __name__ == "__main__":
     lexer = mpaslex.make_lexer()
     result = parser.parse(s)
     if result:
-        #Acá se llama al visitor
+        dump_tree(result)
