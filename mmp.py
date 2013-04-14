@@ -74,13 +74,13 @@ def p_program(p):
 
 def p_func_list(p):
     'func_list : function'
-    p[0]= Node('Funciones', [p[1]])
+    p[0] = Node('Funciones', [p[1]])
     p[0].lineno = lexer.lineno
 
 def p_func_list2(p):
     'func_list : func_list function'
     p[1].append(p[2])
-    p[0]=p[1]
+    p[0] = p[1]
 
 def p_function(p):
     'function : FUNC ID LPAREN argsop RPAREN locals_op BEGIN dec_list END'
@@ -96,7 +96,7 @@ def p_errorFuncion(p):
 #Argumentos
 def p_argsop1(p):
     'argsop : arguments'
-    p[0]=p[1]
+    p[0] = p[1]
 
 def p_argsop2(p):
     'argsop : empty'
@@ -179,7 +179,7 @@ def p_tipo1(p):
     p[0].lineno = lexer.lineno
 
 def p_tipo2(p):
-    'type : FLOAT'
+    'type : FLOAT_TYPE'
     p[0] = Node ('tipo',[], "Float")
     p[0].lineno = lexer.lineno
 
@@ -189,7 +189,7 @@ def p_tipo3(p):
     p[0].lineno = lexer.lineno
 
 def p_tipo4(p):
-    'type : FLOAT LSBRACKET expression RSBRACKET'
+    'type : FLOAT_TYPE LSBRACKET expression RSBRACKET'
     p[0] = Node ('Vector float', [Node('Posicion',[p[3]])],'Vector float')
     p[0].lineno = lexer.lineno
 
@@ -201,7 +201,7 @@ def p_declaration1(p):
     p[0].lineno = lexer.lineno
 
 def p_declaration2(p):
-    'declaration : IFthen'
+    'declaration : ifthen'
     p[0] = p[1]
 
 def p_declaration3(p):
@@ -263,7 +263,7 @@ def p_errorListaVacia(p):
 
 #.### Ifs ###.#
 def p_IFthen(p):
-    'IFthen : IF relation THEN declaration %prec ELSE'
+    'ifthen : IF relation THEN declaration %prec ELSE'
     p[0] = Node("NodoIfThen", [Node('Condicion', [p[2]]), Node('Then', [p[4]])])
     p[0].lineno = lexer.lineno
 
@@ -273,12 +273,12 @@ def p_ifthenelse(p):
     p[0].lineno = lexer.lineno
 
 def p_errorIFthen(p):
-    'IFthen : IF relation declaration %prec ELSE'
+    'ifthen : IF relation declaration %prec ELSE'
     print ("Error en IF cerca de la linea %d. no se encontro 'then'" % lexer.lineno)
     #p[0] = Node("NodoIfthen", [Node('Condicion', [p[2]]), Node('Then', [p[3]])])
 
 def p_errorifthenelse(p):
-    'IFthen : IF relation declaration ELSE declaration'
+    'ifthen : IF relation declaration ELSE declaration'
     print ("Error en IF cerca de la linea %d. no se encontro 'then'" % lexer.lineno)
 
 #lista de claraciones

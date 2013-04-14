@@ -35,11 +35,11 @@ Rule 18    locals -> error
 Rule 19    var_dec -> ID COLON type
 Rule 20    var_dec -> ID type
 Rule 21    type -> INT_TYPE
-Rule 22    type -> FLOAT
+Rule 22    type -> FLOAT_TYPE
 Rule 23    type -> INT_TYPE LSBRACKET expression RSBRACKET
-Rule 24    type -> FLOAT LSBRACKET expression RSBRACKET
+Rule 24    type -> FLOAT_TYPE LSBRACKET expression RSBRACKET
 Rule 25    declaration -> WHILE relation DO declaration
-Rule 26    declaration -> IFthen
+Rule 26    declaration -> ifthen
 Rule 27    declaration -> ifthenelse
 Rule 28    declaration -> ubication ASSIGN expression
 Rule 29    declaration -> PRINT LPAREN STRING RPAREN
@@ -51,10 +51,10 @@ Rule 34    declaration -> SKIP
 Rule 35    declaration -> BREAK
 Rule 36    declaration -> BEGIN dec_list END
 Rule 37    declaration -> BEGIN END
-Rule 38    IFthen -> IF relation THEN declaration
+Rule 38    ifthen -> IF relation THEN declaration
 Rule 39    ifthenelse -> IF relation THEN declaration ELSE declaration
-Rule 40    IFthen -> IF relation declaration
-Rule 41    IFthen -> IF relation declaration ELSE declaration
+Rule 40    ifthen -> IF relation declaration
+Rule 41    ifthen -> IF relation declaration ELSE declaration
 Rule 42    dec_list -> declaration
 Rule 43    dec_list -> dec_list SEMICOLON declaration
 Rule 44    dec_list -> dec_list declaration
@@ -110,8 +110,8 @@ ELSE                 : 39 41
 END                  : 4 5 36 37
 EQ                   : 68
 EXTERN               : 
-FLOAT                : 22 24 76
-FLOAT_TYPE           : 59
+FLOAT                : 76
+FLOAT_TYPE           : 22 24 59
 FUNC                 : 4 5
 GE                   : 67
 GT                   : 66
@@ -147,7 +147,6 @@ error                : 11 18 74
 
 Nonterminals, with rules where they appear
 
-IFthen               : 26
 argsop               : 4 5
 arguments            : 6 9 10
 dec_list             : 4 5 36 43 44
@@ -158,6 +157,7 @@ expressions_list     : 60 63
 expressions_listop   : 33 54
 func_list            : 1 3
 function             : 2 3 15 17
+ifthen               : 26
 ifthenelse           : 27
 locals               : 12 16 17
 locals_op            : 4 5
@@ -303,13 +303,13 @@ state 12
     (19) var_dec -> ID . COLON type
     (20) var_dec -> ID . type
     (21) type -> . INT_TYPE
-    (22) type -> . FLOAT
+    (22) type -> . FLOAT_TYPE
     (23) type -> . INT_TYPE LSBRACKET expression RSBRACKET
-    (24) type -> . FLOAT LSBRACKET expression RSBRACKET
+    (24) type -> . FLOAT_TYPE LSBRACKET expression RSBRACKET
 
     COLON           shift and go to state 18
     INT_TYPE        shift and go to state 19
-    FLOAT           shift and go to state 17
+    FLOAT_TYPE      shift and go to state 17
 
     type                           shift and go to state 20
 
@@ -369,13 +369,13 @@ state 16
 
 state 17
 
-    (22) type -> FLOAT .
-    (24) type -> FLOAT . LSBRACKET expression RSBRACKET
+    (22) type -> FLOAT_TYPE .
+    (24) type -> FLOAT_TYPE . LSBRACKET expression RSBRACKET
 
-    COMMA           reduce using rule 22 (type -> FLOAT .)
-    ID              reduce using rule 22 (type -> FLOAT .)
-    RPAREN          reduce using rule 22 (type -> FLOAT .)
-    SEMICOLON       reduce using rule 22 (type -> FLOAT .)
+    COMMA           reduce using rule 22 (type -> FLOAT_TYPE .)
+    ID              reduce using rule 22 (type -> FLOAT_TYPE .)
+    RPAREN          reduce using rule 22 (type -> FLOAT_TYPE .)
+    SEMICOLON       reduce using rule 22 (type -> FLOAT_TYPE .)
     LSBRACKET       shift and go to state 28
 
 
@@ -383,12 +383,12 @@ state 18
 
     (19) var_dec -> ID COLON . type
     (21) type -> . INT_TYPE
-    (22) type -> . FLOAT
+    (22) type -> . FLOAT_TYPE
     (23) type -> . INT_TYPE LSBRACKET expression RSBRACKET
-    (24) type -> . FLOAT LSBRACKET expression RSBRACKET
+    (24) type -> . FLOAT_TYPE LSBRACKET expression RSBRACKET
 
     INT_TYPE        shift and go to state 19
-    FLOAT           shift and go to state 17
+    FLOAT_TYPE      shift and go to state 17
 
     type                           shift and go to state 29
 
@@ -480,7 +480,7 @@ state 27
 
 state 28
 
-    (24) type -> FLOAT LSBRACKET . expression RSBRACKET
+    (24) type -> FLOAT_TYPE LSBRACKET . expression RSBRACKET
     (47) expression -> . expression PLUS expression
     (48) expression -> . expression MINUS expression
     (49) expression -> . expression TIMES expression
@@ -567,7 +567,7 @@ state 32
     (43) dec_list -> . dec_list SEMICOLON declaration
     (44) dec_list -> . dec_list declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -579,29 +579,29 @@ state 32
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
 
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     dec_list                       shift and go to state 50
-    declaration                    shift and go to state 56
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    declaration                    shift and go to state 57
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 33
 
@@ -852,7 +852,7 @@ state 43
 
 state 44
 
-    (24) type -> FLOAT LSBRACKET expression . RSBRACKET
+    (24) type -> FLOAT_TYPE LSBRACKET expression . RSBRACKET
     (47) expression -> expression . PLUS expression
     (48) expression -> expression . MINUS expression
     (49) expression -> expression . TIMES expression
@@ -1001,7 +1001,7 @@ state 50
     (43) dec_list -> dec_list . SEMICOLON declaration
     (44) dec_list -> dec_list . declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -1013,9 +1013,9 @@ state 50
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
@@ -1024,19 +1024,19 @@ state 50
     SEMICOLON       shift and go to state 84
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 86
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 51
 
@@ -1046,6 +1046,25 @@ state 51
 
 
 state 52
+
+    (26) declaration -> ifthen .
+
+    ELSE            reduce using rule 26 (declaration -> ifthen .)
+    END             reduce using rule 26 (declaration -> ifthen .)
+    SEMICOLON       reduce using rule 26 (declaration -> ifthen .)
+    WHILE           reduce using rule 26 (declaration -> ifthen .)
+    PRINT           reduce using rule 26 (declaration -> ifthen .)
+    WRITE           reduce using rule 26 (declaration -> ifthen .)
+    READ            reduce using rule 26 (declaration -> ifthen .)
+    RETURN          reduce using rule 26 (declaration -> ifthen .)
+    ID              reduce using rule 26 (declaration -> ifthen .)
+    SKIP            reduce using rule 26 (declaration -> ifthen .)
+    BREAK           reduce using rule 26 (declaration -> ifthen .)
+    BEGIN           reduce using rule 26 (declaration -> ifthen .)
+    IF              reduce using rule 26 (declaration -> ifthen .)
+
+
+state 53
 
     (27) declaration -> ifthenelse .
 
@@ -1064,7 +1083,7 @@ state 52
     IF              reduce using rule 27 (declaration -> ifthenelse .)
 
 
-state 53
+state 54
 
     (36) declaration -> BEGIN . dec_list END
     (37) declaration -> BEGIN . END
@@ -1072,7 +1091,7 @@ state 53
     (43) dec_list -> . dec_list SEMICOLON declaration
     (44) dec_list -> . dec_list declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -1084,9 +1103,9 @@ state 53
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
@@ -1094,22 +1113,22 @@ state 53
     END             shift and go to state 89
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     dec_list                       shift and go to state 88
-    declaration                    shift and go to state 56
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    declaration                    shift and go to state 57
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
-state 54
+state 55
 
     (34) declaration -> SKIP .
 
@@ -1128,14 +1147,14 @@ state 54
     IF              reduce using rule 34 (declaration -> SKIP .)
 
 
-state 55
+state 56
 
     (30) declaration -> WRITE . LPAREN expression RPAREN
 
     LPAREN          shift and go to state 90
 
 
-state 56
+state 57
 
     (42) dec_list -> declaration .
 
@@ -1153,30 +1172,11 @@ state 56
     IF              reduce using rule 42 (dec_list -> declaration .)
 
 
-state 57
+state 58
 
     (28) declaration -> ubication . ASSIGN expression
 
     ASSIGN          shift and go to state 91
-
-
-state 58
-
-    (26) declaration -> IFthen .
-
-    ELSE            reduce using rule 26 (declaration -> IFthen .)
-    END             reduce using rule 26 (declaration -> IFthen .)
-    SEMICOLON       reduce using rule 26 (declaration -> IFthen .)
-    WHILE           reduce using rule 26 (declaration -> IFthen .)
-    PRINT           reduce using rule 26 (declaration -> IFthen .)
-    WRITE           reduce using rule 26 (declaration -> IFthen .)
-    READ            reduce using rule 26 (declaration -> IFthen .)
-    RETURN          reduce using rule 26 (declaration -> IFthen .)
-    ID              reduce using rule 26 (declaration -> IFthen .)
-    SKIP            reduce using rule 26 (declaration -> IFthen .)
-    BREAK           reduce using rule 26 (declaration -> IFthen .)
-    BEGIN           reduce using rule 26 (declaration -> IFthen .)
-    IF              reduce using rule 26 (declaration -> IFthen .)
 
 
 state 59
@@ -1192,9 +1192,9 @@ state 59
 
 state 60
 
-    (38) IFthen -> IF . relation THEN declaration
-    (40) IFthen -> IF . relation declaration
-    (41) IFthen -> IF . relation declaration ELSE declaration
+    (38) ifthen -> IF . relation THEN declaration
+    (40) ifthen -> IF . relation declaration
+    (41) ifthen -> IF . relation declaration ELSE declaration
     (39) ifthenelse -> IF . relation THEN declaration ELSE declaration
     (64) relation -> . expression LT expression
     (65) relation -> . expression LE expression
@@ -1532,12 +1532,12 @@ state 71
 
 state 72
 
-    (24) type -> FLOAT LSBRACKET expression RSBRACKET .
+    (24) type -> FLOAT_TYPE LSBRACKET expression RSBRACKET .
 
-    COMMA           reduce using rule 24 (type -> FLOAT LSBRACKET expression RSBRACKET .)
-    ID              reduce using rule 24 (type -> FLOAT LSBRACKET expression RSBRACKET .)
-    RPAREN          reduce using rule 24 (type -> FLOAT LSBRACKET expression RSBRACKET .)
-    SEMICOLON       reduce using rule 24 (type -> FLOAT LSBRACKET expression RSBRACKET .)
+    COMMA           reduce using rule 24 (type -> FLOAT_TYPE LSBRACKET expression RSBRACKET .)
+    ID              reduce using rule 24 (type -> FLOAT_TYPE LSBRACKET expression RSBRACKET .)
+    RPAREN          reduce using rule 24 (type -> FLOAT_TYPE LSBRACKET expression RSBRACKET .)
+    SEMICOLON       reduce using rule 24 (type -> FLOAT_TYPE LSBRACKET expression RSBRACKET .)
 
 
 state 73
@@ -1847,7 +1847,7 @@ state 84
     (5) function -> FUNC ID LPAREN argsop RPAREN locals_op BEGIN dec_list SEMICOLON . END
     (43) dec_list -> dec_list SEMICOLON . declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -1859,9 +1859,9 @@ state 84
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
@@ -1869,19 +1869,19 @@ state 84
     END             shift and go to state 121
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 122
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 85
 
@@ -1923,7 +1923,7 @@ state 88
     (43) dec_list -> dec_list . SEMICOLON declaration
     (44) dec_list -> dec_list . declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -1935,9 +1935,9 @@ state 88
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
@@ -1946,19 +1946,19 @@ state 88
     SEMICOLON       shift and go to state 124
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 86
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 89
 
@@ -2114,14 +2114,14 @@ state 93
 
 state 94
 
-    (38) IFthen -> IF relation . THEN declaration
-    (40) IFthen -> IF relation . declaration
-    (41) IFthen -> IF relation . declaration ELSE declaration
+    (38) ifthen -> IF relation . THEN declaration
+    (40) ifthen -> IF relation . declaration
+    (41) ifthen -> IF relation . declaration ELSE declaration
     (39) ifthenelse -> IF relation . THEN declaration ELSE declaration
     (70) relation -> relation . AND relation
     (71) relation -> relation . OR relation
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -2133,9 +2133,9 @@ state 94
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
@@ -2145,19 +2145,19 @@ state 94
     OR              shift and go to state 111
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 131
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 95
 
@@ -2524,7 +2524,7 @@ state 110
 
     (25) declaration -> WHILE relation DO . declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -2536,28 +2536,28 @@ state 110
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
 
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 139
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 111
 
@@ -2892,7 +2892,7 @@ state 124
 
     (43) dec_list -> dec_list SEMICOLON . declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -2904,28 +2904,28 @@ state 124
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
 
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 122
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 125
 
@@ -3012,10 +3012,10 @@ state 129
 
 state 130
 
-    (38) IFthen -> IF relation THEN . declaration
+    (38) ifthen -> IF relation THEN . declaration
     (39) ifthenelse -> IF relation THEN . declaration ELSE declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -3027,49 +3027,49 @@ state 130
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
 
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 152
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 131
 
-    (40) IFthen -> IF relation declaration .
-    (41) IFthen -> IF relation declaration . ELSE declaration
+    (40) ifthen -> IF relation declaration .
+    (41) ifthen -> IF relation declaration . ELSE declaration
 
-    END             reduce using rule 40 (IFthen -> IF relation declaration .)
-    SEMICOLON       reduce using rule 40 (IFthen -> IF relation declaration .)
-    WHILE           reduce using rule 40 (IFthen -> IF relation declaration .)
-    PRINT           reduce using rule 40 (IFthen -> IF relation declaration .)
-    WRITE           reduce using rule 40 (IFthen -> IF relation declaration .)
-    READ            reduce using rule 40 (IFthen -> IF relation declaration .)
-    RETURN          reduce using rule 40 (IFthen -> IF relation declaration .)
-    ID              reduce using rule 40 (IFthen -> IF relation declaration .)
-    SKIP            reduce using rule 40 (IFthen -> IF relation declaration .)
-    BREAK           reduce using rule 40 (IFthen -> IF relation declaration .)
-    BEGIN           reduce using rule 40 (IFthen -> IF relation declaration .)
-    IF              reduce using rule 40 (IFthen -> IF relation declaration .)
+    END             reduce using rule 40 (ifthen -> IF relation declaration .)
+    SEMICOLON       reduce using rule 40 (ifthen -> IF relation declaration .)
+    WHILE           reduce using rule 40 (ifthen -> IF relation declaration .)
+    PRINT           reduce using rule 40 (ifthen -> IF relation declaration .)
+    WRITE           reduce using rule 40 (ifthen -> IF relation declaration .)
+    READ            reduce using rule 40 (ifthen -> IF relation declaration .)
+    RETURN          reduce using rule 40 (ifthen -> IF relation declaration .)
+    ID              reduce using rule 40 (ifthen -> IF relation declaration .)
+    SKIP            reduce using rule 40 (ifthen -> IF relation declaration .)
+    BREAK           reduce using rule 40 (ifthen -> IF relation declaration .)
+    BEGIN           reduce using rule 40 (ifthen -> IF relation declaration .)
+    IF              reduce using rule 40 (ifthen -> IF relation declaration .)
     ELSE            shift and go to state 153
 
-  ! ELSE            [ reduce using rule 40 (IFthen -> IF relation declaration .) ]
+  ! ELSE            [ reduce using rule 40 (ifthen -> IF relation declaration .) ]
 
 
 state 132
@@ -3599,31 +3599,31 @@ state 151
 
 state 152
 
-    (38) IFthen -> IF relation THEN declaration .
+    (38) ifthen -> IF relation THEN declaration .
     (39) ifthenelse -> IF relation THEN declaration . ELSE declaration
 
-    END             reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    SEMICOLON       reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    WHILE           reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    PRINT           reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    WRITE           reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    READ            reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    RETURN          reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    ID              reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    SKIP            reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    BREAK           reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    BEGIN           reduce using rule 38 (IFthen -> IF relation THEN declaration .)
-    IF              reduce using rule 38 (IFthen -> IF relation THEN declaration .)
+    END             reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    SEMICOLON       reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    WHILE           reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    PRINT           reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    WRITE           reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    READ            reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    RETURN          reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    ID              reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    SKIP            reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    BREAK           reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    BEGIN           reduce using rule 38 (ifthen -> IF relation THEN declaration .)
+    IF              reduce using rule 38 (ifthen -> IF relation THEN declaration .)
     ELSE            shift and go to state 155
 
-  ! ELSE            [ reduce using rule 38 (IFthen -> IF relation THEN declaration .) ]
+  ! ELSE            [ reduce using rule 38 (ifthen -> IF relation THEN declaration .) ]
 
 
 state 153
 
-    (41) IFthen -> IF relation declaration ELSE . declaration
+    (41) ifthen -> IF relation declaration ELSE . declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -3635,28 +3635,28 @@ state 153
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
 
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 156
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 154
 
@@ -3678,7 +3678,7 @@ state 155
 
     (39) ifthenelse -> IF relation THEN declaration ELSE . declaration
     (25) declaration -> . WHILE relation DO declaration
-    (26) declaration -> . IFthen
+    (26) declaration -> . ifthen
     (27) declaration -> . ifthenelse
     (28) declaration -> . ubication ASSIGN expression
     (29) declaration -> . PRINT LPAREN STRING RPAREN
@@ -3690,46 +3690,46 @@ state 155
     (35) declaration -> . BREAK
     (36) declaration -> . BEGIN dec_list END
     (37) declaration -> . BEGIN END
-    (38) IFthen -> . IF relation THEN declaration
-    (40) IFthen -> . IF relation declaration
-    (41) IFthen -> . IF relation declaration ELSE declaration
+    (38) ifthen -> . IF relation THEN declaration
+    (40) ifthen -> . IF relation declaration
+    (41) ifthen -> . IF relation declaration ELSE declaration
     (39) ifthenelse -> . IF relation THEN declaration ELSE declaration
     (45) ubication -> . ID
     (46) ubication -> . ID LSBRACKET expression RSBRACKET
 
     WHILE           shift and go to state 49
     PRINT           shift and go to state 51
-    WRITE           shift and go to state 55
+    WRITE           shift and go to state 56
     READ            shift and go to state 48
     RETURN          shift and go to state 47
     ID              shift and go to state 59
-    SKIP            shift and go to state 54
+    SKIP            shift and go to state 55
     BREAK           shift and go to state 61
-    BEGIN           shift and go to state 53
+    BEGIN           shift and go to state 54
     IF              shift and go to state 60
 
-    ifthenelse                     shift and go to state 52
+    ifthenelse                     shift and go to state 53
     declaration                    shift and go to state 157
-    ubication                      shift and go to state 57
-    IFthen                         shift and go to state 58
+    ubication                      shift and go to state 58
+    ifthen                         shift and go to state 52
 
 state 156
 
-    (41) IFthen -> IF relation declaration ELSE declaration .
+    (41) ifthen -> IF relation declaration ELSE declaration .
 
-    ELSE            reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    END             reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    SEMICOLON       reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    WHILE           reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    PRINT           reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    WRITE           reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    READ            reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    RETURN          reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    ID              reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    SKIP            reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    BREAK           reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    BEGIN           reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
-    IF              reduce using rule 41 (IFthen -> IF relation declaration ELSE declaration .)
+    END             reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    SEMICOLON       reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    WHILE           reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    PRINT           reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    WRITE           reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    READ            reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    RETURN          reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    ID              reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    SKIP            reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    BREAK           reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    BEGIN           reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    IF              reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
+    ELSE            reduce using rule 41 (ifthen -> IF relation declaration ELSE declaration .)
 
 
 state 157

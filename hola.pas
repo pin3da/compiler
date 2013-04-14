@@ -1,4 +1,6 @@
-func mf( a : int, b:int , c;float)
+func mf( a : int, b:int , c:float)
     begin
-        a = a+b
+        a=10;
+        b=10+5;
+        
     end
