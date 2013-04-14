@@ -291,7 +291,7 @@ def p_expression7(p):
 
 def p_expression8(p):
     'expression : ID LPAREN expressions_listop RPAREN'
-    p[0] = Call_func(p[1],p[3])
+    p[0] = call_func(p[1],p[3])
     p[0].lineno = lexer.lineno
 
 def p_expression9(p):
