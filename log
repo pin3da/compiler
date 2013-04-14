@@ -1,51 +1,178 @@
-ERROR: mpasparse.py:147: Symbol 'return_d' used, but not defined as a token or a rule
-ERROR: mpasparse.py:185: Symbol 'GREATER' used, but not defined as a token or a rule
-ERROR: mpasparse.py:186: Symbol 'LESS' used, but not defined as a token or a rule
-ERROR: mpasparse.py:187: Symbol 'GREATEREQUAL' used, but not defined as a token or a rule
-ERROR: mpasparse.py:188: Symbol 'LESSEQUAL' used, but not defined as a token or a rule
-ERROR: mpasparse.py:189: Symbol 'DIFFERENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:190: Symbol 'EQUIVALENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:220: Symbol 'RPARENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:275: Symbol 'LPARENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:275: Symbol 'RPARENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:276: Symbol 'LAPRENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:276: Symbol 'RPARENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:277: Symbol 'LPARENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:277: Symbol 'RPARENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:283: Symbol 'RPARENT' used, but not defined as a token or a rule
-ERROR: mpasparse.py:311: Symbol 'instructrion' used, but not defined as a token or a rule
-ERROR: mpasparse.py:323: Symbol 'EQUAL' used, but not defined as a token or a rule
-WARNING: Token 'CONST' defined, but not used
-WARNING: Token 'READ' defined, but not used
-WARNING: Token 'EXTERN' defined, but not used
-WARNING: Token 'LE' defined, but not used
-WARNING: Token 'NE' defined, but not used
-WARNING: Token 'LSBRACKET' defined, but not used
-WARNING: Token 'LT' defined, but not used
-WARNING: Token 'ASSIGN' defined, but not used
-WARNING: Token 'GT' defined, but not used
-WARNING: Token 'GE' defined, but not used
-WARNING: Token 'VAR' defined, but not used
-WARNING: Token 'EQ' defined, but not used
-WARNING: Token 'RSBRACKET' defined, but not used
-WARNING: mpasparse.py:260: Rule 'return' defined, but not used
-WARNING: There are 13 unused tokens
-WARNING: There is 1 unused rule
-WARNING: Symbol 'return' is unreachable
-ERROR: Infinite recursion detected for symbol 'line_if'
-ERROR: Infinite recursion detected for symbol 'assignation'
-ERROR: Infinite recursion detected for symbol 'print_d'
-ERROR: Infinite recursion detected for symbol 'call_d'
-ERROR: Precedence rule 'left' defined for unknown symbol '!'
-ERROR: Precedence rule 'left' defined for unknown symbol '||'
-ERROR: Precedence rule 'right' defined for unknown symbol 'UMINUS'
-ERROR: Precedence rule 'left' defined for unknown symbol '&&'
-ERROR: Precedence rule 'right' defined for unknown symbol 'else'
-Traceback (most recent call last):
-  File "mpasparse.py", line 350, in <module>
-    parser = make_parser()
-  File "mpasparse.py", line 335, in make_parser
-    return yacc.yacc()
-  File "/usr/local/lib/python2.7/dist-packages/ply/yacc.py", line 3214, in yacc
-    raise YaccError("Unable to build parser")
-ply.yacc.YaccError: Unable to build parser
+Error de sintaxis con la expression ID en la linea 40
+Error en definicion de variables locals. Linea: 40
+Error en definicion de variables locals. Linea: 41
+Programa  
+  +-- Funciones  
+        |-- Funcion (quicksort)  
+        |     |-- Argumentos  
+        |     |     |-- Def. variable (l)  
+        |     |     |     +-- tipo (Float)  
+        |     |     |-- Def. variable (r)  
+        |     |     |     +-- tipo (Entero)  
+        |     |     |-- Def. variable (l)  
+        |     |     |     +-- tipo (Entero)  
+        |     |     |-- Def. variable (r)  
+        |     |     |     +-- tipo (Entero)  
+        |     |     +-- Def. variable (a)  
+        |     |           +-- tipo (Entero)  
+        |     |-- Variables Locales  
+        |     |     |-- Def. variable (i)  
+        |     |     |     +-- tipo (Float)  
+        |     |     |-- Def. variable (j)  
+        |     |     |     +-- tipo (Entero)  
+        |     |     |-- Def. variable (x)  
+        |     |     |     +-- tipo (Entero)  
+        |     |     |-- Def. variable (w)  
+        |     |     |     +-- tipo (Entero)  
+        |     |     |-- Def. variable (tmp)  
+        |     |     |     +-- tipo (Entero)  
+        |     |     +-- Def. variable (done)  
+        |     |           +-- tipo (Entero)  
+        |     +-- Declaraciones  
+        |           |-- Asignacion  
+        |           |     |-- Ubicacion (i)  
+        |           |     +-- Id (l)  
+        |           |-- Asignacion  
+        |           |     |-- Ubicacion (j)  
+        |           |     +-- Id (r)  
+        |           |-- Asignacion  
+        |           |     |-- Ubicacion (d)  
+        |           |     +-- Vecto (b)  
+        |           |           +-- Posicion  
+        |           |                 +-- Suma  
+        |           |                       |-- ConverInt  
+        |           |                       |     +-- Suma  
+        |           |                       |           |-- Id (i)  
+        |           |                       |           +-- Entero (1)  
+        |           |                       +-- Entero (1)  
+        |           |-- Asignacion  
+        |           |     |-- Ubicacion (x)  
+        |           |     +-- Vecto (a)  
+        |           |           +-- Posicion  
+        |           |                 +-- Division  
+        |           |                       |-- Suma  
+        |           |                       |     |-- Id (l)  
+        |           |                       |     +-- Id (r)  
+        |           |                       +-- Entero (2)  
+        |           |-- Asignacion  
+        |           |     |-- Ubicacion (done)  
+        |           |     +-- Entero  
+        |           |-- While  
+        |           |     |-- Condicion  
+        |           |     |     +-- ==  
+        |           |     |           |-- Id (done)  
+        |           |     |           +-- Entero  
+        |           |     +-- Then  
+        |           |           +-- Declaraciones  
+        |           |                 |-- While  
+        |           |                 |     |-- Condicion  
+        |           |                 |     |     +-- <  
+        |           |                 |     |           |-- Vecto (a)  
+        |           |                 |     |           |     +-- Posicion  
+        |           |                 |     |           |           +-- Id (i)  
+        |           |                 |     |           +-- Id (x)  
+        |           |                 |     +-- Then  
+        |           |                 |           +-- Asignacion  
+        |           |                 |                 |-- Ubicacion (i)  
+        |           |                 |                 +-- Suma  
+        |           |                 |                       |-- Id (i)  
+        |           |                 |                       +-- Entero (1)  
+        |           |                 |-- While  
+        |           |                 |     |-- Condicion  
+        |           |                 |     |     +-- <  
+        |           |                 |     |           |-- Id (x)  
+        |           |                 |     |           +-- Vecto (a)  
+        |           |                 |     |                 +-- Posicion  
+        |           |                 |     |                       +-- Id (j)  
+        |           |                 |     +-- Then  
+        |           |                 |           +-- Asignacion  
+        |           |                 |                 |-- Ubicacion (j)  
+        |           |                 |                 +-- Resta  
+        |           |                 |                       |-- Id (j)  
+        |           |                 |                       +-- Entero (1)  
+        |           |                 |-- NodoIfThen  
+        |           |                 |     |-- Condicion  
+        |           |                 |     |     +-- <=  
+        |           |                 |     |           |-- Id (i)  
+        |           |                 |     |           +-- Id (j)  
+        |           |                 |     +-- Then  
+        |           |                 |           +-- Declaraciones  
+        |           |                 |                 |-- Asignacion  
+        |           |                 |                 |     |-- Ubicacion (tmp)  
+        |           |                 |                 |     +-- Vecto (a)  
+        |           |                 |                 |           +-- Posicion  
+        |           |                 |                 |                 +-- Id (i)  
+        |           |                 |                 |-- Asignacion  
+        |           |                 |                 |     |-- Ubicacionvector (a)  
+        |           |                 |                 |     |     +-- Id (i)  
+        |           |                 |                 |     +-- Vecto (a)  
+        |           |                 |                 |           +-- Posicion  
+        |           |                 |                 |                 +-- Id (j)  
+        |           |                 |                 |-- Asignacion  
+        |           |                 |                 |     |-- Ubicacionvector (a)  
+        |           |                 |                 |     |     +-- Id (j)  
+        |           |                 |                 |     +-- Id (tmp)  
+        |           |                 |                 |-- Asignacion  
+        |           |                 |                 |     |-- Ubicacion (i)  
+        |           |                 |                 |     +-- Suma  
+        |           |                 |                 |           |-- Id (i)  
+        |           |                 |                 |           +-- Entero (1)  
+        |           |                 |                 +-- Asignacion  
+        |           |                 |                       |-- Ubicacion (j)  
+        |           |                 |                       +-- Resta  
+        |           |                 |                             |-- Id (j)  
+        |           |                 |                             +-- Entero (1)  
+        |           |                 +-- NodoIfThen  
+        |           |                       |-- Condicion  
+        |           |                       |     +-- >  
+        |           |                       |           |-- Id (i)  
+        |           |                       |           +-- Id (j)  
+        |           |                       +-- Then  
+        |           |                             +-- Asignacion  
+        |           |                                   |-- Ubicacion (done)  
+        |           |                                   +-- Entero (1)  
+        |           |-- NodoIfThen  
+        |           |     |-- Condicion  
+        |           |     |     +-- <  
+        |           |     |           |-- Id (l)  
+        |           |     |           +-- Id (j)  
+        |           |     +-- Then  
+        |           |           +-- Asignacion  
+        |           |                 |-- Ubicacion (tmp)  
+        |           |                 +-- Llamado a Funcion (quicksort)  
+        |           |                       +-- Expresiones  
+        |           |                             |-- Id (l)  
+        |           |                             |-- Id (j)  
+        |           |                             +-- Id (a)  
+        |           +-- NodoIfThen  
+        |                 |-- Condicion  
+        |                 |     +-- <  
+        |                 |           |-- Id (i)  
+        |                 |           +-- Id (r)  
+        |                 +-- Then  
+        |                       +-- Asignacion  
+        |                             |-- Ubicacion (tmp)  
+        |                             +-- Llamado a Funcion (quicksort)  
+        |                                   +-- Expresiones  
+        |                                         |-- Id (i)  
+        |                                         |-- Id (r)  
+        |                                         +-- Id (a)  
+        +-- Funcion (main)  
+              |-- empty_argument (empty)  
+              |-- Error al definir locals  
+              |     |-- Def. variable (v)  
+              |     |     +-- tipo (Entero)  
+              |     |-- Def. variable (i)  
+              |     |     +-- tipo (Entero)  
+              |     +-- Def. variable (v)  
+              |           +-- tipo (Entero)  
+              +-- Declaraciones  
+                    |-- While  
+                    |     |-- Condicion  
+                    |     |     +-- >  
+                    |     |           |-- Id (i)  
+                    |     |           +-- Id (x)  
+                    |     +-- Then  
+                    |           +-- Print (nada)  
+                    |-- Print (Entre n: )  
+                    +-- Print (otro)  

@@ -91,7 +91,7 @@ def p_errorFuncion(p):
     'function : FUNC ID LPAREN argsop RPAREN locals_op BEGIN dec_list SEMICOLON END'
     p[0] = Node ('Funcion', [p[4], p[6], p[8]], p[2])
     p[0].lineno = lexer.lineno
-    print ("Sobra punto y coma ';'al final de la lista de declarationes. Linea %d" %p.lineno(9))
+    print ("Warning: Line %d. Statments ends with semicolon" %p.lineno(9))
 
 #Argumentos
 def p_argsop1(p):
