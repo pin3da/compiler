@@ -258,22 +258,22 @@ def p_ubication2(p):
 #expressiones
 def p_expression1(p):
     'expression : expression PLUS expression'
-    p[0] = Plus(p[1], p[3])
+    p[0] = Binary_op('+',p[1], p[3])
     p[0].lineno = lexer.lineno
 
 def p_expression2(p):
     'expression : expression MINUS expression'
-    p[0] = Minus(p[1], p[3])
+    p[0] = Binary:op('-',[1], p[3])
     p[0].lineno = lexer.lineno
 
 def p_expression3(p):
     'expression : expression TIMES expression'
-    p[0] = Times(p[1], p[3])
+    p[0] = Binary_op('*',p[1], p[3])
     p[0].lineno = lexer.lineno
 
 def p_expression4(p):
     'expression : expression DIVIDE expression'
-    p[0] = Divide(p[1],p[3])
+    p[0] = Binary_op('/',[1],p[3])
     p[0].lineno = lexer.lineno
 
 def p_expression5(p):
