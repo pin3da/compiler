@@ -42,6 +42,7 @@ v:int;
 i:int;
 v:int;
 begin
+   v := -15;
    while i > x do
       print("nada");
    print("Entre n: ");

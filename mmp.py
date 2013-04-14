@@ -252,7 +252,7 @@ def p_declaration12(p):
     'declaration : BEGIN dec_list END'
     p[0] = p[2]
 
-def p_errorListaVacia(p):
+def p_error_empty_list(p):
     'declaration : BEGIN END'
     print ("Conjunto de declarationes vacias en linea %d" % lexer.lineno)
 
@@ -262,7 +262,7 @@ def p_errorListaVacia(p):
 #    p[0] = Node ('Error en declaration',[],p[1])
 
 #.### Ifs ###.#
-def p_IFthen(p):
+def p_ifthen(p):
     'ifthen : IF relation THEN declaration %prec ELSE'
     p[0] = Node("NodoIfThen", [Node('Condicion', [p[2]]), Node('Then', [p[4]])])
     p[0].lineno = lexer.lineno
@@ -272,7 +272,7 @@ def p_ifthenelse(p):
     p[0] = Node("NodoIfThenElse", [Node('Condicion', [p[2]]), Node('Then', [p[4]]), Node('Else', [p[6]])])
     p[0].lineno = lexer.lineno
 
-def p_errorIFthen(p):
+def p_errorifthen(p):
     'ifthen : IF relation declaration %prec ELSE'
     print ("Error en IF cerca de la linea %d. no se encontro 'then'" % lexer.lineno)
     #p[0] = Node("NodoIfthen", [Node('Condicion', [p[2]]), Node('Then', [p[3]])])
@@ -331,12 +331,12 @@ def p_expression4(p):
 
 def p_expression5(p):
     'expression : MINUS expression %prec UMINUS'
-    p[0] = Node ('-', [p[2]])
+    p[0] = Node ('Menos', [p[2]])
     p[0].lineno = lexer.lineno
 
 def p_expression6(p):
     'expression : PLUS expression'
-    p[0] = Node ('+', [p[2]])
+    p[0] = Node ('Mas', [p[2]])
 
 def p_expression7(p):
     'expression : LPAREN expression RPAREN'
@@ -358,7 +358,7 @@ def p_expression10(p):
     p[0].lineno = lexer.lineno
 
 def p_expression11(p):
-    'expression : numero'
+    'expression : number'
     p[0] = p[1]
 
 def p_expression12(p):
@@ -446,13 +446,13 @@ def p_errorRelacion(p):
     'relation : error'
     print ("Error de relation en linea %d" % lexer.lineno)
 
-def p_numero1(p):
-    'numero : INTEGER'
+def p_number1(p):
+    'number : INTEGER'
     p[0] = Node('Entero',[],p[1])
     p[0].lineno = lexer.lineno
 
-def p_numero2(p):
-    'numero : FLOAT'
+def p_number2(p):
+    'number : FLOAT'
     p[0] = Node('Float',[],p[1])
     p[0].lineno = lexer.lineno
 
@@ -473,4 +473,4 @@ if __name__ == "__main__":
     lexer = mpaslex.make_lexer()
     result = parser.parse(s)
     if result:
-        dump_tree(result)
+        #Acá se llama al visitor

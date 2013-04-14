@@ -1,24 +1,24 @@
 /* Comentario */
 func quicksort(l:float, r:int, l:int, r:int, a:int)
-    i : float;
-    j : int;
-    x : int;
-    w : int;
-    tmp : int;
-    done : int;
+    i:int;
+    j:int;
+    x:int;
+    w:int;
+    tmp:int;
+    done:int;
 begin
     i = l;
     j = r;
 	d = b[int(i+1)+1];
     x = a[(l+r)/2];
     done = 0;
-    while done == 0 do
+    while (done == 0) do
         begin
-            while a[i] < x do
+            while (a[i] < x) do
                 i = i + 1;
-            while x < a[j] do
+            while (x < a[j]) do
                 j = j - 1;
-            if i <= j then
+            if (i <= j) then
                 begin
                     tmp = a[i];
                     a[i] = a[j];
@@ -26,12 +26,12 @@ begin
                     i = i+1;
                     j = j-1
                 end;
-            if i>j then
+            if (i>j) then
                 done = 1
         end;
-    if ( l<j ) then
+    if (l<j) then
         tmp = quicksort(l, j, a);
-    if ( i<r) then
+    if (i<r) then
         tmp = quicksort(i, r, a)
 end
 
@@ -42,7 +42,8 @@ v:int;
 i:int;
 v:int;
 begin
-   while i > x do
+   v = -15;
+   while (i > x) do
       print("nada");
    print("Entre n: ");
    print("otro")

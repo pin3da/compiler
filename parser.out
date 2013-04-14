@@ -70,7 +70,7 @@ Rule 53    expression -> LPAREN expression RPAREN
 Rule 54    expression -> ID LPAREN expressions_listop RPAREN
 Rule 55    expression -> ID
 Rule 56    expression -> ID LSBRACKET expression RSBRACKET
-Rule 57    expression -> numero
+Rule 57    expression -> number
 Rule 58    expression -> INT_TYPE LPAREN expression RPAREN
 Rule 59    expression -> FLOAT_TYPE LPAREN expression RPAREN
 Rule 60    expressions_listop -> expressions_list
@@ -88,8 +88,8 @@ Rule 71    relation -> relation OR relation
 Rule 72    relation -> NOT relation
 Rule 73    relation -> LPAREN relation RPAREN
 Rule 74    relation -> error
-Rule 75    numero -> INTEGER
-Rule 76    numero -> FLOAT
+Rule 75    number -> INTEGER
+Rule 76    number -> FLOAT
 Rule 77    empty -> <empty>
 
 Terminals, with rules where they appear
@@ -161,7 +161,7 @@ ifthen               : 26
 ifthenelse           : 27
 locals               : 12 16 17
 locals_op            : 4 5
-numero               : 57
+number               : 57
 program              : 0
 relation             : 25 38 39 40 41 70 70 71 71 72 73
 type                 : 19 20
@@ -491,11 +491,11 @@ state 28
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -507,7 +507,7 @@ state 28
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 44
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 29
 
@@ -532,11 +532,11 @@ state 30
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -548,7 +548,7 @@ state 30
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 46
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 31
 
@@ -642,74 +642,74 @@ state 37
 
 state 38
 
-    (76) numero -> FLOAT .
+    (76) number -> FLOAT .
 
-    PLUS            reduce using rule 76 (numero -> FLOAT .)
-    MINUS           reduce using rule 76 (numero -> FLOAT .)
-    TIMES           reduce using rule 76 (numero -> FLOAT .)
-    DIVIDE          reduce using rule 76 (numero -> FLOAT .)
-    RSBRACKET       reduce using rule 76 (numero -> FLOAT .)
-    RPAREN          reduce using rule 76 (numero -> FLOAT .)
-    END             reduce using rule 76 (numero -> FLOAT .)
-    SEMICOLON       reduce using rule 76 (numero -> FLOAT .)
-    WHILE           reduce using rule 76 (numero -> FLOAT .)
-    PRINT           reduce using rule 76 (numero -> FLOAT .)
-    WRITE           reduce using rule 76 (numero -> FLOAT .)
-    READ            reduce using rule 76 (numero -> FLOAT .)
-    RETURN          reduce using rule 76 (numero -> FLOAT .)
-    ID              reduce using rule 76 (numero -> FLOAT .)
-    SKIP            reduce using rule 76 (numero -> FLOAT .)
-    BREAK           reduce using rule 76 (numero -> FLOAT .)
-    BEGIN           reduce using rule 76 (numero -> FLOAT .)
-    IF              reduce using rule 76 (numero -> FLOAT .)
-    ELSE            reduce using rule 76 (numero -> FLOAT .)
-    LT              reduce using rule 76 (numero -> FLOAT .)
-    LE              reduce using rule 76 (numero -> FLOAT .)
-    GT              reduce using rule 76 (numero -> FLOAT .)
-    GE              reduce using rule 76 (numero -> FLOAT .)
-    EQ              reduce using rule 76 (numero -> FLOAT .)
-    NE              reduce using rule 76 (numero -> FLOAT .)
-    COMMA           reduce using rule 76 (numero -> FLOAT .)
-    DO              reduce using rule 76 (numero -> FLOAT .)
-    AND             reduce using rule 76 (numero -> FLOAT .)
-    OR              reduce using rule 76 (numero -> FLOAT .)
-    THEN            reduce using rule 76 (numero -> FLOAT .)
+    RPAREN          reduce using rule 76 (number -> FLOAT .)
+    PLUS            reduce using rule 76 (number -> FLOAT .)
+    MINUS           reduce using rule 76 (number -> FLOAT .)
+    TIMES           reduce using rule 76 (number -> FLOAT .)
+    DIVIDE          reduce using rule 76 (number -> FLOAT .)
+    DO              reduce using rule 76 (number -> FLOAT .)
+    AND             reduce using rule 76 (number -> FLOAT .)
+    OR              reduce using rule 76 (number -> FLOAT .)
+    THEN            reduce using rule 76 (number -> FLOAT .)
+    WHILE           reduce using rule 76 (number -> FLOAT .)
+    PRINT           reduce using rule 76 (number -> FLOAT .)
+    WRITE           reduce using rule 76 (number -> FLOAT .)
+    READ            reduce using rule 76 (number -> FLOAT .)
+    RETURN          reduce using rule 76 (number -> FLOAT .)
+    ID              reduce using rule 76 (number -> FLOAT .)
+    SKIP            reduce using rule 76 (number -> FLOAT .)
+    BREAK           reduce using rule 76 (number -> FLOAT .)
+    BEGIN           reduce using rule 76 (number -> FLOAT .)
+    IF              reduce using rule 76 (number -> FLOAT .)
+    RSBRACKET       reduce using rule 76 (number -> FLOAT .)
+    END             reduce using rule 76 (number -> FLOAT .)
+    SEMICOLON       reduce using rule 76 (number -> FLOAT .)
+    ELSE            reduce using rule 76 (number -> FLOAT .)
+    LT              reduce using rule 76 (number -> FLOAT .)
+    LE              reduce using rule 76 (number -> FLOAT .)
+    GT              reduce using rule 76 (number -> FLOAT .)
+    GE              reduce using rule 76 (number -> FLOAT .)
+    EQ              reduce using rule 76 (number -> FLOAT .)
+    NE              reduce using rule 76 (number -> FLOAT .)
+    COMMA           reduce using rule 76 (number -> FLOAT .)
 
 
 state 39
 
-    (57) expression -> numero .
+    (57) expression -> number .
 
-    PLUS            reduce using rule 57 (expression -> numero .)
-    MINUS           reduce using rule 57 (expression -> numero .)
-    TIMES           reduce using rule 57 (expression -> numero .)
-    DIVIDE          reduce using rule 57 (expression -> numero .)
-    RSBRACKET       reduce using rule 57 (expression -> numero .)
-    RPAREN          reduce using rule 57 (expression -> numero .)
-    END             reduce using rule 57 (expression -> numero .)
-    SEMICOLON       reduce using rule 57 (expression -> numero .)
-    WHILE           reduce using rule 57 (expression -> numero .)
-    PRINT           reduce using rule 57 (expression -> numero .)
-    WRITE           reduce using rule 57 (expression -> numero .)
-    READ            reduce using rule 57 (expression -> numero .)
-    RETURN          reduce using rule 57 (expression -> numero .)
-    ID              reduce using rule 57 (expression -> numero .)
-    SKIP            reduce using rule 57 (expression -> numero .)
-    BREAK           reduce using rule 57 (expression -> numero .)
-    BEGIN           reduce using rule 57 (expression -> numero .)
-    IF              reduce using rule 57 (expression -> numero .)
-    ELSE            reduce using rule 57 (expression -> numero .)
-    LT              reduce using rule 57 (expression -> numero .)
-    LE              reduce using rule 57 (expression -> numero .)
-    GT              reduce using rule 57 (expression -> numero .)
-    GE              reduce using rule 57 (expression -> numero .)
-    EQ              reduce using rule 57 (expression -> numero .)
-    NE              reduce using rule 57 (expression -> numero .)
-    COMMA           reduce using rule 57 (expression -> numero .)
-    DO              reduce using rule 57 (expression -> numero .)
-    AND             reduce using rule 57 (expression -> numero .)
-    OR              reduce using rule 57 (expression -> numero .)
-    THEN            reduce using rule 57 (expression -> numero .)
+    PLUS            reduce using rule 57 (expression -> number .)
+    MINUS           reduce using rule 57 (expression -> number .)
+    TIMES           reduce using rule 57 (expression -> number .)
+    DIVIDE          reduce using rule 57 (expression -> number .)
+    RSBRACKET       reduce using rule 57 (expression -> number .)
+    RPAREN          reduce using rule 57 (expression -> number .)
+    END             reduce using rule 57 (expression -> number .)
+    SEMICOLON       reduce using rule 57 (expression -> number .)
+    WHILE           reduce using rule 57 (expression -> number .)
+    PRINT           reduce using rule 57 (expression -> number .)
+    WRITE           reduce using rule 57 (expression -> number .)
+    READ            reduce using rule 57 (expression -> number .)
+    RETURN          reduce using rule 57 (expression -> number .)
+    ID              reduce using rule 57 (expression -> number .)
+    SKIP            reduce using rule 57 (expression -> number .)
+    BREAK           reduce using rule 57 (expression -> number .)
+    BEGIN           reduce using rule 57 (expression -> number .)
+    IF              reduce using rule 57 (expression -> number .)
+    ELSE            reduce using rule 57 (expression -> number .)
+    LT              reduce using rule 57 (expression -> number .)
+    LE              reduce using rule 57 (expression -> number .)
+    GT              reduce using rule 57 (expression -> number .)
+    GE              reduce using rule 57 (expression -> number .)
+    EQ              reduce using rule 57 (expression -> number .)
+    NE              reduce using rule 57 (expression -> number .)
+    COMMA           reduce using rule 57 (expression -> number .)
+    DO              reduce using rule 57 (expression -> number .)
+    AND             reduce using rule 57 (expression -> number .)
+    OR              reduce using rule 57 (expression -> number .)
+    THEN            reduce using rule 57 (expression -> number .)
 
 
 state 40
@@ -725,11 +725,11 @@ state 40
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -741,7 +741,7 @@ state 40
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 66
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 41
 
@@ -756,11 +756,11 @@ state 41
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -772,42 +772,42 @@ state 41
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 67
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 42
 
-    (75) numero -> INTEGER .
+    (75) number -> INTEGER .
 
-    PLUS            reduce using rule 75 (numero -> INTEGER .)
-    MINUS           reduce using rule 75 (numero -> INTEGER .)
-    TIMES           reduce using rule 75 (numero -> INTEGER .)
-    DIVIDE          reduce using rule 75 (numero -> INTEGER .)
-    RSBRACKET       reduce using rule 75 (numero -> INTEGER .)
-    RPAREN          reduce using rule 75 (numero -> INTEGER .)
-    END             reduce using rule 75 (numero -> INTEGER .)
-    SEMICOLON       reduce using rule 75 (numero -> INTEGER .)
-    WHILE           reduce using rule 75 (numero -> INTEGER .)
-    PRINT           reduce using rule 75 (numero -> INTEGER .)
-    WRITE           reduce using rule 75 (numero -> INTEGER .)
-    READ            reduce using rule 75 (numero -> INTEGER .)
-    RETURN          reduce using rule 75 (numero -> INTEGER .)
-    ID              reduce using rule 75 (numero -> INTEGER .)
-    SKIP            reduce using rule 75 (numero -> INTEGER .)
-    BREAK           reduce using rule 75 (numero -> INTEGER .)
-    BEGIN           reduce using rule 75 (numero -> INTEGER .)
-    IF              reduce using rule 75 (numero -> INTEGER .)
-    ELSE            reduce using rule 75 (numero -> INTEGER .)
-    LT              reduce using rule 75 (numero -> INTEGER .)
-    LE              reduce using rule 75 (numero -> INTEGER .)
-    GT              reduce using rule 75 (numero -> INTEGER .)
-    GE              reduce using rule 75 (numero -> INTEGER .)
-    EQ              reduce using rule 75 (numero -> INTEGER .)
-    NE              reduce using rule 75 (numero -> INTEGER .)
-    COMMA           reduce using rule 75 (numero -> INTEGER .)
-    DO              reduce using rule 75 (numero -> INTEGER .)
-    AND             reduce using rule 75 (numero -> INTEGER .)
-    OR              reduce using rule 75 (numero -> INTEGER .)
-    THEN            reduce using rule 75 (numero -> INTEGER .)
+    RPAREN          reduce using rule 75 (number -> INTEGER .)
+    PLUS            reduce using rule 75 (number -> INTEGER .)
+    MINUS           reduce using rule 75 (number -> INTEGER .)
+    TIMES           reduce using rule 75 (number -> INTEGER .)
+    DIVIDE          reduce using rule 75 (number -> INTEGER .)
+    DO              reduce using rule 75 (number -> INTEGER .)
+    AND             reduce using rule 75 (number -> INTEGER .)
+    OR              reduce using rule 75 (number -> INTEGER .)
+    THEN            reduce using rule 75 (number -> INTEGER .)
+    WHILE           reduce using rule 75 (number -> INTEGER .)
+    PRINT           reduce using rule 75 (number -> INTEGER .)
+    WRITE           reduce using rule 75 (number -> INTEGER .)
+    READ            reduce using rule 75 (number -> INTEGER .)
+    RETURN          reduce using rule 75 (number -> INTEGER .)
+    ID              reduce using rule 75 (number -> INTEGER .)
+    SKIP            reduce using rule 75 (number -> INTEGER .)
+    BREAK           reduce using rule 75 (number -> INTEGER .)
+    BEGIN           reduce using rule 75 (number -> INTEGER .)
+    IF              reduce using rule 75 (number -> INTEGER .)
+    RSBRACKET       reduce using rule 75 (number -> INTEGER .)
+    END             reduce using rule 75 (number -> INTEGER .)
+    SEMICOLON       reduce using rule 75 (number -> INTEGER .)
+    ELSE            reduce using rule 75 (number -> INTEGER .)
+    LT              reduce using rule 75 (number -> INTEGER .)
+    LE              reduce using rule 75 (number -> INTEGER .)
+    GT              reduce using rule 75 (number -> INTEGER .)
+    GE              reduce using rule 75 (number -> INTEGER .)
+    EQ              reduce using rule 75 (number -> INTEGER .)
+    NE              reduce using rule 75 (number -> INTEGER .)
+    COMMA           reduce using rule 75 (number -> INTEGER .)
 
 
 state 43
@@ -878,11 +878,11 @@ state 45
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -894,7 +894,7 @@ state 45
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 75
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 46
 
@@ -924,11 +924,11 @@ state 47
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -940,7 +940,7 @@ state 47
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 77
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 48
 
@@ -973,11 +973,11 @@ state 49
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     NOT             shift and go to state 82
     LPAREN          shift and go to state 80
@@ -992,7 +992,7 @@ state 49
 
     expression                     shift and go to state 83
     relation                       shift and go to state 79
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 50
 
@@ -1217,11 +1217,11 @@ state 60
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     NOT             shift and go to state 82
     LPAREN          shift and go to state 80
@@ -1236,7 +1236,7 @@ state 60
 
     expression                     shift and go to state 83
     relation                       shift and go to state 94
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 61
 
@@ -1288,11 +1288,11 @@ state 64
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -1304,7 +1304,7 @@ state 64
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 95
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 65
 
@@ -1319,11 +1319,11 @@ state 65
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -1335,7 +1335,7 @@ state 65
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 96
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 66
 
@@ -1410,11 +1410,11 @@ state 68
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -1426,7 +1426,7 @@ state 68
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 98
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 69
 
@@ -1446,11 +1446,11 @@ state 69
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     RPAREN          reduce using rule 77 (empty -> .)
     MINUS           shift and go to state 45
@@ -1465,7 +1465,7 @@ state 69
     expression                     shift and go to state 101
     expressions_listop             shift and go to state 100
     expressions_list               shift and go to state 99
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
     empty                          shift and go to state 102
 
 state 70
@@ -1481,11 +1481,11 @@ state 70
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -1497,7 +1497,7 @@ state 70
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 103
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 71
 
@@ -1512,11 +1512,11 @@ state 71
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -1528,7 +1528,7 @@ state 71
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 104
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 72
 
@@ -1553,11 +1553,11 @@ state 73
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -1569,7 +1569,7 @@ state 73
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 105
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 74
 
@@ -1584,11 +1584,11 @@ state 74
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -1600,7 +1600,7 @@ state 74
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 106
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 75
 
@@ -1730,11 +1730,11 @@ state 80
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     NOT             shift and go to state 82
     LPAREN          shift and go to state 80
@@ -1749,7 +1749,7 @@ state 80
 
     expression                     shift and go to state 113
     relation                       shift and go to state 112
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 81
 
@@ -1796,11 +1796,11 @@ state 82
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     NOT             shift and go to state 82
     LPAREN          shift and go to state 80
@@ -1815,7 +1815,7 @@ state 82
 
     expression                     shift and go to state 83
     relation                       shift and go to state 114
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 83
 
@@ -1992,11 +1992,11 @@ state 90
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2008,7 +2008,7 @@ state 90
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 126
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 91
 
@@ -2023,11 +2023,11 @@ state 91
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2039,7 +2039,7 @@ state 91
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 127
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 92
 
@@ -2054,11 +2054,11 @@ state 92
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2070,7 +2070,7 @@ state 92
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 128
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 93
 
@@ -2090,11 +2090,11 @@ state 93
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     RPAREN          reduce using rule 77 (empty -> .)
     MINUS           shift and go to state 45
@@ -2109,7 +2109,7 @@ state 93
     expression                     shift and go to state 101
     expressions_listop             shift and go to state 129
     expressions_list               shift and go to state 99
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
     empty                          shift and go to state 102
 
 state 94
@@ -2499,11 +2499,11 @@ state 109
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     NOT             shift and go to state 82
     LPAREN          shift and go to state 80
@@ -2518,7 +2518,7 @@ state 109
 
     expression                     shift and go to state 83
     relation                       shift and go to state 138
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 110
 
@@ -2583,11 +2583,11 @@ state 111
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     NOT             shift and go to state 82
     LPAREN          shift and go to state 80
@@ -2602,7 +2602,7 @@ state 111
 
     expression                     shift and go to state 83
     relation                       shift and go to state 140
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 112
 
@@ -2681,11 +2681,11 @@ state 115
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2697,7 +2697,7 @@ state 115
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 142
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 116
 
@@ -2712,11 +2712,11 @@ state 116
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2728,7 +2728,7 @@ state 116
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 143
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 117
 
@@ -2743,11 +2743,11 @@ state 117
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2759,7 +2759,7 @@ state 117
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 144
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 118
 
@@ -2774,11 +2774,11 @@ state 118
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2790,7 +2790,7 @@ state 118
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 145
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 119
 
@@ -2805,11 +2805,11 @@ state 119
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2821,7 +2821,7 @@ state 119
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 146
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 120
 
@@ -2836,11 +2836,11 @@ state 120
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -2852,7 +2852,7 @@ state 120
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 147
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 121
 
@@ -3193,11 +3193,11 @@ state 135
     (54) expression -> . ID LPAREN expressions_listop RPAREN
     (55) expression -> . ID
     (56) expression -> . ID LSBRACKET expression RSBRACKET
-    (57) expression -> . numero
+    (57) expression -> . number
     (58) expression -> . INT_TYPE LPAREN expression RPAREN
     (59) expression -> . FLOAT_TYPE LPAREN expression RPAREN
-    (75) numero -> . INTEGER
-    (76) numero -> . FLOAT
+    (75) number -> . INTEGER
+    (76) number -> . FLOAT
 
     MINUS           shift and go to state 45
     PLUS            shift and go to state 40
@@ -3209,7 +3209,7 @@ state 135
     FLOAT           shift and go to state 38
 
     expression                     shift and go to state 154
-    numero                         shift and go to state 39
+    number                         shift and go to state 39
 
 state 136
 

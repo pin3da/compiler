@@ -60,9 +60,9 @@ def validate_fields(**fields):
 # Unos pocos nodos ejemplos
 
 
-@validate_fields(functions=list)
+@validate_fields(func_list=list)
 class Program(AST):
-    _fields = ['functions']
+    _fields = ['func_list']
 
     def append(self,e):
         sef.functions.append(e)
