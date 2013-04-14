@@ -107,7 +107,7 @@ from errors import error
 # Analizadores lexicos son definidos usando la libreria ply.lex
 #
 # Vea http://www.dabeaz.com/ply/ply.html#ply_nn3
-from ply.lex import lex
+import ply.lex as lex
 
 # ----------------------------------------------------------------------
 # Lista de token. Esta lista identifica la lista completa de nombres de
@@ -398,6 +398,7 @@ reserved = {
     'skip':'SKIP',
     'return':'RETURN',
     'break': 'BREAK',
+    'end': 'END',
 }
 
 # En realidad este diccionario no se usa
@@ -432,7 +433,7 @@ def make_lexer():
     '''
 #    return lex(optimize=1)
 #   When lex is optimized, doesn't recognize CPP_COMMENT
-    return lex()
+    return lex.lex()
 
 if __name__ == '__main__':
     import sys

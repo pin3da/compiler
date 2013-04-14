@@ -15,10 +15,10 @@ from mpasast import *
 
 precedence = (
 		('left', 'OR'),
-    ('left', 'ID'), #NO SE QUE TAN BUENA IDEA SEA
+        ('left', 'ID'), #NO SE QUE TAN BUENA IDEA SEA
 		('left', 'AND'),
 		('left', 'NOT'),
-    ('left', 'UMINUS'),
+        ('left', 'UMINUS'),
 		('left', 'PLUS','MINUS'),
 		('left', 'TIMES','DIVIDE'),
 		('right', 'RETURN'),
@@ -208,7 +208,7 @@ def p_bool_expr(p):
             p[0] = BinaryOp("==",p[1],p[3])
     else:
         p[0] = Boolean(p[1])
-		
+        
 
 ########
 # BinaryOp para comparaciones, retorna boolean
@@ -262,7 +262,7 @@ def p_term(p):
 def p_return_d(p):
     '''
     return_d : RETURN expression
-		         
+                 
     '''
     p[0] = Return(p[2]) 
 
