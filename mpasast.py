@@ -42,6 +42,7 @@ class AST(object):
         dotty=DotVisitor()
         dotty.visit(self)
         dotty.graph.write_png('salida.png') 
+
 def validate_fields(**fields):
     def validator(cls):
         old_init = cls.__init__
@@ -448,11 +449,20 @@ class DotVisitor():
         self.id=0
     def ID(self):
         self.id+=1
-        return "n%d" %self.id
+        return self.id
+        #return "n%d" %self.id
+    
+    def visit (self, node):
+        if(node._leaf):
+            newname=self.visit_leaf(node)
+            
+        else:
+            newname=self.visit_non_leaf(node)
+        return newname
 
     def visit_non_leaf(self,node):
-        name=pydot.Node(node.__class__.__name__, shape='circle')
-      
+        string= "n%d %s" % (self.ID(), node.__class__.__name__)
+        name=pydot.Node(string, shape='circle')
         for field in getattr(node,"_fields"):
             value = getattr(node,field,None)           
             if isinstance(value,list):
@@ -460,24 +470,21 @@ class DotVisitor():
                 for item in value:
                     if isinstance(item,AST):
                         newname = self.visit(item)
-                        self.graph.add_edge(pydot.Edge(name, item.__class__.__name__))#not sure
+                        self.graph.add_edge(pydot.Edge(name, newname))
                         
                                                       
             elif isinstance(value,AST):
                 newname = self.visit(value)
-                self.graph.add_edge(pydot.Edge(name, value.__class__.__name__))
+                self.graph.add_edge(pydot.Edge(name, newname))
+        return name
                 
                
-        return name
+        
 
     def visit_leaf(self, node):
-        name=pydot.Node(self.ID(), shape='box')
-    
+        string = "n%d %s" % (self.ID(), node.__class__.__name__)
+        name=pydot.Node(string, style="box")
         return name
 
-    def visit (self, node):
-        if(node._leaf):
-            self.visit_leaf(node)
-        else:
-            self.visit_non_leaf(node)
+    
 
