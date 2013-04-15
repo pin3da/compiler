@@ -206,7 +206,7 @@ def p_declaration12(p):
 
 def p_error_empty_list(p):
     'declaration : BEGIN END'
-    print ("Conjunto de declarationes vacias en linea %d" % lexer.lineno)
+    print ("Error line %d: No declarations found." % lexer.lineno)
 
 #if
 def p_ifthen(p):
