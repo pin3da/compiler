@@ -484,5 +484,5 @@ class DotVisitor():
 
     def visit_leaf(self, node):
         string = "Leaf %d %s" % (self.ID(), node.__class__.__name__)
-        return pydot.Node(string, shape='box3d',style="filled", fillcolor="#6200a3")
+        return pydot.Node(string, shape='box3d',style="filled", fillcolor="#9ACD32")
 
