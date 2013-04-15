@@ -127,12 +127,12 @@ def p_errorDefvar(p):
 
 def p_tipo1(p):
     'type : INT_TYPE'
-    p[0] = Type('Integer_type')
+    p[0] = Type('Integer_type',_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_tipo2(p):
     'type : FLOAT_TYPE'
-    p[0] = Type('Float_type')
+    p[0] = Type('Float_type',_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_tipo3(p):
@@ -192,12 +192,12 @@ def p_declaration9(p):
 
 def p_declaration10(p):
     'declaration : SKIP'
-    p[0] = Skip()
+    p[0] = Skip(_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_declaration11(p):
     'declaration : BREAK'
-    p[0] = Break()
+    p[0] = Break(_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_declaration12(p):
@@ -247,7 +247,7 @@ def p_dec_listerror(p):
 #ubication
 def p_ubication1(p):
     'ubication : ID'
-    p[0] = Ubication(p[1],True)
+    p[0] = Ubication(p[1],_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_ubication2(p):
@@ -296,7 +296,7 @@ def p_expression8(p):
 
 def p_expression9(p):
     'expression : ID'
-    p[0] = Id(p[1])
+    p[0] = Id(p[1],_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_expression10(p):
@@ -395,12 +395,12 @@ def p_errorRelacion(p):
 
 def p_number1(p):
     'number : INTEGER'
-    p[0] = Integer(p[1])
+    p[0] = Integer(p[1],_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_number2(p):
     'number : FLOAT'
-    p[0] = Float(p[1])
+    p[0] = Float(p[1],_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_empty(p):
@@ -450,4 +450,5 @@ if __name__ == "__main__":
     lexer = mpaslex.make_lexer()
     result = parser.parse(s)
     if result:
-        dump_tree(result)
+        #dump_tree(result)
+        print result._leaf

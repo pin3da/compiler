@@ -27,8 +27,11 @@ class AST(object):
         for name,value in zip(self._fields,args):
             setattr(self,name,value)
         # Asigna argumentos adicionales (keywords) si se suministran
-        for name,value in kwargs.items():
-            setattr(self,name,value)
+        if(len(kwargs)!=0):
+            for name,value in kwargs.items():
+                setattr(self,name,value)
+        else:
+            setattr(self,"_leaf",False)
 
     def pprint(self):
         for depth, node in flatten(self):
@@ -158,7 +161,8 @@ class Dec_list(AST):
         self.declarations_list.append(e)
         
 class Ubication(AST):
-    _fields = ['ID', 'boolean']
+    _fields = ['value']
+    _leaf = False
 
 class Ubication_vector(AST):
     _fields = ['ID', 'Position']
@@ -429,3 +433,9 @@ def flatten(top):
     d = Flattener()
     d.visit(top)
     return d.nodes
+
+import pydot
+
+class DotVisitor(NodeVisitor):
+    def __init__(self):
+        self.graph = pydot.Dot(sys.argv[0]) 
