@@ -192,12 +192,12 @@ def p_declaration9(p):
 
 def p_declaration10(p):
     'declaration : SKIP'
-    p[0] = Skip('skip', _leaf=True)
+    p[0] = Skip(_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_declaration11(p):
     'declaration : BREAK'
-    p[0] = Break('break',_leaf=True)
+    p[0] = Break(_leaf=True)
     p[0].lineno = lexer.lineno
 
 def p_declaration12(p):

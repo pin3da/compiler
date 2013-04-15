@@ -465,7 +465,7 @@ class DotVisitor():
     
     def visit_Function(self, node):
         string= "N%d Function ( %s )" % (self.ID(), node.id)
-        name=pydot.Node(string,shape='box3d', style="filled", fillcolor="#666999")
+        name=pydot.Node(string,shape='box3d', style="filled", fillcolor="#122488")
         for i in xrange (1,len(node._fields)):
             if (not isinstance(getattr(node,node._fields[i]) , list) ):
                 newname=self.visit(getattr(node,node._fields[i]))
