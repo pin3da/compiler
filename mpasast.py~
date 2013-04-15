@@ -461,8 +461,8 @@ class DotVisitor():
         return newname
 
     def visit_non_leaf(self,node):
-        string= "n%d %s" % (self.ID(), node.__class__.__name__)
-        name=pydot.Node(string, shape='circle')
+        string= "node %d %s" % (self.ID(), node.__class__.__name__)
+        name=pydot.Node(string)
         for field in getattr(node,"_fields"):
             value = getattr(node,field,None)           
             if isinstance(value,list):
@@ -482,8 +482,9 @@ class DotVisitor():
         
 
     def visit_leaf(self, node):
-        string = "n%d %s" % (self.ID(), node.__class__.__name__)
-        name=pydot.Node(string, style="box")
+        string = "leaf %d %s" % (self.ID(), node.__class__.__name__)
+        name=pydot.Node(string)
+        
         return name
 
     
