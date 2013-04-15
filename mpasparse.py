@@ -450,5 +450,5 @@ if __name__ == "__main__":
     lexer = mpaslex.make_lexer()
     result = parser.parse(s)
     if result:
-			 result.graphprint()	
+			 result.graphprint(sys.argv[1]+".png")	
         

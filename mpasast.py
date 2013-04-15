@@ -38,10 +38,10 @@ class AST(object):
         for depth, node in flatten(self):
             print("%s%s" % (" "*(4*depth),node))
 
-    def graphprint(self):
+    def graphprint(self,name):
         dotty=DotVisitor()
         dotty.visit(self)
-        dotty.graph.write_png('salida.png') 
+        dotty.graph.write_png(name) 
 
 def validate_fields(**fields):
     def validator(cls):
@@ -458,11 +458,12 @@ class DotVisitor():
             
         else:
             newname=self.visit_non_leaf(node)
+        self.graph.add_node(newname)
         return newname
 
     def visit_non_leaf(self,node):
         string= "Node %d %s" % (self.ID(), node.__class__.__name__)
-        name=pydot.Node(string)
+        name=pydot.Node(string,shape='box3d', style="filled", fillcolor="#0066ff")
         for field in getattr(node,"_fields"):
             value = getattr(node,field,None)           
             if isinstance(value,list):
@@ -483,9 +484,5 @@ class DotVisitor():
 
     def visit_leaf(self, node):
         string = "Leaf %d %s" % (self.ID(), node.__class__.__name__)
-        name=pydot.Node(string)
-        
-        return name
-
-    
+        return pydot.Node(string, shape='box3d',style="filled", fillcolor="#6200a3")
 
