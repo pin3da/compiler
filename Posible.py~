@@ -17,14 +17,14 @@ class DotVisitor(NodeVisitor):
                 newvalues = []
                 for item in value:
                     if isinstance(item,AST):
+                        self.graph.add_edge(pydot.Edge, node.__class__.__name__, item.__class__.__name__)#not sure
                         newnode = self.visit(item)
                         if newnode is not None:
                             newvalues.append(newnode)
                     else:
                         newvalues.append(n)
                 value[:] = newvalues
-                for items in newvalues
-                    self.graph.add_edge(pydot.Edge, node.__class__.__name__, items.__class__.__name__)
+                                    
             elif isinstance(value,AST):
                 self.graph.add_edge(pydot.Edge, node.__class__.__name__ ,value.__class__.__name__)
                 newnode = self.visit(value)
@@ -33,7 +33,17 @@ class DotVisitor(NodeVisitor):
                 else:
                     setattr(node,field,newnode)
         return name
+
     def visit_leaf(self, node):
         name=pydot.Node(self.ID(), shape='box')
 	      name.label(node.__class__.__name__ % node.value)
         return name
+
+    def visit (self, node):
+        if(self.leaf)
+            visit_leaf(node)
+        else
+            visit_non_leaf(node)
+
+    
+       
