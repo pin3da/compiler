@@ -122,7 +122,7 @@ tokens = (
     'IF', 'ELSE', 'WHILE', 'READ', 'WRITE','SKIP', 'RETURN','BREAK',
 
     # Operators and delimiters
-    'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'UMINUS',
+    'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 
     'ASSIGN', 'SEMICOLON', 'LPAREN', 'RPAREN', 'COMMA', 'COLON',
     'LSBRACKET' , 'RSBRACKET','COLONEQUAL',
 
@@ -147,27 +147,27 @@ tokens = (
 
 t_PLUS          = r'\+'
 t_MINUS         = r'-'
-t_UMINUS         = r'-'
+#t_UMINUS        = r'-'
 t_TIMES         = r'\*'
-t_DIVIDE    = r'/'
-t_ASSIGN    = r'='
-t_SEMICOLON        = r';'
+t_DIVIDE        = r'/'
+t_ASSIGN        = r':='
+t_SEMICOLON     = r';'
+t_COLONEQUAL    = r'='
 t_COLON         = r':'
-t_COLONEQUAL= r':='
-t_LPAREN    = r'\('
-t_RPAREN    = r'\)'
-t_LSBRACKET = r'\['
-t_RSBRACKET = r'\]'
+t_LPAREN        = r'\('
+t_RPAREN        = r'\)'
+t_LSBRACKET     = r'\['
+t_RSBRACKET     = r'\]'
 t_COMMA         = r'\,'
-t_LT        = r'<'
-t_LE        = r'<='
-t_EQ        = r'=='
-t_GE        = r'>='
-t_GT        = r'>'
-t_NE        = r'!='
-t_AND          = r'&&'
-t_OR           = r'\|\|'
-t_NOT          = r'!'
+t_LT            = r'<'
+t_LE            = r'<='
+t_EQ            = r'=='
+t_GE            = r'>='
+t_GT            = r'>'
+t_NE            = r'!='
+t_AND           = r'&&'
+t_OR            = r'\|\|'
+t_NOT           = r'!'
 
 # ----------------------------------------------------------------------
 # Ignorando caracteres (whitespace)
@@ -353,6 +353,11 @@ def t_BOOLEAN(t):
 def t_error(t):
     error(t.lexer.lineno,"Illegal character %r" % t.value[0],filename=sys.argv[1])
     t.lexer.skip(1)
+
+#def t_error_assign(t):
+#    r'='
+#    error(t.lexer.lineno,"Ilegal definition, assignation must be := and equal must be ==")
+#    t.lexer.skip(1)
 
 # Comentario C-style no terminado
 def t_COMMENT_UNTERM(t):

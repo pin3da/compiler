@@ -81,7 +81,7 @@ class Func_list(AST):
         self.functions.append(e)
 
 class Function(AST):
-    _fields = ['id', 'arglist', 'locals', 'block']
+    _fields = ['id', 'arglist','type', 'locals', 'block']
     def append(self,e):
         self.functions.append(e)
 
@@ -148,10 +148,10 @@ class Return(AST):
 class Call_func(AST):
     _fields = ['func_id', 'varlist']
 
-class Skip():
+class Skip(AST):
     _fields=['value']
 
-class Break():
+class Break(AST):
     _fields=['value']
 
 class Ifthen(AST):
