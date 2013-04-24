@@ -372,9 +372,10 @@ class DotVisitor():
         self.graph.add_node(newname)
         return newname
     
-    def visit_Function(self, node):
-        string= "N%d Function ( %s )" % (self.ID(), node.id)
-        name=pydot.Node(string,shape='box3d', style="filled", fillcolor="#666999")
+    
+    def visit_color(self,node,node_name,node_id,color):
+        string= "N%d %s ( %s )" % (self.ID(), node_name, node_id)
+        name=pydot.Node(string,shape='box3d', style="filled", fillcolor=color)
         for i in xrange (1,len(node._fields)):
             if (not isinstance(getattr(node,node._fields[i]) , list) ):
                 newname=self.visit(getattr(node,node._fields[i]))
@@ -385,35 +386,16 @@ class DotVisitor():
                         newname = self.visit(foo)
                         self.graph.add_edge(pydot.Edge(name, newname))
         return name
+    
+    
+    def visit_Function(self, node):
+        return self.visit_color(node,"Function",node.id,"#666999")
 
     def visit_Binary_op(self,node):
-        string= "N%d Operation ( %s )" % (self.ID(), node.op)
-        name=pydot.Node(string,shape='box3d', style="filled", fillcolor="#884221")
-        for i in xrange (1,len(node._fields)):
-            if (not isinstance(getattr(node,node._fields[i]) , list) ):
-                newname=self.visit(getattr(node,node._fields[i]))
-                self.graph.add_edge(pydot.Edge(name, newname))
-            else:
-                for foo in getattr(node,node._fields[i]):
-                    if isinstance(foo,AST):
-                        newname = self.visit(foo)
-                        self.graph.add_edge(pydot.Edge(name, newname))
-        return name
+        return self.visit_color(node,"Bin Oper ",node.op,"#884221")
 
     def visit_Call_func(self, node):
-        string= "N%d Call ( %s )" % (self.ID(), node.func_id)
-        name=pydot.Node(string,shape='box3d', style="filled", fillcolor="#FFFFFF")
-        for i in xrange (1,len(node._fields)):
-            if (not isinstance(getattr(node,node._fields[i]) , list) ):
-                newname=self.visit(getattr(node,node._fields[i]))
-                self.graph.add_edge(pydot.Edge(name, newname))
-            else:
-                for foo in getattr(node,node._fields[i]):
-                    if isinstance(foo,AST):
-                        newname = self.visit(foo)
-                        self.graph.add_edge(pydot.Edge(name, newname))
-            return name
-        
+        return self.visit_color(node,"Call",node.func_id,"#FFFFFF")        
 
     def visit_non_leaf(self,node):
         string= "N%d %s" % (self.ID(), node.__class__.__name__)
