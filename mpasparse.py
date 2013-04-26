@@ -85,9 +85,9 @@ def p_arguments3(p):
     p[0]=p[1]
     sys.stderr.write("Error line %d: Arguments must be separate by comma (,)\n" % lexer.lineno)
 
-def p_errorarguments(p):
-    'arguments : error'
-    sys.stderr.write ("Error line %d: The arguments must be decalrate ID:TYPE and separate by comma\n" % lexer.lineno)
+#def p_errorarguments(p):
+#    'arguments : error'
+#    sys.stderr.write ("Error line %d: The arguments must be decalrate ID:TYPE and separate by comma\n" % lexer.lineno)
 
 #Locales
 def p_locals_op1(p):
@@ -116,11 +116,6 @@ def p_locals4(p):
     p[1].append(p[2])
     p[0] = p[1]
     
-def p_errorlocals1(p):
-    'locals : error'
-    sys.stderr.write ("Error line %d: Locals definition are wrong\n" % lexer.lineno)
-    p[0] = []
-
 def p_var_dec(p):
     'var_dec : ID COLON type'
     p[0] = Var_dec(p[1], p[3])
@@ -138,7 +133,7 @@ def p_tipo1(p):
 def p_tipo2(p):
     'type : FLOAT_TYPE'
     p[0] = Type('Float_type',_leaf=True)
-        
+       
 def p_tipo3(p):
     'type : INT_TYPE LSBRACKET expression RSBRACKET'
     p[0] = Vector('Integer_type', p[3])
@@ -147,6 +142,15 @@ def p_tipo4(p):
     'type : FLOAT_TYPE LSBRACKET expression RSBRACKET'
     p[0] = Vector('Float_type',p[3])
         
+
+def p_tipo5(p):
+    'type : STRING_TYPE'
+    p[0] = Type('String_type',_leaf=True)
+
+def p_tipo6(p):
+    'type : STRING_TYPE LSBRACKET expression RSBRACKET'
+    p[0] = Vector('String_type',p[3])
+
 #Statements/Declaraciones
 
 def p_declaration1(p):
@@ -363,7 +367,7 @@ def p_number1(p):
     'number : INTEGER'
     p[0] = Integer(p[1],_leaf=True)
         
-def p_number2(p):
+def p_number(p):
     'number : FLOAT'
     p[0] = Float(p[1],_leaf=True)
         
@@ -373,7 +377,7 @@ def p_empty(p):
 # regla de error general
 def p_error(p):
     if p:
-        sys.stderr.write ("Syntax error at line %d:  %s\n" % (lexer.lineno,p.type))
+        sys.stderr.write ("Syntax error at line %d:  %s -> %s\n" % (lexer.lineno,p.type,p.value))
 
 parser = yacc.yacc(debug=1)
 
@@ -415,6 +419,6 @@ if __name__ == "__main__":
     lexer = mpaslex.make_lexer()
     result = parser.parse(s)
     if result:
-			result.graphprint(sys.argv[1]+".png")	
-            #dump_tree(result)
+	    result.graphprint(sys.argv[1]+".png")	
+        #dump_tree(result)
         

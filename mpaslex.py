@@ -108,6 +108,7 @@ from errors import error
 #
 # Vea http://www.dabeaz.com/ply/ply.html#ply_nn3
 import ply.lex as lex
+import sys
 
 # ----------------------------------------------------------------------
 # Lista de token. Esta lista identifica la lista completa de nombres de
@@ -165,9 +166,9 @@ t_EQ            = r'=='
 t_GE            = r'>='
 t_GT            = r'>'
 t_NE            = r'!='
-t_AND           = r'&&'
-t_OR            = r'\|\|'
-t_NOT           = r'!'
+#t_AND           = r'&&'
+#t_OR            = r'\|\|'
+#t_NOT           = r'!'
 
 # ----------------------------------------------------------------------
 # Ignorando caracteres (whitespace)
@@ -186,6 +187,16 @@ def t_newline(t):
 def t_ID(t):
     r'[a-zA-Z_]\w*'
     t.type = reserved.get(t.value,'ID')
+    if t.value == 'fun':
+        t.type = 'FUNC'
+    return t
+
+
+def t_FLOAT(t):
+    #r'((\d+)(\.\d+)(e(\+|-)?(\d+))? | (\d+)e(\+|-)?(\d+))'
+    r'((\d*\.\d+)([e|E][\+-]?\d+)?|([1-9]\d*[e|E][\+-]?\d+))'
+    #r'((\d*\.\d+)([eE](\+|-)?\d+)?)|(\d+\.\d*)|(\d+)([eE](\+|-)?\d+)'
+    t.value = float(t.value)               # Conversion a float de Python
     return t
 
 
@@ -198,7 +209,7 @@ def t_ID(t):
 #
 # El valor debe ser convertido a un int de Python cuando se analice.
 def t_INTEGER(t):
-    r'(?:0[xX]?)?\d+'
+    r'(0[xX]?)?\d+'
     # Conversion a int de Python
     if t.value.startswith(('0x','0X')):
         t.value = int(t.value,16)
@@ -219,12 +230,6 @@ def t_INTEGER(t):
 #   1.23, 1.23e1, 1.23e+1, 1.23e-1, 123., .123, 1e1, 0.
 #
 # El valor debe ser convertido a un float de Python cuando se analice
-def t_FLOAT(t):
-    #r'((\d+)(\.\d+)(e(\+|-)?(\d+))? | (\d+)e(\+|-)?(\d+))'
-    r'((\d*\.\d+)([eE](\+|-)?\d+)?)|(\d+\.\d*)|(\d+)([eE](\+|-)?\d+)'
-    t.value = float(t.value)               # Conversion a float de Python
-    return t
-
    
 #    to avoid index out of bounds
 #    Can return any non-digit charcter
@@ -281,13 +286,17 @@ def _replace_escape_codes(t):
                 not_error = False
             else:
                 if c1=='n':
-                    c='\n'
+                    #c='\n'
+                    c='_NL_'
                 elif c1=='r':
-                    c='\r'
+                    #c='\r'
+                    c='_R_'
                 elif c1=='t':
-                    c='\t'
+                    #c='\t'
+                    c='_T_'
                 elif c1=='\\':
-                    c='\\'
+                    #c='\\'
+                    c='_BS_'
                 elif c1=='"':
                     c='"'
                 elif c1=='b':
@@ -320,7 +329,7 @@ def t_STRING(t):
     if(_replace_escape_codes(t) != None):    # Debe implementar arriba
         return t
         
-        
+  
 # Comentarios C-style (/* ... */)
 def t_C_COMMENT(t):
     r'(/\*(.|\n)*?\*/)'
@@ -404,6 +413,9 @@ reserved = {
     'return':'RETURN',
     'break': 'BREAK',
     'end': 'END',
+    'or' : 'OR',
+    'and' : 'AND',
+    'not' : 'NOT',
 }
 
 # En realidad este diccionario no se usa
