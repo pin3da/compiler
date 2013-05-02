@@ -87,7 +87,7 @@ class SemanticVisitor(NodeVisitor):
 
     # Cambio la palabra node en todos para recordar que atributos tengo
 
-    def visit_program(self,program):
+    def visit_Program(self,program):
         for function in program.func_list.functions:
             self.generate_talbe_function(function)
 
@@ -129,3 +129,28 @@ class SemanticVisitor(NodeVisitor):
 
         #si pasa todas las verificaciones, añado la nueva tabla
         self.actual_t = temporal_table
+
+
+    def visit_Block(self,block):
+        temporal_table = self.actual_t
+        self.actual_t = Table('',self.actual_t,'block')
+        temporal_table.add_children(self.actual_t)
+        block.table = self.actual_t #ojo aca
+
+
+    def visit_Locals(self,node):
+        pass
+
+    def visit_While(self,node):
+        pass
+
+    def visit_Call_func(self,node):
+        pass
+
+    def visit_Ifthen(self,node):
+        pass
+
+
+    def visit_Ifthenelse(self,node):
+        pass
+
