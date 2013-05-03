@@ -26,9 +26,9 @@ class Table:
             print(message)
             self.message = message
 
-    def add(self, n_data):
+    def add(self, n_data, message = ""):
         if self.table.has_key[n_data.name]:
-            raise Semantic_error('Identifier redefined: '+ n_data.name)
+            raise Semantic_error('Identifier redefined: '+ n_data.name + message)
         self.table[n_data.name] = n_data
 
     def find(self,name):
@@ -76,29 +76,15 @@ class Table:
 
 
 class SemanticVisitor(NodeVisitor):
-    #Si vamos a hacer un visitante cada tipo de visita tiene que llamar a visit
-    #para recorrer a los hijos, ud con quien vio estructuras?
-    #en general su puede usar el metodo generico para las listas (Func_list, Dec_list) y especificos para
-    #los nodos concretos
-
+   
     def __init_(self,node):
         self.main_t = Table('Main_t',None,'program')
         self.actual_t = self.main_t
         self.acutal_fun = None
         self.in_while = False
         self.main = False
-        
-     #funcion que llama al método correcto de acuerdo al nodo ver visitante mpasast       
-    def visit(self, node):
-        if node:
-            method = 'visit_' + node.__class__.__name__
-            visitor = getattr(self, method, self.visit)
-            newname= visitor(node)     
-                      
-
 
     # Cambio la palabra node en todos para recordar que atributos tengo
-    # Hay que llamar a visit
     def visit_Program(self,program):
         for function in program.func_list.functions:
             self.generate_talbe_function(function)
@@ -106,29 +92,29 @@ class SemanticVisitor(NodeVisitor):
         if not(self.main):
             raise Semantic_error('Function main was not found')
             
-    #debe ir primero visit_func_list que le puede mandar cada funcion a generate_table_function
-    #o simplemente definir ese generate cono visit_Function y llamar a visit haciendo este
-    #metodo inutil
-    def visit_Func_list(self, node):
-        pass
-    
+
     #podria llamarse visit_Function y llamar el metodo visit para que vaya a los hijos
     def generate_table_function(self,function): 
         function_t = Data(function.id,'function',function.type, function.arglist)
         self.actual_t.find_function_repeated(function_t)
         temporal_table = self.actual_t
-        #TODO: verificar si los argumentos están repetidos e.g foo(hola: int, hola:int)
+ 
         for field in function.arglist:
-            temporal_table.add(Data(field.id , 'variable',field.typename))
+            temporal_table.add(Data(field.id , 'variable',field.typename),' , Agument redefined in function : ' + function_t.name)
         
         if function.id == 'main'
             if self.main:
                 raise Semantic_error('The program must have a only one main function')
 
         #add locals
+        #
+        # Acá se debe crear otra tabla que contiene el scope de las variables para la funcion
+        #
+        for local in function.locals:
+            local.visit(self)
 
         #llama para que de aqui en adelante los datos necesarios esten calculados
-        function.block.visit(self)
+        visit_Block(function.block)
 
         p_return_type = None
         for statement in function.block:
@@ -149,24 +135,29 @@ class SemanticVisitor(NodeVisitor):
         #si pasa todas las verificaciones, añado la nueva tabla
         self.actual_t = temporal_table
 
-    #visita argumentos, no hay necesidad de visita para Empty_arguments     
-    def visit_Arguments(self, node):
-        pass  
-        
-    def visit_Local_var(self, node): #no se si sea necesario, mas bien solo visitar Var_dec??
-        pass
-        
-    def visit_Local_fun(self, node): #pasarselo a generate_table_function o visit_Function... no?
-        pass
-        
-    def visit_Var_dec(self, node): #no se si es necesario
-        pass
+         
+    def visit_Var_dec(self, var_dec): #no se si es necesario
+        self.actual_t.find_repeated(var_dec.id)
+        self.actual_t.add(Data(var_dec.id,'variable',var_dec.type ))
+
+
+    def visit_Block(self,block):
+        for statement in block:
+            statement.visit(self)
+        # en este punto, todos los statements deberían tener un valor asociado al return_typei
+        # falta verificar y agregar un return_type al bloque
+
+
     
     def visit_Vector(self, node): #no se si es necesario, se puede sacar de Var_dec, pero en todo caso 
         pass 
         
-    def visit_While(self, node): #necesario
-        pass
+    def visit_While(self, _while):
+        _while.conditional.visit(self)
+        if not(_while.conditional.type == 'integer'): ## se puede comparar con._class por si hay problemas
+            raise Semantic_error('Conditional in while is not correct, function: '+ self.actual_fun.name)
+        _while.then.visit(self)
+        _while.return_type = _while.then.return_type
         
     def visit_Assignation(self, node): #necesario
         pass 
@@ -180,8 +171,9 @@ class SemanticVisitor(NodeVisitor):
     def visit_Read(self, node): #necesario
         pass            
         
-    def visit_Return(self, node): #necesario
-        pass
+    def visit_Return(self, ret):
+        if self.actual_fun.return_type != ret.return_type:
+            raise Semantic_error('Invalid return type in method : '+ self.actual_fun.name)
         
     def visit_Call_func(self, node): #necesario
         pass
@@ -189,8 +181,13 @@ class SemanticVisitor(NodeVisitor):
     def visit_Break(self, node): #necesario
         pass
         
-    def visit_Ifthen(self, node): #necesario
-        pass
+    def visit_Ifthen(self, ifthen):
+        ifthen.conditional.visit(self)
+        if not(ifthen.conditional.type == 'integer'):
+            raise Semantic_error('Conditional in if is not correct, function: ' + self.actual_fun.name)
+        ifthen.then.visit(self)
+        ifthen.return_type = ifthen.then.return_type
+
     
     def visit_Ifthenelse(self, node): #necesario
         pass
@@ -235,12 +232,6 @@ class SemanticVisitor(NodeVisitor):
         pass                        
     # de aqui pa abajo no se                                                               
     
-    def visit_Block(self,block):
-        temporal_table = self.actual_t
-        self.actual_t = Table('',self.actual_t,'block')
-        temporal_table.add_children(self.actual_t)
-        block.table = self.actual_t #ojo aca
-
 
     def visit_Locals(self,node):
         pass

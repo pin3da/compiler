@@ -24,6 +24,9 @@ class AST(object):
     '''
     _fields = []
     def __init__(self,*args,**kwargs):
+        ##
+        # Agrego return type en todos los nodos, si es None, no tiene retorno (funciones)
+        self.return_type = None
         assert len(args) == len(self._fields)
         for name,value in zip(self._fields,args):
             setattr(self,name,value)
