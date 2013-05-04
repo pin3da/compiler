@@ -239,6 +239,9 @@ class SemanticVisitor(NodeVisitor):
             
         
         
+    def visit_Ubication(self, node): #no se si es necesario
+        pass    
+        
     def visit_Ubication_vector(self, node): #necesario
         pass  
         

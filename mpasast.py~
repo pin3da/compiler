@@ -161,7 +161,7 @@ class Ifthen(AST):
     _fields =['conditional', 'then']
 
 class Ifthenelse(AST):
-    _fields =['conditional', 'then', '_else']
+    _fields =['conditional', 'then', 'else']
 
 class Dec_list(AST):
     _fields = ['declarations_list']
