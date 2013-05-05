@@ -118,7 +118,7 @@ class SemanticVisitor(NodeVisitor):
         self.visit_Block(function.block)
 
         p_return_type[int, bool] = None
-        for statement in function.block:
+        for statement in function.block: #Creo que esto ya no es necasrio, soloes necesario visitar
         
             if p_return_type == None:
                 p_return_type[1] = statement.return_type
@@ -150,8 +150,7 @@ class SemanticVisitor(NodeVisitor):
                 raise Semantic_error('The function can not have different return types: '+ self.actual_fun)
 
     
-    def visit_Vector(self, node): #no se si es necesario, se puede sacar de Var_dec, pero en todo caso 
-        pass 
+   
         
     def visit_While(self, _while):
         self.visit(_while.conditional)
@@ -175,28 +174,36 @@ class SemanticVisitor(NodeVisitor):
         if(node):
             if(node.value.return_type!=String_type):#???
                 raise Semantic_error('Argument for Print must be a String in function' + self.actual_fun.name)                
-        pass 
+        
         
     def visit_Write(self, node): #necesario
         if(node):
             if not(self.actual_t.find(node.value)):
                 raise Semantic_error('Identifier not found in function' + self.actual_fun.name)
-        pass  
+        
     
     def visit_Read(self, node): #necesario
         if(node):
             if not(self.actual_t.find(node.value)):
                 raise Semantic_error('Identifier not found in function' + self.actual_fun.name)
-        pass            
+                 
         
     def visit_Return(self, ret):
-        pass
+        if(node):
+            self.visit(ret.value)
+            if(self.actual_fun._type==None):
+                self.actual_fun._type=ret.value.return_type
+            else
+                if(ret.value.return_type!=self.actual_fun._type):
+                    raise Semantic_error('Conflicting Return Types in Function' + self.actual_fun.name)
+                    
+            
+        
         
     def visit_Call_func(self, node):
         pass
         
-    def visit_Break(self, node): #necesario
-        pass
+   
         
     def visit_Ifthen(self, ifthen):
         self.visit(ifthen.conditional)
@@ -244,16 +251,33 @@ class SemanticVisitor(NodeVisitor):
         pass  
         
     def visit_Binary_op(self, node):
-        pass
+        if(node):
+            self.visit(node.left)
+            self.visit(node.right)
+            if(node.left.return_type != node.right.return_type):
+                raise Semantic_error('Incompatible types in operation, in function' + self.actual_fun.name) 
+            else
+               node.return_type=node.left.return_type               
+       
         
     def Unary_op(self, node):
         pass
         
     def visit_Cast_int(self, node):
-        pass
+        if (node):
+            visit(node.value)
+            if(node.value.return_type != Float_type):#deberiamos tener todo esto en una rchivo que angle mando (Float_type, String_type)
+                raise Semantic_error('Must be a float to convert to integer, in function' + self.actual_fun.name)
+            node.return_type = Int_type    
+       
         
     def visit_Cast_float(self, node):
-        pass 
+        if (node):
+            visit(node.value)
+            if(node.value.return_type != Int_type):#deberiamos tener todo esto en una rchivo que angle mando (Float_type, String_type)
+                raise Semantic_error('Must be a an Integer to convert to float, in function' + self.actual_fun.name)
+            node.return_type= Float_type    
+        
         
     def visit_Expr_list(self, node): # no se si es necesario
         pass
@@ -264,12 +288,11 @@ class SemanticVisitor(NodeVisitor):
     def visit_Position(self, node): # no se si es necesario
         pass
         
-    def visit_Condition(self, node): 
+    def visit_Condition(self, node):
+             
         pass
-        
-        
-    def visit_Read(self, node):
-        pass                        
+       
+                          
     # de aqui pa abajo no se                                                               
     
 
