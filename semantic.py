@@ -119,11 +119,12 @@ class SemanticVisitor(NodeVisitor):
 
         p_return_type = None
         for statement in function.block:
-            if p_return_type == None:
-                p_return_type = statement.return_type
-            else:
-                if p_return_type != statement.return_type:
-                    raise Semantic_error('Function has different return types')
+            if statement.__class__.__name__ == 'Return'
+                if p_return_type == None:
+                    p_return_type = statement.return_type #no se esto que
+                else:
+                    if p_return_type != statement.return_type:
+                        raise Semantic_error('Function has different return types')
 
         if function.type == None:
             function.type = p_return_type
@@ -188,8 +189,7 @@ class SemanticVisitor(NodeVisitor):
         pass            
         
     def visit_Return(self, ret):
-        if self.actual_fun.return_type != ret.return_type:
-            raise Semantic_error('Invalid return type in method : '+ self.actual_fun.name)
+        pass
         
     def visit_Call_func(self, node):
         pass
