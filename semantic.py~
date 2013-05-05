@@ -117,14 +117,15 @@ class SemanticVisitor(NodeVisitor):
         #llama para que de aqui en adelante los datos necesarios esten calculados
         self.visit_Block(function.block)
 
-        p_return_type = None
+        p_return_type[int, bool] = None
         for statement in function.block:
-            if statement.__class__.__name__ == 'Return'
-                if p_return_type == None:
-                    p_return_type = statement.return_type #no se esto que
-                else:
-                    if p_return_type != statement.return_type:
-                        raise Semantic_error('Function has different return types')
+        
+            if p_return_type == None:
+                p_return_type[1] = statement.return_type
+                p_return_type[2] = false
+            else:
+                if p_return_type != statement.return_type:
+                    raise Semantic_error('Function has different return types')
 
         if function.type == None:
             function.type = p_return_type
