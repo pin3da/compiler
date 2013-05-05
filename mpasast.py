@@ -24,9 +24,13 @@ class AST(object):
     '''
     _fields = []
     def __init__(self,*args,**kwargs):
-        ##
+        ####
         # Agrego return type en todos los nodos, si es None, no tiene retorno (funciones)
+        # Agrego lineno para manejo de errores, -1 para saber en que nodo falta agregarla, no se inicializa con kwargs porque genera problemas con _leaf
         self.return_type = None
+        self.lineno = -1 
+        #
+        ####
         assert len(args) == len(self._fields)
         for name,value in zip(self._fields,args):
             setattr(self,name,value)
