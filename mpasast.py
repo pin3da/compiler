@@ -166,10 +166,10 @@ class Ifthen(AST):
 
 class Ifthenelse(AST):
     _fields =['conditional', 'then', '_else']
-
+    
+@validate_fields(declarations_list = list)
 class Dec_list(AST):
     _fields = ['declarations_list']
-
     def append(self,e):
         self.declarations_list.append(e)
         

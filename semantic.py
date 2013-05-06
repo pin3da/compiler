@@ -149,12 +149,12 @@ class SemanticVisitor(NodeVisitor):
 
         
         p_return_type = None
-        for statement in function.block:
+        for statement in function.block.declarations_list:
         
-            if(statement.return_type[1]): #means is a return istruction or wrap someone
+            if(statement.return_type): #means is a return istruction or wrap someone
                 if p_return_type == None:
-                    p_return_type = statement.return_type[0]
-                elif p_return_type != statement.return_type[0]:
+                    p_return_type = statement.return_type
+                elif p_return_type != statement.return_type:
                     error(statement.lineno , 'Function has different return types', filename = sys.argv[1])
 
         if function.type == None:
@@ -173,11 +173,11 @@ class SemanticVisitor(NodeVisitor):
 
 
     def visit_Var_dec(self, var_dec): #no se si es necesario
-        if self.actual_t.find(var_dec.id.value):
+        if self.actual_t.find(var_dec.id):
             error(var_dec.lineno, 'Redeclared Variable', filename=sys.argv[1])
-        else
+        else:
             self.visit(var_dec.typename)
-            self.actual_t.add(Data(var_dec.id,'variable',var_dec.return_type[0] ))
+            self.actual_t.add(Data(var_dec.id,'variable', var_dec.typename.return_type ))
 
 
     def visit_Block(self,block):
@@ -205,7 +205,7 @@ class SemanticVisitor(NodeVisitor):
             error(assignation.lineno, 'Identifier not found', filename=sys.argv[1])
         else:
             self.visit(assignation.value)                  
-            if var._type!=node.value.return_type[0]:
+            if var._type!=assignation.value.return_type:
                 #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
                 error(assignation.lineno, 'Incompatible Types in assignation', filename=sys.argv[1])
     
