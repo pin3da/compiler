@@ -202,12 +202,12 @@ class SemanticVisitor(NodeVisitor):
     def visit_Assignation(self, assignation): #necesario
         var=self.actual_t.find(assignation.ubication.value)
         if not(var):
-            error(assignation.lineno, 'Identifier not found', filename=sys.argv[1])
+            raise Semantic_error('Identifier in assignation not found' + self.actual_fun.name)
         else:
             self.visit(assignation.value)                  
             if var._type!=node.value.return_type[0]:
                 #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
-                error(assignation.lineno, 'Incompatible Types in assignation', filename=sys.argv[1])
+                raise Semantic_error('Incompatible types in function: ' + self.actual_fun.name)
     
         
     def visit_Print(self, _print): #necesario
