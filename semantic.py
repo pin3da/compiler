@@ -29,8 +29,9 @@ class Table:
 
     def add(self, n_data, message = ""):
         if n_data.name in self.table:
-            raise Semantic_error('Identifier redefined: '+ n_data.name + message)
+            return False
         self.table[n_data.name] = n_data
+        return True
 
     def find(self,name):
         if name in self.table:
@@ -38,7 +39,8 @@ class Table:
         else:
             if self.parent != None:
                 return self.parent.find(name)
-            raise Semantic_error('Identifier was not declared: '+ name)
+
+        return None
 
 
     #Busca si un campo se ha definido varias veces
@@ -48,6 +50,7 @@ class Table:
         else:
             if self.parent != None:
                 self.parent.find_repeated(name)
+        return False
 
 
     def add_child(self, child):
@@ -58,22 +61,34 @@ class Table:
         for child in self.children:
             if child.name == name:
                 return children
-        raise Semantic_error('Indentifier was not declared: '+ name)
+        return None
 
     #funciones redefinidas
+    
 
+    ######
+    #   Return 1 if the function was previously declared but the return or the len of arguments doesn't matches
+    #   Return 2 if the len of the arguments matches but each not
+    #   Return 3 if the function was previously declared, arguments doesn't matters
+    #   Return 0 if is not found (not repeated)
+    ######
     def find_function_repeated(self, function):
         if function.name in self.table:
             possible = self.table[function.name]
-            if possible._class != 'function' or possible._type != function._type or len(function.info) != len(possible.info):
-                raise Semantic_error('Function '+function.name+' was previously declared, return type or args does not match')
+            if possible._class != 'function' or possible._type != function._type or len(function.info) != len(possible.info): 
+                return 1
                 
-                for args1,args2 in zip (function.info, possible.info):
-                    if args1._type != args2._type:
-                        raise Semantic_error('Function previously decladred. Args declared erroneously for function: '+ function.name)
+            for args1,args2 in zip (function.info, possible.info):
+                if args1._type != args2._type:
+                     return 2
+
+
+            return 3
 
         elif self.parent != None:
             self.parent.find_function_repeated(function)
+
+        return 0
 
 
 class SemanticVisitor(NodeVisitor):
@@ -90,52 +105,65 @@ class SemanticVisitor(NodeVisitor):
         for function in program.func_list.functions:
             self.generate_table_function(function)
 
-        if not(self.main):
-            raise Semantic_error('Function main was not found')
+        if not (self.main) :
+            error(0,'Function main was not found',filename=sys.argv[1])
             
 
     #podria llamarse visit_Function y llamar el metodo visit para que vaya a los hijos
     def generate_table_function(self,function): 
         function_t = Data(function.id,'function',function.type, function.arglist)
-        self.actual_t.find_function_repeated(function_t)
+        is_repeated = self.actual_t.find_function_repeated(function_t)
+        if is_repeated == 2:
+            error(function.lineno,"The function was previously declared but the argument's type doesn't match ", filename=sys.argv[1] )
+        elif is_repeated == 1:
+            error(function.lineno,"The funcion was previously declared, neither return type nor argument's size matches",filename=sys.argv[1] )
+        elif is_repeated == 2:
+            error(function.lineno, "The function was previously declared", filename=sys.argv[1])
 
-        temporal_table = self.actual_t
+        temporal_table = Table('fun_'+function.id , self.actual_t , 'function')
+
+        
+        self.actual_t.add_child(temporal_table)        
+        self.actual_t = temporal_table
         self.actual_fun = function_t 
+        
+        ids = []
         for field in function.arglist.variables:
-            temporal_table.add(Data(field.id , 'variable',field.typename),' , Agument redefined in function : ' + function_t.name)
+            if field.id in ids:
+                error(function.lineno, 'Argument '+ field.id+' was declared more than once', filename=sys.argv[1])
+            ids.append(field.id)
+            self.actual_t.add(Data(field.id , 'variable',field.typename),' , Agument redefined in function : ' + function_t.name)
         
         if function.id == 'main':
             if self.main:
-                raise Semantic_error('The program must have a only one main function')
+                error(function.lineno, 'The program must have a only one main function', filename=sys.argv[1])
+            else:
+                self.main = True
 
-
-        self.actual_t = Table('func_' + function.id, self.actual_t, 'function')
         for local in function.locals.local_var:
             self.visit(local)
             
-        temporal_table.add_child(self.actual_t)
-        self.actual_t = temporal_table
 
         #llama para que de aqui en adelante los datos necesarios esten calculados
         self.visit_Block(function.block)
 
-        p_return_type[int, bool] = None
-        for statement in function.block: #Creo que esto ya no es necasrio, soloes necesario visitar
         
-            if p_return_type == None:
-                p_return_type[1] = statement.return_type
-                p_return_type[2] = false
-            else:
-                if p_return_type != statement.return_type:
-                    raise Semantic_error('Function has different return types')
+        p_return_type = None
+        for statement in function.block:
+        
+            if(statement.return_type[1]): #means is a return istruction or wrap someone
+                if p_return_type == None:
+                    p_return_type = statement.return_type[0]
+                elif p_return_type != statement.return_type[0]:
+                    error(statement.lineno , 'Function has different return types', filename = sys.argv[1])
 
         if function.type == None:
             function.type = p_return_type
         else:
             if p_return_type == None:
-                raise Semantic_error('Function must have at least one return')
+                error(function.lineno,'Function must have at least one return', filename = sys.argv[1])
             if p_return_type != function.type:
-                raise Semantic_error('Function return does not matches with definition')
+                error(function.lineno, 'Function return does not matches with definition',filename = sys.argv[1] )
          
     def visit_Var_dec(self, var_dec): #no se si es necesario
         if self.actual_t.find_repeated(var_dec.id):
@@ -170,7 +198,7 @@ class SemanticVisitor(NodeVisitor):
             else:
                 self.visit(node.value)                  
                 if var._type!=node.value.return_type:
-                    print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
+                    #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
                     raise Semantic_error('Incompatible types in function: ' + self.actual_fun.name)
         
         
