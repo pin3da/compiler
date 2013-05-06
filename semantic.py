@@ -1,8 +1,7 @@
-import mpasparse
-import mpaslex
-import mpasast
-import errors
-
+from mpasparse import *
+from mpaslex import *
+from mpasast import *
+from errors import *
 
 class Data:
 
@@ -11,6 +10,11 @@ class Data:
         self._class = _class
         self._type = _type
         self.info = info
+
+class Semantic_error:        
+    def __init__(self, message):
+        print message 
+        self.message = message
 
 class Table:
     
@@ -21,18 +25,15 @@ class Table:
         self.parent = parent
         self._type = _type
 
-    class Semantic_error:        
-        def __init(self, message):
-            print(message)
-            self.message = message
+
 
     def add(self, n_data, message = ""):
-        if self.table.has_key[n_data.name]:
+        if n_data.name in self.table:
             raise Semantic_error('Identifier redefined: '+ n_data.name + message)
         self.table[n_data.name] = n_data
 
     def find(self,name):
-        if self.table.has_key[name]:
+        if name in self.table:
             return self.table[name]
         else:
             if self.parent != None:
@@ -42,8 +43,8 @@ class Table:
 
     #Busca si un campo se ha definido varias veces
     def find_repeated(self, name):
-        if self.table.has_key[name]:
-            raise Semantic_error('Identifier was declared multiple times')
+        if name in self.table:
+            return True
         else:
             if self.parent != None:
                 self.parent.find_repeated(name)
@@ -55,17 +56,17 @@ class Table:
     def find_child(self, name):
         #Toca buscar -a mano- porque compara por nombre
         for child in self.children:
-            if child.name == name
+            if child.name == name:
                 return children
         raise Semantic_error('Indentifier was not declared: '+ name)
 
     #funciones redefinidas
 
     def find_function_repeated(self, function):
-        if self.table.has_key[function.name]:
+        if function.name in self.table:
             possible = self.table[function.name]
-                if possible._class != 'function' or possible._type != function._type or len(function.info) != len(possible.info):
-                    raise Semantic_error('Function '+function.name+' was previously declared, return type or args does not match')
+            if possible._class != 'function' or possible._type != function._type or len(function.info) != len(possible.info):
+                raise Semantic_error('Function '+function.name+' was previously declared, return type or args does not match')
                 
                 for args1,args2 in zip (function.info, possible.info):
                     if args1._type != args2._type:
@@ -77,17 +78,17 @@ class Table:
 
 class SemanticVisitor(NodeVisitor):
    
-    def __init_(self,node):
+    def __init__(self):
         self.main_t = Table('Main_t',None,'program')
         self.actual_t = self.main_t
-        self.acutal_fun = None
+        self.actual_fun = None
         self.in_while = False
         self.main = False
 
     # Cambio la palabra node en todos para recordar que atributos tengo
     def visit_Program(self,program):
         for function in program.func_list.functions:
-            self.generate_talbe_function(function)
+            self.generate_table_function(function)
 
         if not(self.main):
             raise Semantic_error('Function main was not found')
@@ -97,18 +98,19 @@ class SemanticVisitor(NodeVisitor):
     def generate_table_function(self,function): 
         function_t = Data(function.id,'function',function.type, function.arglist)
         self.actual_t.find_function_repeated(function_t)
- 
-        for field in function.arglist:
+
+        temporal_table = self.actual_t
+        self.actual_fun = function_t 
+        for field in function.arglist.variables:
             temporal_table.add(Data(field.id , 'variable',field.typename),' , Agument redefined in function : ' + function_t.name)
         
-        if function.id == 'main'
+        if function.id == 'main':
             if self.main:
                 raise Semantic_error('The program must have a only one main function')
 
 
-        temporal_table = self.actual_t
-        self.actual_t = Table('func_' + funcion.name, self.actual_t, 'function')
-        for local in function.locals:
+        self.actual_t = Table('func_' + function.id, self.actual_t, 'function')
+        for local in function.locals.local_var:
             self.visit(local)
             
         temporal_table.add_child(self.actual_t)
@@ -136,13 +138,14 @@ class SemanticVisitor(NodeVisitor):
                 raise Semantic_error('Function return does not matches with definition')
          
     def visit_Var_dec(self, var_dec): #no se si es necesario
-        self.actual_t.find_repeated(var_dec.id)
-        self.actual_t.add(Data(var_dec.id,'variable',var_dec.type ))
+        if self.actual_t.find_repeated(var_dec.id):
+            raise Semantic_error('Identifier was declared multiple times in this scope: '+ var_dec.id + 'line: '+ var_dec.lineno)
+        self.actual_t.add(Data(var_dec.id,'variable',var_dec.typename ))
 
 
     def visit_Block(self,block):
         p_type = None
-        for statement in block:
+        for statement in block.declarations_list:
             self.visit(statement)
             if p_type == None:
                 p_type = statement.return_type
@@ -164,10 +167,11 @@ class SemanticVisitor(NodeVisitor):
             var=self.actual_t.find(node.ubication.value)
             if not(var):
                 raise Semantic_error('Identifier in assignation not found' + self.actual_fun.name)
-            else
+            else:
                 self.visit(node.value)                  
-                if var._type!=node.value.return_type
-                    raise Semantic_error('Incompatible types in function' + self.actual_fun.name)
+                if var._type!=node.value.return_type:
+                    print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
+                    raise Semantic_error('Incompatible types in function: ' + self.actual_fun.name)
         
         
     def visit_Print(self, node): #necesario
@@ -193,7 +197,7 @@ class SemanticVisitor(NodeVisitor):
             self.visit(ret.value)
             if(self.actual_fun._type==None):
                 self.actual_fun._type=ret.value.return_type
-            else
+            else:
                 if(ret.value.return_type!=self.actual_fun._type):
                     raise Semantic_error('Conflicting Return Types in Function' + self.actual_fun.name)
                     
@@ -239,7 +243,7 @@ class SemanticVisitor(NodeVisitor):
                 self.visit(statement)
                 if p_return_type == None:
                     p_return_type = statement.return_type
-                elif p_return_type != statement.return_type and statement.return_type != None
+                elif p_return_type != statement.return_type and statement.return_type != None:
                     raise Semantic_error('Statments of then in function: '+ self.actual_fun.name + ' has no same return type')
         else:
             self.visit(_then.declaration)
@@ -256,7 +260,7 @@ class SemanticVisitor(NodeVisitor):
             self.visit(node.right)
             if(node.left.return_type != node.right.return_type):
                 raise Semantic_error('Incompatible types in operation, in function' + self.actual_fun.name) 
-            else
+            else:
                node.return_type=node.left.return_type               
        
         
@@ -291,24 +295,23 @@ class SemanticVisitor(NodeVisitor):
     def visit_Condition(self, node):
              
         pass
-       
-                          
-    # de aqui pa abajo no se                                                               
-    
-
-    def visit_Locals(self,node):
-        pass
-
-    def visit_While(self,node):
-        pass
-
-    def visit_Call_func(self,node):
-        pass
-
-    def visit_Ifthen(self,node):
-        pass
 
 
-    def visit_Ifthenelse(self,node):
-        pass
 
+
+def check_program(root):
+	checker = SemanticVisitor()
+	checker.visit(root)
+
+def main():
+    import mpasparse
+    import sys
+    from errors import subscribe_errors
+    lexer = mpaslex.make_lexer()
+    parser = mpasparse.make_parser()
+    with subscribe_errors(lambda msg: sys.stdout.write(msg+"\n")):
+        program = parser.parse(open(sys.argv[1]).read())
+        check_program(program)
+
+if __name__ == '__main__':
+    main()

@@ -7,6 +7,8 @@ import sys
 from mpasast import *
 
 
+lexer = mpaslex.make_lexer()
+
 precedence = (
 		('left', 'OR'),
 		('left', 'AND'),
@@ -408,7 +410,10 @@ def p_error(p):
     if p:
         sys.stderr.write ("Syntax error at line %d:  %s -> %s\n" % (lexer.lineno,p.type,p.value))
 
-parser = yacc.yacc(debug=1)
+def make_parser(): 
+    lexer = mpaslex.make_lexer()
+    parser = yacc.yacc(debug=1)
+    return parser
 
 def dump_tree(node, indent = ""):
     #print node
@@ -446,6 +451,7 @@ if __name__ == "__main__":
     f = open(sys.argv[1])
     s = f.read()
     lexer = mpaslex.make_lexer()
+    parser = make_parser()
     result = parser.parse(s)
     if result:
 	    result.graphprint(sys.argv[1]+".png")	
