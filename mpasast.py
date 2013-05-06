@@ -28,7 +28,8 @@ class AST(object):
         # Agrego return type en todos los nodos, si es None, no tiene retorno (funciones)
         # Agrego lineno para manejo de errores, -1 para saber en que nodo falta agregarla, no se inicializa con kwargs porque genera problemas con _leaf
         self.return_type = None
-        self.lineno = -1 
+        self.lineno = -1
+        self.hasReturn = None
         #
         ####
         assert len(args) == len(self._fields)

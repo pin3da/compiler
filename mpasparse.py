@@ -88,7 +88,7 @@ def p_arguments3(p):
     'arguments : arguments var_dec'
     p[1].append(p[2])
     p[0]=p[1]
-    sys.stderr.write("Error line %d: Arguments must be separate by comma (,)\n" % lexer.lineno)
+    sys.stderr.write("Error line %d: Arguments must be separate by comma (,)\n" % p.lineno(1))
 
 #def p_errorarguments(p):
 #    'arguments : error'
@@ -127,100 +127,100 @@ def p_locals4(p):
 def p_var_dec(p):
     'var_dec : ID COLON type'
     p[0] = Var_dec(p[1], p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
         
 def p_errorDefvar(p):
     'var_dec : ID type'
     p[0] = Var_dec(p[1], p[3])
-    p[0].lineno = lexer.lineno
-    sys.stderr.write ("Error line %d: ':' missing\n" % lexer.lineno)
+    p[0].lineno = p.lineno(1)
+    sys.stderr.write ("Error line %d: ':' missing\n" % p.lineno(1))
 
 def p_tipo1(p):
     'type : INT_TYPE'
-    p[0] = Type('Integer_type',_leaf=True)
+    p[0] = Type('integer',_leaf=True)
         
 def p_tipo2(p):
     'type : FLOAT_TYPE'
-    p[0] = Type('Float_type',_leaf=True)
+    p[0] = Type('float',_leaf=True)
        
 def p_tipo3(p):
     'type : INT_TYPE LSBRACKET expression RSBRACKET'
-    p[0] = Vector('Integer_type', p[3])
+    p[0] = Vector('integer', p[3])
         
 def p_tipo4(p):
     'type : FLOAT_TYPE LSBRACKET expression RSBRACKET'
-    p[0] = Vector('Float_type',p[3])
+    p[0] = Vector('float',p[3])
         
 
 def p_tipo5(p):
     'type : STRING_TYPE'
-    p[0] = Type('String_type',_leaf=True)
+    p[0] = Type('string',_leaf=True)
 
 def p_tipo6(p):
     'type : STRING_TYPE LSBRACKET expression RSBRACKET'
-    p[0] = Vector('String_type',p[3])
+    p[0] = Vector('string',p[3])
 
 #Statements/Declaraciones
 
 def p_declaration1(p):
     'declaration : WHILE relation DO declaration'
     p[0] = While(Condition(p[2]),Then(p[4]) )
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
         
 def p_declaration2(p):
     'declaration : ifthen'
     p[0] = p[1]
-    p[0].lineno = p[1].lineno
+    p[0].lineno = p.lineno(1)
 
 def p_declaration3(p):
     'declaration : ifthenelse'
     p[0] = p[1]
-    p[0].lineno = p[1].lineno
+    p[0].lineno = p.lineno(1)
 
 def p_declaration4(p):
     'declaration : ubication ASSIGN expression'
     p[0] = Assignation(p[1], p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
         
 def p_declaration_error(p):
     'declaration : ubication COLONEQUAL expression'
-    p[0].lineno = lexer.lineno
-    sys.stderr.write("Error line %d: Assignation must be :=\n" % lexer.lineno)
+    p[0].lineno = p.lineno(1)
+    sys.stderr.write("Error line %d: Assignation must be :=\n" % p.lineno(1))
 
 def p_declaration5(p):
     'declaration : PRINT LPAREN STRING RPAREN'
     p[0] = Print(p[3],_leaf=True)
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
         
 def p_declaration6(p):
     'declaration : WRITE LPAREN expression RPAREN'
     p[0] = Write(p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
         
 def p_declaration7(p):
     'declaration : READ LPAREN ubication RPAREN'
     p[0] = Read (p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
         
 def p_declaration8(p):
     'declaration : RETURN expression'
     p[0] = Return(p[2])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
         
 def p_declaration9(p):
     'declaration : ID LPAREN expressions_listop RPAREN'
     p[0] = Call_func(p[1], p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
         
 def p_declaration10(p):
     'declaration : SKIP'
     p[0] = Skip('skip', _leaf=True)
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
 
 def p_declaration11(p):
     'declaration : BREAK'
     p[0] = Break('break',_leaf=True)
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
         
 def p_declaration12(p):
     'declaration : BEGIN dec_list END'
@@ -228,27 +228,27 @@ def p_declaration12(p):
 
 def p_error_empty_list(p):
     'declaration : BEGIN END'
-    sys.stderr.write ("Error line %d: No declarations found.\n" % lexer.lineno)
+    sys.stderr.write ("Error line %d: No declarations found.\n" % p.lineno(1))
 
 #if
 def p_ifthen(p):
     'ifthen : IF relation THEN declaration %prec ELSE'
     p[0] = Ifthen( Condition(p[2]),Then(p[4]) )
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
 
 def p_ifthenelse(p):
     'ifthenelse : IF relation THEN declaration ELSE declaration'
     p[0] = Ifthenelse(Condition(p[2]),Then(p[4]),Else(p[6]))
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
 
 def p_errorifthen(p):
     'ifthen : IF relation declaration %prec ELSE'
-    sys.stderr.write("Error line %d: missing then\n" % lexer.lineno)
+    sys.stderr.write("Error line %d: missing then\n" % p.lineno(2))
     #p[0] = Node("NodoIfthen", [Node('Condicion', [p[2]]), Node('Then', [p[3]])])
 
 def p_errorifthenelse(p):
     'ifthen : IF relation declaration ELSE declaration'
-    sys.stderr.write ("Error line %d: missing then\n" % lexer.lineno)
+    sys.stderr.write ("Error line %d: missing then\n" % p.lineno(2))
 
 #lista de claraciones
 def p_dec_list1(p):
@@ -262,7 +262,7 @@ def p_dec_list2(p):
 
 def p_dec_listerror(p):
     'dec_list : dec_list declaration'    
-    sys.stderr.write("Error line %d: Locals definition. Semicolon is missing\n" % lexer.lineno)
+    sys.stderr.write("Error line %d: Locals definition. Semicolon is missing\n" % p.lineno(2))
     p[1].append(p[2])
     p[0]=p[1]    
 
@@ -270,43 +270,43 @@ def p_dec_listerror(p):
 def p_ubication1(p):
     'ubication : ID'
     p[0] = Ubication(p[1],_leaf=True)
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
 
 def p_ubication2(p):
     'ubication : ID LSBRACKET expression RSBRACKET'
     p[0] = Ubication_vector(p[1],Position(p[3]))
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
 
 #expressiones
 def p_expression1(p):
     'expression : expression PLUS expression'
     p[0] = Binary_op('+',p[1], p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(1)
 
 def p_expression2(p):
     'expression : expression MINUS expression'
     p[0] = Binary_op('-',p[1], p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
 
 def p_expression3(p):
     'expression : expression TIMES expression'
     p[0] = Binary_op('*',p[1], p[3])
-    p[0].lieno = lexer.lineno
+    p[0].lieno = p.lineno(2)
         
 def p_expression4(p):
     'expression : expression DIVIDE expression'
     p[0] = Binary_op('/',p[1],p[3])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
         
 def p_expression5(p):
     'expression : MINUS expression %prec UMINUS'
     p[0] = Unary_op('-',p[2])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
        
 def p_expression6(p):
     'expression : PLUS expression'
     p[0] = Unary_op('+',p[2])
-    p[0].lineno = lexer.lineno
+    p[0].lineno = p.lineno(2)
 
 def p_expression7(p):
     'expression : LPAREN expression RPAREN'
@@ -408,7 +408,7 @@ def p_empty(p):
 # regla de error general
 def p_error(p):
     if p:
-        sys.stderr.write ("Syntax error at line %d:  %s -> %s\n" % (lexer.lineno,p.type,p.value))
+        sys.stderr.write ("Syntax error at line %d:  %s -> %s\n" % (p.lineno(0),p.type,p.value))
 
 def make_parser(): 
     lexer = mpaslex.make_lexer()
