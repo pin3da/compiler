@@ -168,12 +168,16 @@ class SemanticVisitor(NodeVisitor):
 
         # return -The control- to program table
         self.actual_t = self.actual_t.parent
+        
+       
 
 
     def visit_Var_dec(self, var_dec): #no se si es necesario
-        if self.actual_t.find_repeated(var_dec.id):
-            raise Semantic_error('Identifier was declared multiple times in this scope: '+ var_dec.id + 'line: '+ var_dec.lineno)
-        self.actual_t.add(Data(var_dec.id,'variable',var_dec.typename ))
+        if self.actual_t.find(var_dec.id.value):
+            raise Semantic_error('Identifier was declared multiple times in this scope: '+ var_dec.id.value + 'line: '+ var_dec.lineno)
+        else
+            self.visit(var_dec.typename)
+            self.actual_t.add(Data(var_dec.id,'variable',var_dec.return_type[0] ))
 
 
     def visit_Block(self,block):
@@ -195,35 +199,32 @@ class SemanticVisitor(NodeVisitor):
         self.visit(_while.then)
         _while.return_type = _while.then.return_type
         
-    def visit_Assignation(self, node): #necesario
-        if(node):
-            var=self.actual_t.find(node.ubication.value)
-            if not(var):
-                raise Semantic_error('Identifier in assignation not found' + self.actual_fun.name)
-            else:
-                self.visit(node.value)                  
-                if var._type!=node.value.return_type:
-                    #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
-                    raise Semantic_error('Incompatible types in function: ' + self.actual_fun.name)
+    def visit_Assignation(self, assignation): #necesario
+        var=self.actual_t.find(assignation.ubication.value)
+        if not(var):
+            raise Semantic_error('Identifier in assignation not found' + self.actual_fun.name)
+        else:
+            self.visit(assignation.value)                  
+            if var._type!=node.value.return_type[0]:
+                #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
+                raise Semantic_error('Incompatible types in function: ' + self.actual_fun.name)
+    
         
+    def visit_Print(self, _print): #necesario
+        self.visit(_print.value)
+        if(node.value.return_type[0]!=String_type):#???
+            raise Semantic_error('Argument for Print must be a String in function' + self.actual_fun.name)                
+    
         
-    def visit_Print(self, node): #necesario
-        if(node):
-            if(node.value.return_type!=String_type):#???
-                raise Semantic_error('Argument for Print must be a String in function' + self.actual_fun.name)                
-        
-        
-    def visit_Write(self, node): #necesario
-        if(node):
-            if not(self.actual_t.find(node.value)):
-                raise Semantic_error('Identifier not found in function' + self.actual_fun.name)
+    def visit_Write(self, write): #necesario
+        if not(self.actual_t.find(node.value)):
+            raise Semantic_error('Identifier not found in function' + self.actual_fun.name)
         
     
     def visit_Read(self, node): #necesario
-        if(node):
-            if not(self.actual_t.find(node.value)):
-                raise Semantic_error('Identifier not found in function' + self.actual_fun.name)
-                 
+        if not(self.actual_t.find(node.value)):
+            raise Semantic_error('Identifier not found in function' + self.actual_fun.name)
+             
         
     def visit_Return(self, ret):
         if(node):
@@ -288,13 +289,13 @@ class SemanticVisitor(NodeVisitor):
         pass  
         
     def visit_Binary_op(self, node):
-        if(node):
-            self.visit(node.left)
-            self.visit(node.right)
-            if(node.left.return_type != node.right.return_type):
-                raise Semantic_error('Incompatible types in operation, in function' + self.actual_fun.name) 
-            else:
-               node.return_type=node.left.return_type               
+       
+        self.visit(node.left)
+        self.visit(node.right)
+        if(node.left.return_type != node.right.return_type):
+            raise Semantic_error('Incompatible types in operation, in function' + self.actual_fun.name) 
+        else:
+            node.return_type=node.left.return_type               
        
         
     def Unary_op(self, node):
