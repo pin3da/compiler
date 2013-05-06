@@ -36,7 +36,7 @@ def p_func_list2(p):
 
 def p_function(p):
     'function : FUNC ID LPAREN argsop RPAREN locals_op BEGIN dec_list END'
-    p[0] = Function(p[2], p[4],[], p[6], p[8])
+    p[0] = Function(p[2], p[4],None, p[6], p[8])
     p[0].lineno = p[4].lineno
 
 def p_function2(p):
@@ -53,7 +53,7 @@ def p_errorFuncion(p):
 
 def p_errorFuncion2(p):
     'function : FUNC ID LPAREN argsop RPAREN locals_op BEGIN dec_list SEMICOLON END'
-    p[0] = Function(p[2], p[4],[], p[6], p[8])
+    p[0] = Function(p[2], p[4],None, p[6], p[8])
     p[0].lineno = p[4].lineno     
     sys.stderr.write("Warning: Line %d. Statments ends with semicolon\n" %p.lineno(9))
 
@@ -146,19 +146,23 @@ def p_tipo2(p):
 def p_tipo3(p):
     'type : INT_TYPE LSBRACKET expression RSBRACKET'
     p[0] = Vector('integer', p[3])
+    p[0].lineno = p.lineno(1)
         
 def p_tipo4(p):
     'type : FLOAT_TYPE LSBRACKET expression RSBRACKET'
     p[0] = Vector('float',p[3])
+    p[0].lineno = p.lineno(1)
         
 
 def p_tipo5(p):
     'type : STRING_TYPE'
     p[0] = Type('string',_leaf=True)
+    p[0].lineno = p.lineno(1)
 
 def p_tipo6(p):
     'type : STRING_TYPE LSBRACKET expression RSBRACKET'
     p[0] = Vector('string',p[3])
+    p[0].lineno = p.lineno(1)
 
 #Statements/Declaraciones
 
@@ -281,7 +285,7 @@ def p_ubication2(p):
 def p_expression1(p):
     'expression : expression PLUS expression'
     p[0] = Binary_op('+',p[1], p[3])
-    p[0].lineno = p.lineno(1)
+    p[0].lineno = p.lineno(2)
 
 def p_expression2(p):
     'expression : expression MINUS expression'
@@ -408,7 +412,7 @@ def p_empty(p):
 # regla de error general
 def p_error(p):
     if p:
-        sys.stderr.write ("Syntax error at line %d:  %s -> %s\n" % (p.lineno(0),p.type,p.value))
+        sys.stderr.write ("Syntax error at line %d:  %s -> %s\n" % (p.lineno, p.type , p.value ))
 
 def make_parser(): 
     lexer = mpaslex.make_lexer()
