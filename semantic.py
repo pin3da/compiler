@@ -117,7 +117,7 @@ class SemanticVisitor(NodeVisitor):
             error(function.lineno,"The function was previously declared but the argument's type doesn't match ", filename=sys.argv[1] )
         elif is_repeated == 1:
             error(function.lineno,"The funcion was previously declared, neither return type nor argument's size matches",filename=sys.argv[1] )
-        elif is_repeated == 2:
+        elif is_repeated == 3:
             error(function.lineno, "The function was previously declared", filename=sys.argv[1])
 
         temporal_table = Table('fun_'+function.id , self.actual_t , 'function')
@@ -164,7 +164,12 @@ class SemanticVisitor(NodeVisitor):
                 error(function.lineno,'Function must have at least one return', filename = sys.argv[1])
             if p_return_type != function.type:
                 error(function.lineno, 'Function return does not matches with definition',filename = sys.argv[1] )
-         
+        
+
+        # return -The control- to program table
+        self.actual_t = self.actual_t.parent
+
+
     def visit_Var_dec(self, var_dec): #no se si es necesario
         if self.actual_t.find_repeated(var_dec.id):
             raise Semantic_error('Identifier was declared multiple times in this scope: '+ var_dec.id + 'line: '+ var_dec.lineno)
