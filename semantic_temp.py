@@ -142,10 +142,9 @@ class SemanticVisitor(NodeVisitor):
                 exit()
             else:
                 self.main = True
-        
-        if not isinstance(function.locals , Empty_locals):
-            for local in function.locals.local_var:
-                self.visit(local)
+
+        for local in function.locals.local_var:
+            self.visit(local)
             
 
         #llama para que de aqui en adelante los datos necesarios esten calculados
@@ -234,8 +233,6 @@ class SemanticVisitor(NodeVisitor):
                 error(ret.lineno, 'Error, return types do not match, in function: '+ self.actual_fun.name, filename=sys.argv[1])   
                 exit()
         ret.return_type  = ret.value.return_type
-        
-        
 
     def visit_Ubication(self,ubication):
          foo = self.actual_t.find(ubication.value)
@@ -303,7 +300,7 @@ class SemanticVisitor(NodeVisitor):
     
     def visit_Ifthenelse(self, _if):
         self.visit(_if.conditional)
-        if not (_if.conditional.return_type == 'integer'):
+        if not (_if.conditional.type == 'integer'):
             error(ifthen.lineno, 'Conditional in if is not correct, function: ' + self.actual_fun.name, filename=sys.argv[1] )
         self.visit(_if.then)
         self.visit(_if._else)
