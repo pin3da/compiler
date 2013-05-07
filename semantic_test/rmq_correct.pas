@@ -5,9 +5,11 @@
 
 
 func ST_init(data:int[100],tree:int[404],node:int, a:int, b:int)
+    left:int;
     c:int;
     begin
         c := 5
+
     end
 
 
