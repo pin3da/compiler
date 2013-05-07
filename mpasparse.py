@@ -262,13 +262,13 @@ def p_dec_list1(p):
 def p_dec_list2(p):
     'dec_list : dec_list SEMICOLON declaration'
     p[1].append(p[3])
-    p[0]=p[1]
+    p[0] = p[1]
 
 def p_dec_listerror(p):
     'dec_list : dec_list declaration'    
     sys.stderr.write("Error line %d: Locals definition. Semicolon is missing\n" % p.lineno(2))
     p[1].append(p[2])
-    p[0]=p[1]    
+    p[0] = p[1]    
 
 #ubication
 def p_ubication1(p):
@@ -315,30 +315,37 @@ def p_expression6(p):
 def p_expression7(p):
     'expression : LPAREN expression RPAREN'
     p[0] = p[2]
+    p[0].lineno = p.lineno(2)
 
 def p_expression8(p):
     'expression : ID LPAREN expressions_listop RPAREN'
     p[0] = Call_func(p[1],p[3])
+    p[0].lineno = p.lineno(1)
         
 def p_expression9(p):
     'expression : ID'
     p[0] = Id(p[1],_leaf=True)
+    p[0].lineno = p.lineno(1)
         
 def p_expression10(p):
     'expression : ID LSBRACKET expression RSBRACKET'
     p[0] = Vector(p[1],Position(p[3]))
-        
+    p[0].lineno =  p.lineno(1)
+
 def p_expression11(p):
     'expression : number'
     p[0] = p[1]
+    p[0].lineno = p.lineno(1)
 
 def p_expression12(p):
     'expression : INT_TYPE LPAREN expression RPAREN'
     p[0] = Cast_int(p[3])
+    p[0].lineno = p.lineno(1)
         
 def p_expression13(p):
     'expression : FLOAT_TYPE LPAREN expression RPAREN'
     p[0] = Cast_float(p[3])
+    p[0].lineno = p.lineno(1)
         
 #Lista de expressiones
 def p_expressions_listop1(p):
@@ -347,7 +354,7 @@ def p_expressions_listop1(p):
 
 def p_expressions_listop2(p):
     'expressions_listop : empty'
-    p[0] = Empty_expr_list()
+    p[0] = Empty_expr_list()    
         
 def p_expressions_list1(p):
     'expressions_list : expression'
@@ -361,50 +368,62 @@ def p_expressions_list2(p):
 def p_relation1(p):
     'relation : expression LT expression'
     p[0] = Binary_op('<', p[1],p[3])
+    p[0].lineno = p.lineno(2)
         
 def p_relation2(p):
     'relation : expression LE expression'
     p[0] = Binary_op('<=', p[1],p[3])
+    p[0].lineno = p.lineno(2)
         
 def p_relation3(p):
     'relation : expression GT expression'
     p[0] = Binary_op('>',p[1],p[3])
+    p[0].lineno = p.lineno(2)
         
 def p_relation4(p):
     'relation : expression GE expression'
     p[0] = Binary_op('>=',p[1],p[3])
+    p[0].lineno = p.lineno(2)
         
 def p_relation5(p):
     'relation : expression EQ expression'
     p[0] = Binary_op('==',p[1],p[3])
+    p[0].lineno = p.lineno(2)
         
 def p_relation6(p):
     'relation : expression NE expression'
     p[0] = Binary_op('!=',p[1],p[3])
+    p[0].lineno = p.lineno(2)
 
 def p_relation7(p):
     'relation : relation AND relation'
     p[0] = Binary_op('and',p[1],p[3])
-        
+    p[0].lineno = p.lineno(2)
+    
 def p_relation8(p):
     'relation : relation OR relation'
     p[0] = Binary_op('or',p[1],p[3])
-        
+    p[0].lineno = p.lineno(2)
+   
 def p_relation9(p):
     'relation : NOT relation'
     p[0] = Unary_op('not',p[2])
+    p[0].lineno =  p.lineno(1)
         
 def p_relation10(p):
     'relation : LPAREN relation RPAREN'
     p[0] = p[2]
+    p[0].lineno = p.lineno(2)
 
 def p_number1(p):
     'number : INTEGER'
     p[0] = Integer(p[1],_leaf=True)
+    p[0].lineno = p.lineno(1)
         
 def p_number(p):
     'number : FLOAT'
     p[0] = Float(p[1],_leaf=True)
+    p[0].lineno = p.lineno(1)
         
 def p_empty(p):
     'empty :'

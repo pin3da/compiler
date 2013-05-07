@@ -66,7 +66,7 @@ def error(lineno, message, filename=None):
 	if not filename:
 		errmsg = "{}: {}".format(lineno, message)
 	else:
-		errmsg = "{}:{}: {}".format(filename,lineno,message)
+		errmsg = "{} : {} : {}".format(filename,lineno,message)
 	for subscriber in _subscribers:
 		subscriber(errmsg)
 	_num_errors += 1
