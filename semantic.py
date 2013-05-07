@@ -209,19 +209,13 @@ class SemanticVisitor(NodeVisitor):
         _print.return_type = _print.value.return_type
     
     def visit_Write(self, write): 
-        if not(self.actual_t.find(write.value)):
-            error(write.lineno, 'Error, Identifier not found in Write statement', filename=sys.argv[1])
-            exit()
         self.visit(write.value)
         write.return_type = write.value.return_type
 
     
     def visit_Read(self, read):
-        if not(self.actual_t.find(read.value)):
-            error(read.lineno, 'Error, Identifier not found in Read statement', filename=sys.argv[1])
-            exit()
-        self.visit(read.value)
-        read.return_type = read.value.return_type
+        self.visit(read.var_id)
+        read.return_type = read.var_id.return_type
              
         
     def visit_Return(self, ret):
@@ -236,7 +230,13 @@ class SemanticVisitor(NodeVisitor):
         
         ret.return_type  = ret.value.return_type
 
-        
+    def visit_Ubication(self,ubication):
+         foo = self.actual_t.find(ubication.value)
+         if foo == None:
+            error(ubication.lineno, 'Identifier not declared : '+ ubication.value, filename=sys.argv[1] )
+            exit()
+
+
     def visit_Call_func(self, fun):
         act_fun = self.actual_t.find(fun.func_id)
         if act_fun == None or act_fun._class != 'function' :
@@ -338,8 +338,18 @@ class SemanticVisitor(NodeVisitor):
         else:
             _id.return_type =  p_id._type
         
-    def visit_Ubication_vector(self, node): #necesario
-        pass  
+    def visit_Ubication_vector(self, ubi_vector): 
+        p_id =  self.actual_t.find(ubi_vector.id)
+        if(p_id == None):
+            error(ubi_vector.lineno, 'Vector not declared: '+ ubi_vector.id, filename=sys.argv[1] )
+            exit()
+        else:
+            self.visit(ubi_vector.Position)
+            if ubi_vector.Position.return_type != 'integer':
+                error(ubi_vector.lineno, 'Index invalid, must be an integer: '+ ubi_vector.id, filename=sys.argv[1] )
+                exit()
+
+
         
     def Unary_op(self, node):
         pass
@@ -378,8 +388,9 @@ class SemanticVisitor(NodeVisitor):
     def visit_Position(self, node): # no se si es necesario
         pass
         
-    def visit_Condition(self, node):
-        pass
+    def visit_Condition(self, _condition):
+        self.visit(_condition.relation)
+        _condition.return_type =  _condition.relation.return_type
     
 
 
