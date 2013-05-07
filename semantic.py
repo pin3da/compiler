@@ -142,9 +142,10 @@ class SemanticVisitor(NodeVisitor):
                 exit()
             else:
                 self.main = True
-
-        for local in function.locals.local_var:
-            self.visit(local)
+        
+        if not isinstance(function.locals , Empty_locals):
+            for local in function.locals.local_var:
+                self.visit(local)
             
 
         #llama para que de aqui en adelante los datos necesarios esten calculados
@@ -297,7 +298,7 @@ class SemanticVisitor(NodeVisitor):
     
     def visit_Ifthenelse(self, _if):
         self.visit(_if.conditional)
-        if not (_if.conditional.type == 'integer'):
+        if not (_if.conditional.return_type == 'integer'):
             error(ifthen.lineno, 'Conditional in if is not correct, function: ' + self.actual_fun.name, filename=sys.argv[1] )
         self.visit(_if.then)
         self.visit(_if._else)
