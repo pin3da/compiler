@@ -111,7 +111,10 @@ class SemanticVisitor(NodeVisitor):
             
 
     #podria llamarse visit_Function y llamar el metodo visit para que vaya a los hijos
-    def generate_table_function(self,function): 
+    def generate_table_function(self,function):
+        temporal_table = Table('fun_'+function.id , self.actual_t , 'function')
+        self.actual_t.add_child(temporal_table)        
+        self.actual_t = temporal_table
         self.visit(function.arglist)
         
         _arguments = []
@@ -130,11 +133,7 @@ class SemanticVisitor(NodeVisitor):
         elif is_repeated == 3:
             error(function.lineno, "The function was previously declared", filename=sys.argv[1])
             exit()
-
-        temporal_table = Table('fun_'+function.id , self.actual_t , 'function')
-
-        self.actual_t.add_child(temporal_table)        
-        self.actual_t = temporal_table
+        
         self.actual_fun = function_t 
 
         if function.id == 'main':
@@ -278,7 +277,11 @@ class SemanticVisitor(NodeVisitor):
             ids.append(field.id)
             #self.actual_t.add(Data(field.id , 'variable',field.typename.value))
             self.visit(field)
-            field.return_type =  field.typename.value
+            if( hasattr(field.typename,'value') ):
+                field.return_type =  field.typename.value
+            else:
+                self.visit(field.typename)
+                field.return_type  = field.typename.return_type
     
     def visit_Ifthen(self, ifthen):
         self.visit(ifthen.conditional)
@@ -385,8 +388,9 @@ class SemanticVisitor(NodeVisitor):
     def visit_Else(self, node):
         pass
         
-    def visit_Position(self, node): # no se si es necesario
-        pass
+    def visit_Position(self, pos):
+        self.visit(pos.expr)
+        pos.return_type = pos.expr.return_type
         
     def visit_Condition(self, _condition):
         self.visit(_condition.relation)
