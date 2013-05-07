@@ -8,26 +8,22 @@ A minipascal compiler for my compliers course on Universidad Tecnologica de Pere
 
 this is a free software project, if you wanna copy/change/modify for academic purposes, feel free to do it (Remember to give credit and thanks to the creators).
 
-### how to test
+if you want to check the code, you can run any of pascal codes in test dir
 
-go to test directory and run "test.sh"
+### to run
+    
+    python <phase>.py path_to_file.pas
 
-	cd test/
-	./test.sh
-	
-it will run the "correct" tests, to run all write
-	
-	./test.sh -all
-	
-to run a specific test write
+where <phase> can be: mpaslexer , mpasparser , semantic
 
-	./test.sh specific_name
-	
-or
-	
-	python mpaslex.py specific_name
-	
-	
-	
+
+- Lexer returns a list with all tokens of program
+- Parser generate a .png image which will contains the AST for your progam, this file will be create at "path_to_file.png"
+- Semantic checks your progam and advertises you about the problems
+
+
+##enjoy!
+
+
 _________
 https://github.com/pin3da/compiler

@@ -172,19 +172,20 @@ class SemanticVisitor(NodeVisitor):
             self.actual_t.add(Data(var_dec.id,'variable', var_dec.typename.return_type ))
             var_dec.return_type = var_dec.typename.return_type
             
-    def visit_Assignation(self, assignation): #necesario
-        var = self.actual_t.find(assignation.ubication.value)
-        if var == None:
-            error(assignation.lineno, 'Identifier not found', filename=sys.argv[1])
+    def visit_Assignation(self, assignation):
+        self.visit(assignation.ubication)
+        self.visit(assignation.value)
+        
+        p_var = self.actual_t.find(assignation.value.return_type)
+        
+        if not (p_var == None):
+            assignation.value.return_type = p_var._type
+
+
+        if assignation.ubication.return_type != assignation.value.return_type:
+            #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
+            error(assignation.lineno, 'Incompatible Types in assignation', filename=sys.argv[1])
             exit()
-        else:
-            self.visit(assignation.value)
-            if var._type != assignation.value.return_type:
-                #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
-                error(assignation.lineno, 'Incompatible Types in assignation', filename=sys.argv[1])
-                #exit()
-            else:
-                assignation.return_type = assignation.value.return_type
 
     def visit_Block(self,block):
         for statement in block.declarations_list:
@@ -242,6 +243,7 @@ class SemanticVisitor(NodeVisitor):
          if foo == None:
             error(ubication.lineno, 'Identifier not declared : '+ ubication.value, filename=sys.argv[1] )
             exit()
+         ubication.return_type = foo._type
 
 
     def visit_Call_func(self, fun):
@@ -360,6 +362,8 @@ class SemanticVisitor(NodeVisitor):
             if ubi_vector.Position.return_type != 'integer':
                 error(ubi_vector.lineno, 'Index invalid, must be an integer: '+ ubi_vector.id, filename=sys.argv[1] )
                 exit()
+
+        ubi_vector.return_type = p_id._type
 
 
         
