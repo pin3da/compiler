@@ -188,8 +188,8 @@ def p_declaration4(p):
         
 def p_declaration_error(p):
     'declaration : ubication COLONEQUAL expression'
-    p[0].lineno = p.lineno(1)
-    sys.stderr.write("Error line %d: Assignation must be :=\n" % p.lineno(1))
+    sys.stderr.write("Error line %d: Assignation must be :=\n" % p.lineno(2))
+    exit()
 
 def p_declaration5(p):
     'declaration : PRINT LPAREN STRING RPAREN'

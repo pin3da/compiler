@@ -4,12 +4,28 @@
 ******/
 
 
+func min(a:int , b:int)
+    begin
+        if a < b then 
+            return a
+        else 
+            return b
+    end
+
 func ST_init(data:int[100],tree:int[404],node:int, a:int, b:int)
     left:int;
     c:int;
     begin
-        c := 5
-
+        if (a == b) then
+            begin
+                tree[node] := data[a]
+            end
+        else
+            begin
+                ST_init(data, tree, node*2 , a, (a+b)/2);
+                ST_init(data, tree, (node*2)+1, ((a+b)/2)+1, b);
+                tree[node] := min(tree[node*2],tree[(node*2)+1])
+            end
     end
 
 
