@@ -18,6 +18,7 @@ func ST_query(tree:int[404], node:int, a:int, b:int, i:int, j:int):int
     begin
         left := (a+b)/2;
         right := left + 1;
+        return right
     end
 
 func main()
