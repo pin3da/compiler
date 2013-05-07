@@ -11,6 +11,15 @@ func ST_init(data:int[100],tree:int[404],node:int, a:int, b:int)
     end
 
 
+func ST_query(tree:int[404], node:int, a:int, b:int, i:int, j:int):int
+    left:int;
+    right:int;
+    mid:int;
+    begin
+        left := (a+b)/2;
+        right := left + 1;
+    end
+
 func main()
     a:int;
     i:int;

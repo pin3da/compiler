@@ -220,11 +220,14 @@ class SemanticVisitor(NodeVisitor):
     def visit_Return(self, ret):
         self.visit(ret.value)
         ret.hasReturn=True
-        if(actual_fun._type == None):
-            actual_fun._type = ret.value.return_type
+
+        if not (isinstance(self.actual_fun._type,str)):
+            self.actual_fun._type = self.actual_fun._type.value
+        if(self.actual_fun._type == None):
+            self.actual_fun._type = ret.value.return_type
             
-        elif(ret.value.return_type != actual_fun._type): 
-            error(ret.lineno, 'Error, return types do not match, in function'+ actual_fun.name, filename=sys.argv[1])   
+        elif(ret.value.return_type != self.actual_fun._type): 
+            error(ret.lineno, 'Error, return types do not match, in function: '+ self.actual_fun.name, filename=sys.argv[1])   
             exit()
         
         ret.return_type  = ret.value.return_type
