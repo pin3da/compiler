@@ -352,7 +352,7 @@ class SemanticVisitor(NodeVisitor):
             node.return_type = node.left.return_type
     
     def visit_Cast_int(self, node):
-        visit(node.value)
+        self.visit(node.value)
         possible = ['float']
         if not (node.value.return_type in possible):#deberiamos tener todo esto en una rchivo que angle mando (Float_type, String_type)
             error(node.lineno, 'Must be a float to convert to integer, in function' + self.actual_fun.name, filename=sys.argv[1] )

@@ -1,4 +1,4 @@
-fun bad_break(x:int)
+fun main(x:int)
    begin
       write(x);
       while (x > 0) do begin
