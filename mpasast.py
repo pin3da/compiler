@@ -5,11 +5,11 @@ import pydot
 Objetos Arbol de Sintaxis Abstracto (AST - Abstract Syntax Tree).
 
 Este archivo define las clases para los diferentes tipos de nodos del
-·rbol de sintaxis abstracto.  Durante el an·lisis sint·tico, se debe 
-crear estos nodos y conectarlos.  En general, usted tendr· diferentes
+√°rbol de sintaxis abstracto.  Durante el an√°lisis sint√°tico, se debe 
+crear estos nodos y conectarlos.  En general, usted tendr√° diferentes
 nodos AST para cada tipo de regla gramatical.  Algunos ejemplos de
-nodos AST pueden ser encontrados al comienzo del archivo.  Usted deber·
-aÒadir m·s.
+nodos AST pueden ser encontrados al comienzo del archivo.  Usted deber√°
+a√±adir m√°s.
 '''
 
 # NO MODIFICAR
@@ -17,10 +17,10 @@ class AST(object):
     '''
     Clase base para todos los nodos del AST.  Cada nodo se espera 
     definir el atributo _fields el cual enumera los nombres de los
-    atributos almacenados.  El mÈtodo a continuaciÛn __init__() toma
+    atributos almacenados.  El m√©todo a continuaci√≥n __init__() toma
     argumentos posicionales y los asigna a los campos apropiados.
     Cualquier argumento adicional especificado como keywords son 
-    tambiÈn asignados.
+    tambi√©n asignados.
     '''
     _fields = []
     def __init__(self,*args,**kwargs):
@@ -65,10 +65,10 @@ def validate_fields(**fields):
 # ----------------------------------------------------------------------
 # Nodos AST especificos
 #
-# Para cada nodo es necesario definir una clase y aÒadir la especificaciÛn
+# Para cada nodo es necesario definir una clase y a√±adir la especificaci√≥n
 # del apropiado _fields = [] que indique que campos deben ser almacenados.
 # A modo de ejemplo, para un operador binario es posible almacenar el
-# operador, la expresiÛn izquierda y derecha, como esto:
+# operador, la expresi√≥n izquierda y derecha, como esto:
 # 
 #    class Binop(AST):
 #        _fields = ['op','left','right']
@@ -119,10 +119,11 @@ class Local_var(AST):
 @validate_fields(local_fun=list)
 class Local_fun(AST):
     _fields = ['local_fun']
-    
+
     def append(self,e):
         self.local_fun.append(e)
 
+    
 class Error_locals_def(AST):
     _fields = ['error']                
                 
@@ -232,7 +233,7 @@ class Empty(AST):
     _fields = []
 
 
-# Usted deber· aÒadir mas nodos aquÌ.  Algunos nodos sugeridos son
+# Usted deber√° a√±adir mas nodos aqu√≠.  Algunos nodos sugeridos son
 # BinaryOperator, UnaryOperator, ConstDeclaration, VarDeclaration, 
 # AssignmentStatement, etc...
 
@@ -241,17 +242,17 @@ class Empty(AST):
 # ----------------------------------------------------------------------
 
 # Las clase siguientes para visitar y reescribir el AST son tomadas
-# desde el mÛdulo ast de python .
+# desde el m√≥dulo ast de python .
 
 # NO MODIFIQUE
 class NodeVisitor(object):
     '''
-    Clase para visitar nodos del ·rbol de sintaxis.  Se modelÛ a partir
-    de una clase similar en la librerÌa est·ndar ast.NodeVisitor.  Para
-    cada nodo, el mÈtodo visit(node) llama un mÈtodo visit_NodeName(node)
-    el cual debe ser implementado en la subclase.  El mÈtodo genÈrico
+    Clase para visitar nodos del √°rbol de sintaxis.  Se model√≥ a partir
+    de una clase similar en la librer√≠a est√°ndar ast.NodeVisitor.  Para
+    cada nodo, el m√©todo visit(node) llama un m√©todo visit_NodeName(node)
+    el cual debe ser implementado en la subclase.  El m√©todo gen√©rico
     generic_visit() es llamado para todos los nodos donde no hay coincidencia
-    con el mÈtodo visit_NodeName().
+    con el m√©todo visit_NodeName().
     
     Es es un ejemplo de un visitante que examina operadores binarios:
 
@@ -269,7 +270,7 @@ class NodeVisitor(object):
     '''
     def visit(self,node):
         '''
-        Ejecuta un mÈtodo de la forma visit_NodeName(node) donde
+        Ejecuta un m√©todo de la forma visit_NodeName(node) donde
         NodeName es el nombre de la clase de un nodo particular.
         '''
         if node:
@@ -281,7 +282,7 @@ class NodeVisitor(object):
     
     def generic_visit(self,node):
         '''
-        MÈtodo ejecutado si no se encuentra mÈdodo aplicable visit_.
+        M√©todo ejecutado si no se encuentra m√©dodo aplicable visit_.
         Este examina el nodo para ver si tiene _fields, es una lista,
         o puede ser recorrido completamente.
         '''
@@ -303,10 +304,10 @@ class NodeTransformer(NodeVisitor):
     nodo es borrado. Si se retorna otro valor, reemplaza el nodo
     original.
     
-    El uso principal de esta clase es en el cÛdigo que deseamos aplicar
+    El uso principal de esta clase es en el c√≥digo que deseamos aplicar
     transformaciones al arbol de sintaxis.  Por ejemplo, ciertas optimizaciones
-    del compilador o ciertas reescrituras de pasos anteriores a la generaciÛn
-    de cÛdigo.
+    del compilador o ciertas reescrituras de pasos anteriores a la generaci√≥n
+    de c√≥digo.
     '''
     def generic_visit(self,node):
         for field in getattr(node,"_fields"):
@@ -333,9 +334,9 @@ class NodeTransformer(NodeVisitor):
 def flatten(top):
     '''
     Aplana el arbol de sintaxis dentro de una lista para efectos
-    de depuraciÛn y pruebas.  Este retorna una lista de tuplas de
+    de depuraci√≥n y pruebas.  Este retorna una lista de tuplas de
     la forma (depth, node) donde depth es un entero representando
-    la profundidad del arbÛl de sintaxis y node es un node AST
+    la profundidad del arb√≥l de sintaxis y node es un node AST
     asociado.
     '''
     class Flattener(NodeVisitor):

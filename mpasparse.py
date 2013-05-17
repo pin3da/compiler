@@ -237,12 +237,12 @@ def p_error_empty_list(p):
 #if
 def p_ifthen(p):
     'ifthen : IF relation THEN declaration %prec ELSE'
-    p[0] = Ifthen( Condition(p[2]),Then(p[4]) )
+    p[0] = Ifthen( p[2],Then(p[4]) )
     p[0].lineno = p.lineno(2)
 
 def p_ifthenelse(p):
     'ifthenelse : IF relation THEN declaration ELSE declaration'
-    p[0] = Ifthenelse(Condition(p[2]),Then(p[4]),Else(p[6]))
+    p[0] = Ifthenelse(p[2],Then(p[4]),Else(p[6]))
     p[0].lineno = p.lineno(2)
 
 def p_errorifthen(p):
@@ -329,7 +329,7 @@ def p_expression9(p):
         
 def p_expression10(p):
     'expression : ID LSBRACKET expression RSBRACKET'
-    p[0] = Vector(p[1],Position(p[3]))
+    p[0] = Ubication_vector(p[1],Position(p[3]))
     p[0].lineno =  p.lineno(1)
 
 def p_expression11(p):

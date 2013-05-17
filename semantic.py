@@ -110,13 +110,16 @@ class SemanticVisitor(NodeVisitor):
             exit()
             
 
+    def visit_Function(self,fun):
+        self.generate_table_function(fun)
+
     #podria llamarse visit_Function y llamar el metodo visit para que vaya a los hijos
     def generate_table_function(self,function):
         temporal_table = Table('fun_'+function.id , self.actual_t , 'function')
         self.actual_t.add_child(temporal_table)        
         self.actual_t = temporal_table
         self.visit(function.arglist)
-        
+        function_parent = self.actual_fun 
         _arguments = []
         if function.arglist.__class__.__name__ != 'Empty_arguments':
             for ar in function.arglist.variables:
@@ -144,8 +147,13 @@ class SemanticVisitor(NodeVisitor):
                 self.main = True
         
         if not isinstance(function.locals , Empty_locals):
-            for local in function.locals.local_var:
-                self.visit(local)
+            if hasattr(function.locals,"local_var"):
+                for local in function.locals.local_var:
+                    self.visit(local)
+            if hasattr(function.locals,"local_fun"):
+                for local in function.locals.local_fun:
+                    self.visit(local)
+
             
 
         #llama para que de aqui en adelante los datos necesarios esten calculados
@@ -157,15 +165,20 @@ class SemanticVisitor(NodeVisitor):
                 #exit()
         
         # return -The control- to program table
+
+        if isinstance(function_t._type,Type):
+            function_t._type = function_t._type.value
+                
+        self.actual_fun = function_parent
         self.actual_t = self.actual_t.parent
         self.actual_t.add(function_t)
        
 
 
-    def visit_Var_dec(self, var_dec): #no se si es necesario
+    def visit_Var_dec(self, var_dec): 
         if self.actual_t.find(var_dec.id):
-            error(var_dec.lineno, 'Redeclared Variable: '+ var_dec.id, filename=sys.argv[1])
-            exit()
+            error(var_dec.lineno, 'Warning: Redeclared Variable: '+ var_dec.id, filename=sys.argv[1])
+            #exit()
             #pass
         else:
             self.visit(var_dec.typename)
@@ -230,7 +243,7 @@ class SemanticVisitor(NodeVisitor):
             self.actual_fun._type = ret.value.return_type
         else:
             if not (isinstance(self.actual_fun._type,str)):
-                self.actual_fun._type = self.actual_fun._type.value    
+                self.actual_fun._type = self.actual_fun._type.value 
             elif(ret.value.return_type != self.actual_fun._type): 
                 error(ret.lineno, 'Error, return types do not match, in function: '+ self.actual_fun.name, filename=sys.argv[1])   
                 exit()
@@ -248,11 +261,13 @@ class SemanticVisitor(NodeVisitor):
 
     def visit_Call_func(self, fun):
         act_fun = self.actual_t.find(fun.func_id)
-        if act_fun == None or act_fun._class != 'function' :
+        if (act_fun == None or act_fun._class != 'function') and fun.func_id != self.actual_fun.name:
             error(fun.lineno, 'Function not declared: '+ fun.func_id , filename=sys.argv[1] )
             exit()
         else:
-            fun.return_type=act_fun._type    
+            if(fun.func_id == self.actual_fun.name): #Porque a penas se esta visitando
+                return     
+            fun.return_type = act_fun._type    
         
         _arguments = []
         if fun.varlist.__class__.__name__ == 'Expression_list':
@@ -296,17 +311,17 @@ class SemanticVisitor(NodeVisitor):
     
     def visit_Ifthen(self, ifthen):
         self.visit(ifthen.conditional)
-        if not(ifthen.conditional.type == 'integer'):
+        if not(ifthen.conditional.return_type == 'integer'):
             error(ifthen.lineno, 'Conditional in if is not correct, function: ' + self.actual_fun.name, filename=sys.argv[1] )
-        self.visit(ithen.then)
+        self.visit(ifthen.then)
         ifthen.hasReturn=ifthen.then.hasReturn
         ifthen.return_type = ifthen.then.return_type
 
     
     def visit_Ifthenelse(self, _if):
         self.visit(_if.conditional)
-        if not (_if.conditional.return_type == 'integer'):
-            error(ifthen.lineno, 'Conditional in if is not correct, function: ' + self.actual_fun.name, filename=sys.argv[1] )
+        if (_if.conditional.return_type != 'integer'):
+            error(_if.lineno, 'Conditional in if is not correct, function: ' + self.actual_fun.name, filename=sys.argv[1] )
         self.visit(_if.then)
         self.visit(_if._else)
         _if.hasReturn = _if.then.hasReturn or _if._else.hasReturn
@@ -367,8 +382,9 @@ class SemanticVisitor(NodeVisitor):
 
 
         
-    def Unary_op(self, node):
-        pass
+    def visit_Unary_op(self, node):
+        self.visit(node.value)
+        node.return_type = node.value.return_type
        
     def visit_Integer(self, node):
         node.return_type = 'integer'
@@ -408,7 +424,10 @@ class SemanticVisitor(NodeVisitor):
     def visit_Condition(self, _condition):
         self.visit(_condition.relation)
         _condition.return_type =  _condition.relation.return_type
-    
+   
+    def visit_Local_fun(self,_fun):
+        self.visit(_fun.local_fun)
+        _fun.return_type = _fun.local_fun.return_type
 
 
 def check_program(root):
