@@ -106,9 +106,8 @@ class SemanticVisitor(NodeVisitor):
             self.generate_table_function(function)
 
         if not (self.main) :
-            error(0,'Function main was not found',filename=sys.argv[1])
-            exit()
-            
+            error(0,'Warning: Function main was not found',filename=sys.argv[1])
+            #exit()            
 
     def visit_Function(self,fun):
         self.generate_table_function(fun)
@@ -396,8 +395,21 @@ class SemanticVisitor(NodeVisitor):
     def visit_Type(self,_type):
         _type.return_type =  _type.value
     
+    ####
+    # Preguntar acerca de indices negativos.Deberia ser en tiempo de ejecucion.
+    # si es algo como X[a*b] ?
+    ####
+    def visit_Ubication_vector(self,ubication):
+        var = self.actual_t.find(ubication.id)
+        if(var == None):
+            error(ubication.lineno,'Vector not declared', filename=sys.argv[1])
+            exit()
+        ubication.return_type = var._type[:-6]
+        
+
+
     def visit_Vector(self,vector):
-        vector.return_type = vector.type
+        vector.return_type = vector.type+"vector"
         self.visit(vector.length)
         if( vector.length.return_type != 'integer'):
             error(vector.lineno, 'Length of vector must be an integer',filename=sys.argv[1] )
@@ -445,4 +457,7 @@ def main():
         check_program(program)
 
 if __name__ == '__main__':
+    if(len(sys.argv) != 2):
+        print "usage: python semantic.py <path_to_file>"
+        exit()
     main()
