@@ -79,16 +79,19 @@ class Table:
                 return 1
                 
             for args1,args2 in zip (function.info, possible.info):
-                if args1._type != args2._type:
+                #print "primero ", args1.return_type 
+                #print "segundo ", args2.return_type
+                if args1.return_type != args2.return_type:
                      return 2
-
 
             return 3
 
         elif self.parent != None:
-            self.parent.find_function_repeated(function)
+            return self.parent.find_function_repeated(function)
+        else:
+            return 0
+        
 
-        return 0
 
 
 class SemanticVisitor(NodeVisitor):
