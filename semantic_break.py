@@ -238,9 +238,6 @@ class SemanticVisitor(NodeVisitor):
     
     def visit_Write(self, write): 
         self.visit(write.value)
-        possible = ["float","integer","string"]
-        if not write.value.return_type in possible:
-            error(write.lineno, "Not a Writeable Type", filename=sys.argv[1])
         write.return_type = write.value.return_type
 
     
@@ -254,7 +251,7 @@ class SemanticVisitor(NodeVisitor):
         possible = ["float","integer","string"]
         #print read.var_id.return_type
         if not read.var_id.return_type in possible:
-            error(read.lineno, "Not a readable Type", filename=sys.argv[1])
+            error(read.lineno, "Can't read into an array", filename=sys.argv[1])
         read.return_type = read.var_id.return_type
              
         
@@ -344,7 +341,7 @@ class SemanticVisitor(NodeVisitor):
     def visit_Ifthen(self, ifthen):
         self.visit(ifthen.conditional)
         if not(ifthen.conditional.return_type == 'integer'):
-            error(ifthen.conditional.lineno, 'Conditional in if is not correct', filename=sys.argv[1] )
+            error(ifthen.lineno, 'Conditional in if is not correct', filename=sys.argv[1] )
         self.visit(ifthen.then)
         ifthen.hasReturn=ifthen.then.hasReturn
         ifthen.return_type = ifthen.then.return_type
@@ -377,9 +374,8 @@ class SemanticVisitor(NodeVisitor):
     def visit_Binary_op(self, node):
         self.visit(node.left)
         self.visit(node.right)
-        #print node.op
         if(node.left.return_type != node.right.return_type):
-            error(node.lineno,'Incompatible types in operation', filename=sys.argv[1] ) 
+            error(node.right.lineno,'Incompatible types in operation', filename=sys.argv[1] ) 
             #exit()
         else:
             node.return_type = node.left.return_type

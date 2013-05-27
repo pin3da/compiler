@@ -1,0 +1,7 @@
+for file in	errors/*.pas
+do 
+    python semantic.py ${file}
+    if [ $? ]; then
+        echo "ERROR !! : "  ${file}
+    fi
+done

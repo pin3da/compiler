@@ -169,7 +169,7 @@ def p_tipo6(p):
 def p_declaration1(p):
     'declaration : WHILE relation DO declaration'
     p[0] = While(Condition(p[2]),Then(p[4]) )
-    p[0].lineno = p.lineno(2)
+    p[0].lineno = p.lineno(1)
         
 def p_declaration2(p):
     'declaration : ifthen'
@@ -238,12 +238,12 @@ def p_error_empty_list(p):
 def p_ifthen(p):
     'ifthen : IF relation THEN declaration %prec ELSE'
     p[0] = Ifthen( p[2],Then(p[4]) )
-    p[0].lineno = p.lineno(2)
+    p[0].lineno = p.lineno(1)
 
 def p_ifthenelse(p):
     'ifthenelse : IF relation THEN declaration ELSE declaration'
     p[0] = Ifthenelse(p[2],Then(p[4]),Else(p[6]))
-    p[0].lineno = p.lineno(2)
+    p[0].lineno = p.lineno(1)
 
 def p_errorifthen(p):
     'ifthen : IF relation declaration %prec ELSE'
@@ -295,7 +295,7 @@ def p_expression2(p):
 def p_expression3(p):
     'expression : expression TIMES expression'
     p[0] = Binary_op('*',p[1], p[3])
-    p[0].lieno = p.lineno(2)
+    p[0].lineno = p.lineno(2)
         
 def p_expression4(p):
     'expression : expression DIVIDE expression'
