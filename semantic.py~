@@ -34,11 +34,6 @@ class Table:
             return False
         self.table[n_data.name] = n_data
         return True
-    
-    def rem(self, _name):
-        del self.table[_name]
-
-
 
     def find(self,name):
         if name in self.table:
@@ -125,7 +120,7 @@ class SemanticVisitor(NodeVisitor):
     #podria llamarse visit_Function y llamar el metodo visit para que vaya a los hijos
     def generate_table_function(self,function):
         temporal_table = Table('fun_'+function.id , self.actual_t , 'function')
-        self.actual_t.add_child(temporal_table)
+        self.actual_t.add_child(temporal_table)        
         self.actual_t = temporal_table
         self.visit(function.arglist)
         function_parent = self.actual_fun 
@@ -138,22 +133,20 @@ class SemanticVisitor(NodeVisitor):
         is_repeated = self.actual_t.find_function_repeated(function_t)
         if is_repeated == 2:
             error(function.lineno,"The function was previously declared but the argument's type doesn't match ", filename=sys.argv[1] )
-            #exit()
+            exit()
         elif is_repeated == 1:
             error(function.lineno,"The funcion was previously declared, neither return type nor argument's size matches",filename=sys.argv[1] )
-            #exit()
+            exit()
         elif is_repeated == 3:
             error(function.lineno, "The function was previously declared", filename=sys.argv[1])
-            #exit()
+            exit()
         
         self.actual_fun = function_t 
 
-        self.actual_t.add(function_t)
-        
         if function.id == 'main':
             if self.main:
                 error(function.lineno, 'The program must have a only one main function', filename=sys.argv[1])
-                #exit()
+                exit()
             else:
                 self.main = True
         
@@ -164,6 +157,8 @@ class SemanticVisitor(NodeVisitor):
             if hasattr(function.locals,"local_fun"):
                 for local in function.locals.local_fun:
                     self.visit(local)
+
+            
 
         #llama para que de aqui en adelante los datos necesarios esten calculados
         self.visit_Block(function.block)
@@ -176,10 +171,8 @@ class SemanticVisitor(NodeVisitor):
         # return -The control- to program table
 
         if isinstance(function_t._type,Type):
-            self.visit(function_t._type)
-            function_t._type = function_t._type.return_type
-        
-        self.actual_t.rem(function_t.name)
+            function_t._type = function_t._type.value
+                
         self.actual_fun = function_parent
         self.actual_t = self.actual_t.parent
         self.actual_t.add(function_t)
@@ -196,7 +189,7 @@ class SemanticVisitor(NodeVisitor):
             if not isinstance(var_dec.typename,Vector):
                 self.actual_t.add(Data(var_dec.id,'variable', var_dec.typename.return_type ))
             else:
-                self.actual_t.add(Data(var_dec.id,'variable',var_dec.typename.return_type,var_dec.typename.length.value))
+                self.actual_t.add(Data(var_dec.id,'variable',var_dec.typename.return_type,var_dec.typename.length))
 
             var_dec.return_type = var_dec.typename.return_type
             
@@ -238,7 +231,7 @@ class SemanticVisitor(NodeVisitor):
             self.visit(_print.value)
             if _print.value.return_type != 'string':
                 error(_print.lineno, 'Error, print must have a string type', filename=sys.argv[1])
-                #exit()
+                exit()
             _print.return_type = _print.value.return_type
         elif not(isinstance(_print.value, str)):
             error(_print.lineno, 'Error, print must have a string type', filename=sys.argv[1])    
@@ -250,6 +243,8 @@ class SemanticVisitor(NodeVisitor):
             error(write.lineno, "Not a Writeable Type", filename=sys.argv[1])
         write.return_type = write.value.return_type
 
+    
+    
     ###
     # Se debe organizar para que NO lea cosas como
     # read(1)
@@ -277,7 +272,7 @@ class SemanticVisitor(NodeVisitor):
                     self.actual_fun._type = self.actual_fun._type.value 
             elif(ret.value.return_type != self.actual_fun._type): 
                 error(ret.lineno, 'Error, return types do not match', filename=sys.argv[1])   
-                #exit()
+                exit()
         ret.return_type  = ret.value.return_type
         
         
@@ -286,7 +281,7 @@ class SemanticVisitor(NodeVisitor):
          foo = self.actual_t.find(ubication.value)
          if foo == None:
             error(ubication.lineno, 'Identifier not declared : '+ ubication.value, filename=sys.argv[1] )
-            #exit()
+            exit()
          ubication.return_type = foo._type
 
 
@@ -294,9 +289,10 @@ class SemanticVisitor(NodeVisitor):
         act_fun = self.actual_t.find(fun.func_id)
         if (act_fun == None or act_fun._class != 'function') and fun.func_id != self.actual_fun.name:
             error(fun.lineno, 'Function not declared: '+ fun.func_id , filename=sys.argv[1] )
-            #exit()
+            exit()
         else:
-            #self.visit()
+            if(fun.func_id == self.actual_fun.name): #Porque a penas se esta visitando
+                return     
             fun.return_type = act_fun._type    
         
         _arguments = []
@@ -382,12 +378,7 @@ class SemanticVisitor(NodeVisitor):
         self.visit(node.left)
         self.visit(node.right)
         #print node.op
-        if isinstance(node.right.return_type, Type):
-            node.right.return_type = node.right.return_type.value
-            
         if(node.left.return_type != node.right.return_type):
-            #print node.left.__class__.__name__, node.right.__class__.__name__ 
-            print node.left.return_type, node.right.return_type 
             error(node.lineno,'Incompatible types in operation', filename=sys.argv[1] ) 
             #exit()
         else:
@@ -431,7 +422,7 @@ class SemanticVisitor(NodeVisitor):
         var = self.actual_t.find(ubication.id)
         if var == None :
             error(ubication.lineno,'Vector not declared', filename=sys.argv[1])
-            #exit()
+            exit()
         self.visit(ubication.Position)
         if(ubication.Position.return_type != 'integer'):
             error(ubication.lineno,'Index must be an integer', filename=sys.argv[1])
@@ -452,7 +443,7 @@ class SemanticVisitor(NodeVisitor):
         self.visit(vector.length)
         if(vector.length.return_type != 'integer'):
             error(vector.lineno, 'Length of vector must be an integer',filename=sys.argv[1] )
-            #exit()
+            exit()
     
     def visit_Cast_float(self, node):
         if (node):
@@ -504,5 +495,5 @@ def main():
 if __name__ == '__main__':
     if(len(sys.argv) != 2):
         print "usage: python semantic.py <path_to_file>"
-        #exit()
+        exit()
     main()

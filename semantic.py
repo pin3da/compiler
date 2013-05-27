@@ -189,7 +189,7 @@ class SemanticVisitor(NodeVisitor):
             if not isinstance(var_dec.typename,Vector):
                 self.actual_t.add(Data(var_dec.id,'variable', var_dec.typename.return_type ))
             else:
-                self.actual_t.add(Data(var_dec.id,'variable',var_dec.typename.return_type,var_dec.typename.length.value))
+                self.actual_t.add(Data(var_dec.id,'variable',var_dec.typename.return_type,var_dec.typename.length))
 
             var_dec.return_type = var_dec.typename.return_type
             
@@ -316,12 +316,7 @@ class SemanticVisitor(NodeVisitor):
             if arg1.return_type != arg2.return_type:
                 error(fun.lineno, "Arguments' types don't match: "+ fun.func_id , filename=sys.argv[1] )
                 #exit()
-            if arg1.return_type.find('vector') != -1: 
-                len1 = self.actual_t.find(arg1.value).info
-                len2 = arg2.typename.length.value
-                if len1 != len2:
-                    error(fun.lineno, "Lenght of vectors don't match")
-                    #exit()
+            
           
           
     def visit_Empty_arguments(self,node):

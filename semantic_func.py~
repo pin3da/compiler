@@ -138,13 +138,13 @@ class SemanticVisitor(NodeVisitor):
         is_repeated = self.actual_t.find_function_repeated(function_t)
         if is_repeated == 2:
             error(function.lineno,"The function was previously declared but the argument's type doesn't match ", filename=sys.argv[1] )
-            #exit()
+            exit()
         elif is_repeated == 1:
             error(function.lineno,"The funcion was previously declared, neither return type nor argument's size matches",filename=sys.argv[1] )
-            #exit()
+            exit()
         elif is_repeated == 3:
             error(function.lineno, "The function was previously declared", filename=sys.argv[1])
-            #exit()
+            exit()
         
         self.actual_fun = function_t 
 
@@ -153,7 +153,7 @@ class SemanticVisitor(NodeVisitor):
         if function.id == 'main':
             if self.main:
                 error(function.lineno, 'The program must have a only one main function', filename=sys.argv[1])
-                #exit()
+                exit()
             else:
                 self.main = True
         
@@ -238,7 +238,7 @@ class SemanticVisitor(NodeVisitor):
             self.visit(_print.value)
             if _print.value.return_type != 'string':
                 error(_print.lineno, 'Error, print must have a string type', filename=sys.argv[1])
-                #exit()
+                exit()
             _print.return_type = _print.value.return_type
         elif not(isinstance(_print.value, str)):
             error(_print.lineno, 'Error, print must have a string type', filename=sys.argv[1])    
@@ -286,7 +286,7 @@ class SemanticVisitor(NodeVisitor):
          foo = self.actual_t.find(ubication.value)
          if foo == None:
             error(ubication.lineno, 'Identifier not declared : '+ ubication.value, filename=sys.argv[1] )
-            #exit()
+            exit()
          ubication.return_type = foo._type
 
 
@@ -294,7 +294,7 @@ class SemanticVisitor(NodeVisitor):
         act_fun = self.actual_t.find(fun.func_id)
         if (act_fun == None or act_fun._class != 'function') and fun.func_id != self.actual_fun.name:
             error(fun.lineno, 'Function not declared: '+ fun.func_id , filename=sys.argv[1] )
-            #exit()
+            exit()
         else:
             #self.visit()
             fun.return_type = act_fun._type    
@@ -431,7 +431,7 @@ class SemanticVisitor(NodeVisitor):
         var = self.actual_t.find(ubication.id)
         if var == None :
             error(ubication.lineno,'Vector not declared', filename=sys.argv[1])
-            #exit()
+            exit()
         self.visit(ubication.Position)
         if(ubication.Position.return_type != 'integer'):
             error(ubication.lineno,'Index must be an integer', filename=sys.argv[1])
@@ -452,7 +452,7 @@ class SemanticVisitor(NodeVisitor):
         self.visit(vector.length)
         if(vector.length.return_type != 'integer'):
             error(vector.lineno, 'Length of vector must be an integer',filename=sys.argv[1] )
-            #exit()
+            exit()
     
     def visit_Cast_float(self, node):
         if (node):
@@ -504,5 +504,5 @@ def main():
 if __name__ == '__main__':
     if(len(sys.argv) != 2):
         print "usage: python semantic.py <path_to_file>"
-        #exit()
+        exit()
     main()
