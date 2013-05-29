@@ -1,7 +1,0 @@
-for file in	semantic_test/*.pas
-do 
-    python semantic.py ${file}
-    if [ $? ]; then
-        echo "ERROR !! : "  ${file}
-    fi
-done
