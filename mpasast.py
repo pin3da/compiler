@@ -29,6 +29,7 @@ class AST(object):
         # Agrego lineno para manejo de errores, -1 para saber en que nodo falta agregarla, no se inicializa con kwargs porque genera problemas con _leaf
         self.return_type = None
         self.lineno = -1
+        self.gen_location= None
         self.hasReturn = None
         #
         ####
