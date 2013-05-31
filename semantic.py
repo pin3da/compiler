@@ -44,6 +44,9 @@ class Table:
 
         return None
 
+    def rem(self, _name):
+        del self.table[_name]
+
 
     #Busca si un campo se ha definido varias veces
     def find_repeated(self, name):
@@ -104,6 +107,8 @@ class SemanticVisitor(NodeVisitor):
         self.actual_fun = None
         self.in_while = False
         self.main = False
+        self.num_errors = 0
+        self.num_warnings = 0
 
     # Cambio la palabra node en todos para recordar que atributos tengo
     def visit_Program(self,program):
@@ -112,6 +117,7 @@ class SemanticVisitor(NodeVisitor):
 
         if not (self.main) :
             error(0,'Warning: Function main was not found',filename=sys.argv[1])
+            self.num_warnings+=1
             #exit()            
 
     def visit_Function(self,fun):
@@ -133,19 +139,24 @@ class SemanticVisitor(NodeVisitor):
         is_repeated = self.actual_t.find_function_repeated(function_t)
         if is_repeated == 2:
             error(function.lineno,"The function was previously declared but the argument's type doesn't match ", filename=sys.argv[1] )
-            exit()
+            self.num_errors+=1
+            #exit()
         elif is_repeated == 1:
             error(function.lineno,"The funcion was previously declared, neither return type nor argument's size matches",filename=sys.argv[1] )
-            exit()
+            self.num_errors+=1
+            #exit()
         elif is_repeated == 3:
             error(function.lineno, "The function was previously declared", filename=sys.argv[1])
-            exit()
+            self.num_errors+=1
+            #exit()
         
         self.actual_fun = function_t 
+        self.actual_t.add(function_t)
 
         if function.id == 'main':
             if self.main:
                 error(function.lineno, 'The program must have a only one main function', filename=sys.argv[1])
+                self.num_errors+=1
                 exit()
             else:
                 self.main = True
@@ -166,6 +177,7 @@ class SemanticVisitor(NodeVisitor):
         if(self.actual_fun._type != None):
             if not(function.block.hasReturn):
                 error(function.lineno, 'The program must have at least one return on function: ' + function.id, filename=sys.argv[1])
+                self.num_errors+=1
                 #exit()
         
         # return -The control- to program table
@@ -173,6 +185,7 @@ class SemanticVisitor(NodeVisitor):
         if isinstance(function_t._type,Type):
             function_t._type = function_t._type.value
                 
+        self.actual_t.rem(function_t.name)
         self.actual_fun = function_parent
         self.actual_t = self.actual_t.parent
         self.actual_t.add(function_t)
@@ -182,6 +195,7 @@ class SemanticVisitor(NodeVisitor):
     def visit_Var_dec(self, var_dec): 
         if self.actual_t.find(var_dec.id):
             error(var_dec.lineno, 'Warning: Redeclared Variable: '+ var_dec.id, filename=sys.argv[1])
+            self.num_warnings+=1
             #exit()
             #pass
         else:
@@ -205,6 +219,7 @@ class SemanticVisitor(NodeVisitor):
         if assignation.ubication.return_type != assignation.value.return_type:
             #print 'Incompatible types in function: ' + self.actual_fun.name + ' line: ',.lineno
             error(assignation.lineno, 'Incompatible Types in assignation', filename=sys.argv[1])
+            self.num_errors+=1
             #exit()
 
     def visit_Block(self,block):
@@ -221,6 +236,7 @@ class SemanticVisitor(NodeVisitor):
         self.visit(_while.conditional)
         if _while.conditional.return_type != 'integer' :
             error(_while.lineno , 'Conditional in while is not correct, function: '+ self.actual_fun.name ,filename=sys.argv[1] )
+            self.num_errors+=1
             #exit()
         self.visit(_while.then)
         _while.hasReturn=_while.then.hasReturn
@@ -231,16 +247,19 @@ class SemanticVisitor(NodeVisitor):
             self.visit(_print.value)
             if _print.value.return_type != 'string':
                 error(_print.lineno, 'Error, print must have a string type', filename=sys.argv[1])
-                exit()
+                self.num_errors+=1
+                #exit()
             _print.return_type = _print.value.return_type
         elif not(isinstance(_print.value, str)):
-            error(_print.lineno, 'Error, print must have a string type', filename=sys.argv[1])    
+            error(_print.lineno, 'Error, print must have a string type', filename=sys.argv[1])
+            self.num_errors+=1    
     
     def visit_Write(self, write): 
         self.visit(write.value)
         possible = ["float","integer","string"]
         if not write.value.return_type in possible:
             error(write.lineno, "Not a Writeable Type", filename=sys.argv[1])
+            self.num_errors+=1
         write.return_type = write.value.return_type
 
     
@@ -255,12 +274,12 @@ class SemanticVisitor(NodeVisitor):
         #print read.var_id.return_type
         if not read.var_id.return_type in possible:
             error(read.lineno, "Not a readable Type", filename=sys.argv[1])
+            self.num_errors+=1
         read.return_type = read.var_id.return_type
              
         
     def visit_Return(self, ret):
         self.visit(ret.value)
-        
         ret.hasReturn=True
         if(self.actual_fun._type == None):
             self.actual_fun._type = ret.value.return_type
@@ -271,8 +290,9 @@ class SemanticVisitor(NodeVisitor):
                 else:
                     self.actual_fun._type = self.actual_fun._type.value 
             elif(ret.value.return_type != self.actual_fun._type): 
-                error(ret.lineno, 'Error, return types do not match', filename=sys.argv[1])   
-                exit()
+                error(ret.lineno, 'Error, return types do not match', filename=sys.argv[1]) 
+                self.num_errors+=1  
+                #exit()
         ret.return_type  = ret.value.return_type
         
         
@@ -281,41 +301,43 @@ class SemanticVisitor(NodeVisitor):
          foo = self.actual_t.find(ubication.value)
          if foo == None:
             error(ubication.lineno, 'Identifier not declared : '+ ubication.value, filename=sys.argv[1] )
+            self.num_errors+=1
             exit()
          ubication.return_type = foo._type
 
 
     def visit_Call_func(self, fun):
         act_fun = self.actual_t.find(fun.func_id)
-        if (act_fun == None or act_fun._class != 'function') and fun.func_id != self.actual_fun.name:
+        if (act_fun == None or act_fun._class != 'function'):
             error(fun.lineno, 'Function not declared: '+ fun.func_id , filename=sys.argv[1] )
-            exit()
+            self.num_errors+=1
+            #exit()
         else:
-            if(fun.func_id == self.actual_fun.name): #Porque a penas se esta visitando
-                return     
             fun.return_type = act_fun._type    
         
-        _arguments = []
-        if fun.varlist.__class__.__name__ == 'Expression_list':
-            for ar in fun.varlist.expr:
-                _arguments.append(ar)
+            _arguments = []
+            if fun.varlist.__class__.__name__ == 'Expression_list':
+                for ar in fun.varlist.expr:
+                    _arguments.append(ar)
         
-        if fun.varlist.__class__.__name__ != 'Empty_expr_list':
-            if (act_fun.info.__class__.__name__ == 'Empty_expr_list' or len(_arguments) != len(act_fun.info) ):
-                error(fun.lineno, "Arguments' length don't match 1: "+ fun.func_id , filename=sys.argv[1] )
-                #exit()
-        else:
-            
-            if (act_fun.info.__class__.__name__ != 'Empty_expr_list'):
-                error(fun.lineno, "Arguments' length don't match 2: "+ fun.func_id , filename=sys.argv[1] )
-                #exit()
-        
-        for (arg1, arg2) in zip (_arguments , act_fun.info):
-            self.visit(arg1)
-            #self.visit(arg2)
-            if arg1.return_type != arg2.return_type:
-                error(fun.lineno, "Arguments' types don't match: "+ fun.func_id , filename=sys.argv[1] )
-                #exit()
+            if fun.varlist.__class__.__name__ != 'Empty_expr_list':
+                if (act_fun.info.__class__.__name__ == 'Empty_expr_list' or len(_arguments) != len(act_fun.info) ):
+                    error(fun.lineno, "Arguments' length don't match 1: "+ fun.func_id , filename=sys.argv[1] )
+                    self.num_errors+=1
+                    #exit()
+            else:        
+                if (act_fun.info.__class__.__name__ != 'Empty_expr_list'):
+                    error(fun.lineno, "Arguments' length don't match 2: "+ fun.func_id , filename=sys.argv[1] )
+                    self.num_errors+=1
+                    #exit()
+                    
+            for (arg1, arg2) in zip (_arguments , act_fun.info):
+                self.visit(arg1)
+                #self.visit(arg2)
+                if arg1.return_type != arg2.return_type:
+                    error(fun.lineno, "Arguments' types don't match: "+ fun.func_id , filename=sys.argv[1] )
+                    self.num_errors+=1
+                     #exit()
             
           
           
@@ -327,6 +349,7 @@ class SemanticVisitor(NodeVisitor):
         for field in args.variables:
             if field.id in ids:
                 error(function.lineno, 'Argument '+ field.id+' was declared more than once', filename=sys.argv[1])
+                self.num_errors+=1
             ids.append(field.id)
             #self.actual_t.add(Data(field.id , 'variable',field.typename.value))
             self.visit(field)
@@ -340,6 +363,7 @@ class SemanticVisitor(NodeVisitor):
         self.visit(ifthen.conditional)
         if not(ifthen.conditional.return_type == 'integer'):
             error(ifthen.conditional.lineno, 'Conditional in if is not correct', filename=sys.argv[1] )
+            self.num_errors+=1
         self.visit(ifthen.then)
         ifthen.hasReturn=ifthen.then.hasReturn
         ifthen.return_type = ifthen.then.return_type
@@ -349,6 +373,7 @@ class SemanticVisitor(NodeVisitor):
         self.visit(_if.conditional)
         if (_if.conditional.return_type != 'integer'):
             error(_if.lineno, 'Conditional in if is not correct', filename=sys.argv[1] )
+            self.num_errors+=1
         self.visit(_if.then)
         self.visit(_if._else)
         _if.hasReturn = _if.then.hasReturn or _if._else.hasReturn
@@ -372,9 +397,9 @@ class SemanticVisitor(NodeVisitor):
     def visit_Binary_op(self, node):
         self.visit(node.left)
         self.visit(node.right)
-        #print node.op
         if(node.left.return_type != node.right.return_type):
-            error(node.lineno,'Incompatible types in operation', filename=sys.argv[1] ) 
+            error(node.lineno,'Incompatible types in operation', filename=sys.argv[1] )
+            self.num_errors+=1 
             #exit()
         else:
             node.return_type = node.left.return_type
@@ -384,6 +409,7 @@ class SemanticVisitor(NodeVisitor):
         possible = ['float']
         if not (node.value.return_type in possible):
             error(node.lineno, 'Must be a float to convert to integer', filename=sys.argv[1] )
+            self.num_errors+=1
         node.return_type = 'integer'
     
     #######
@@ -392,6 +418,7 @@ class SemanticVisitor(NodeVisitor):
         p_id = self.actual_t.find(_id.value)
         if( p_id == None):
             error(_id.lineno, 'Variable not declared: '+ _id.value, filename=sys.argv[1] )
+            self.num_errors+=1
         else:
             _id.return_type =  p_id._type
                 
@@ -417,14 +444,17 @@ class SemanticVisitor(NodeVisitor):
         var = self.actual_t.find(ubication.id)
         if var == None :
             error(ubication.lineno,'Vector not declared', filename=sys.argv[1])
-            exit()
+            self.num_errors+=1
+            #exit()
         self.visit(ubication.Position)
         if(ubication.Position.return_type != 'integer'):
             error(ubication.lineno,'Index must be an integer', filename=sys.argv[1])
+            self.num_errors+=1
             #exit()
             ubication.return_type = var._type
         if not ( var._type.find('vector') != -1 ):
             error(ubication.lineno,'%s is not a vector' % var.name,filename = sys.argv[1])
+            self.num_errors+=1
             #exit()
             ubication.return_type = var._type
         else:
@@ -438,7 +468,8 @@ class SemanticVisitor(NodeVisitor):
         self.visit(vector.length)
         if(vector.length.return_type != 'integer'):
             error(vector.lineno, 'Length of vector must be an integer',filename=sys.argv[1] )
-            exit()
+            self.num_errors+=1
+            #exit()
     
     def visit_Cast_float(self, node):
         if (node):
@@ -446,6 +477,7 @@ class SemanticVisitor(NodeVisitor):
             possible = ['integer']
             if not (node.value.return_type in possible):
                  error(node.lineno,'Must be a an Integer to convert to float' , filename=sys.argv[1])
+                 self.num_errors+=1
             node.return_type= 'float'
         
         
@@ -453,7 +485,8 @@ class SemanticVisitor(NodeVisitor):
         pass
         
     def visit_Else(self, node):
-        pass
+       self.visit(node.statement)
+       node.return_type = node.statement.return_type
         
     def visit_Position(self, pos):
         self.visit(pos.expr)
@@ -471,11 +504,12 @@ class SemanticVisitor(NodeVisitor):
         #print self.in_while
         if not self.in_while:
             error(_break.lineno,"break statement not within loop or switch", filename=sys.argv[1])
+            self.num_errors+=1
 
-
-def check_program(root):
-	checker = SemanticVisitor()
-	checker.visit(root)
+def check_program(root):    
+    checker = SemanticVisitor()
+    checker.visit(root)
+    return checker.num_errors
 
 def main():
     import mpasparse

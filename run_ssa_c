@@ -1,0 +1,7 @@
+for file in	semantic_test/*.pas
+do 
+    python ssa.py ${file}
+    if [ $? ]; then
+        echo "Filename : "  ${file}
+    fi
+done
