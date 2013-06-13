@@ -11,7 +11,7 @@
      save %sp, -72, %sp
 
 ! assign (start)
- mov y, %%l0 !     push y
+     mov y, %l0      ! push y
 !     g:= pop
 ! assign (end)
 
@@ -19,23 +19,23 @@
 
  .L1:
 
- mov x, %%l1 !     push x
-mov 0, %%l2       ! push constant value
+     mov x, %l1      ! push x
+     mov 0, %l2       ! push constant value
 !     >
 !     relop:= pop
 !     if not relop: goto .L2
 
 ! assign (start)
- mov x, %%l3 !     push x
+     mov x, %l3      ! push x
 !     g:= pop
 ! assign (end)
 
 ! assign (start)
- mov y, %%l4 !     push y
- mov y, %%l5 !     push y
- mov x, %%l6 !     push x
+     mov y, %l4      ! push y
+     mov y, %l5      ! push y
+     mov x, %l6      ! push x
 !     div
- mov x, %%l7 !     push x
+     mov x, %l7      ! push x
 !     mul
 !     sub
 !     x:= pop
@@ -43,7 +43,7 @@ mov 0, %%l2       ! push constant value
 
 ! assign (start)
      st %l0, [%fp -64]
- mov g, %%l0 !     push g
+     mov g, %l0      ! push g
 !     y:= pop
 ! assign (end)
 
@@ -55,7 +55,7 @@ mov 0, %%l2       ! push constant value
 
 ! return (start)
      st %l1, [%fp -68]
- mov g, %%l1 !     push g
+     mov g, %l1      ! push g
 !     expr := pop
 !     return(expr)
 ! return (end)
@@ -74,16 +74,16 @@ mov 0, %%l2       ! push constant value
 
 ! assign (start)
      st %l2, [%fp -72]
- mov x, %%l2 !     push x
+     mov x, %l2      ! push x
      st %l3, [%fp -76]
- mov y, %%l3 !     push y
+     mov y, %l3      ! push y
      st %l4, [%fp -80]
-mov 2, %%l4       ! push constant value
+     mov 2, %l4       ! push constant value
 !     mul
 !     add
 !     index := pop
      st %l5, [%fp -84]
- mov r, %%l5 !     push r
+     mov r, %l5      ! push r
 !     arr[index]:= pop
 ! assign (end)
 
@@ -115,10 +115,10 @@ mov 2, %%l4       ! push constant value
 
 ! funcall (gcd) (start)
      st %l6, [%fp -88]
- mov x, %%l6 !     push x
+     mov x, %l6      ! push x
 !     arg1 :=pop
      st %l7, [%fp -92]
- mov y, %%l7 !     push y
+     mov y, %l7      ! push y
 !     arg2 :=pop
 ! funcall (end)
 ! push gcd()
@@ -126,7 +126,7 @@ mov 2, %%l4       ! push constant value
 ! assign (end)
 ! write (start)
      st %l0, [%fp -96]
- mov r, %%l0 !     push r
+     mov r, %l0      ! push r
 !     expr := pop
 !     write(expr)
 ! call flwritef(float)

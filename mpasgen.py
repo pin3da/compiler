@@ -271,15 +271,19 @@ def eval_expression(file,expr):
 
     
     elif isinstance(expr, Id):
-        print >>file , ' mov %s, %%%s'% (expr.value, push(file)) , 
-        print >>file , '!     push', expr.value
+        print >>file , '     mov %s, %s'% (expr.value, push(file)) , 
+        print >>file , '     ! push', expr.value
             
     elif isinstance(expr, Ubication_vector):
         pos = expr.Position
         eval_expression(file, pos.expr)
-        print >>file, "!     index := pop"
-        print >>file, "!     push %s[index]" % Ubication_vector.id
-    
+        result = pop()
+        print >>file, "     sll %s, 2, %s" % (result,result)
+        print >>file, "     add %%fp, %s, %s" % (result,result),
+        print >>file, "     ! index := pop"        
+        print >>file, "     ld [%s + offset], %s   !   push %s[index]" % (Ubication_vector.id),
+        print >>file, "     ! push %s[index]" % Ubication_vector.id
+     
     elif isinstance(expr, Cast_int):
         pass
     
@@ -293,16 +297,15 @@ def eval_expression(file,expr):
         numb = expr.value
         memdir = push(file)
         if numb >= -4095 and numb <= 4095:
-            print >>file, 'mov %d, %%%s'% (numb , memdir),
+            print >>file, '     mov %d, %s'% (numb , memdir),
             print >>file,  '      ! push constant value'
         else:
             label = new_label()
-            print >>data, '%s: .integer "%s"' % (label, numb)
-            print >>file, 'sethi %%hi(%s), %%g1'%label
-            print >>file, 'or %%g1, %%lo(%s), %%g1'%label
-            print >>file, 'ld [%%g1], %%%s'%memdir
+            print >>data, '     %s: .integer "%s"' % (label, numb)
+            print >>file, '     sethi %%hi(%s), %%g1'%label
+            print >>file, '     or %%g1, %%lo(%s), %%g1'%label
+            print >>file, '     ld [%%g1], %s'%memdir
             
-            #sethi
         
     elif isinstance(expr,Float):
         pass
