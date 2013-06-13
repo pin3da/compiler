@@ -142,60 +142,62 @@ def emit_while(file,s):
     done = new_label()
     print >>file, "\n! while (start)"
     print >>file, "\n %s:\n" %test   
-    
-
     cond = s.conditional
     then = s.then
     eval_rel(file,cond.relation)
-    print >>file, "!     relop:= pop"
-    print >>file, "!     if not relop: goto %s" %done
-
-    
+    result = pop()
+    print >> file, "     cmp %s, %%g0     ! relop:= pop"%result
+    print >> file, "     be %s     ! if not relop: goto %s" %(done,done)
+    print >> file, "     nop"
     for statement in then.declaration.declarations_list:
         emit_statement(file,statement)
-    
-    print >>file, "\n! goto %s" %test
+    print >>file, "\n     ba  %s     ! goto %s" %(test, test)
+    print >>file, '     nop'
     print >>file, "\n %s:" %done
     print >>file, "\n! while (end)"
 
 def emit_ifthen(file,s):
     print >>file, "\n! ifthen (start)"
-    
+    done = new_label()
     cond = s.conditional
     then = s.then
     eval_rel( file, cond)
-    
-    print >>file, "!     cond:= pop"
-    print >>file, "!     if not cond: goto end"
-    for statement in then._fields:
+    result = pop()
+    print >>file, "     cmp %s, g0     !cond:= pop"%result
+    print >>file, "     be %s     ! goto %s"%(done,done)
+    print >>file, "     nop"
+    for statement in then._fields: 
         emit_statement(file,getattr(then, statement) )
-    print >>file, "! end:"
-    print >>file, "! ifthen (end)"
+    print >>file, "\n %s:"%done
+    print >>file, "\n! ifthen (end)"
 
 
 def emit_ifthenelse(file,s):
     print >>file, "\n! ifthenelse (start)"
+    elseLabel = new_label()
+    done = new_label()
     cond = s.conditional
     then = s.then
     _else = s._else
     eval_rel(file, cond)
-    
-    print >>file, "!     cond:= pop"
-    print >>file, "!     if not cond: goto else"
+    result = pop()
+    print >>file, "     cmp %s, g0     ! cond:= pop"%result
+    print >>file, "     be %s     ! if not cond: goto else"%elseLabel
+    print >>file, "     nop"
     #then
     
     for statement in then._fields :
         emit_statement(file,getattr(then, statement) )
-        
-    print >>file, "! goto end:"
+    
+    print >>file, "     ba %s     ! if not cond: goto end:"%done   
+    
     
     #else
-    print >>file, "! else:"
-    
+    print >>file, "\n %s:     ! else:"%elseLabel
     for statement in _else._fields:
         emit_statement(file,getattr(_else, statement) )
         
-    print >>file, "! end:"
+    print >>file, "\n %s:     ! end:"%done
     print >>file, "! ifthenelse (end)"
     
     
@@ -255,24 +257,20 @@ def eval_expression(file,expr):
         memdir_right = pop()
         memdir =push(file)
         if expr.op == '+' :
-            print >>file, "!     add"
-            print >>file, "     add %s, %s, %s"%(memdir_left, memdir_right, memdir)
+            print >>file, "     add %s, %s, %s     ! add"%(memdir_left, memdir_right, memdir)
           
         elif expr.op == '-':
-            print >>file, "!     sub"
-            print >>file, "     sub %s, %s, %s"%(memdir_left, memdir_right, memdir)
+            print >>file, "     sub %s, %s, %s     ! sub"%(memdir_left, memdir_right, memdir)
             
         elif expr.op == '*' :        
-            print >>file, "!     mul"
             print >>file, "     mov %s, %%o0"%(memdir_left)
-            print >>file, "     call .mul"
+            print >>file, "     call .mul     ! mul"
             print >>file, "     mov %s, %%o0"%(memdir_right)
             print >>file, "     mov %%o0, %s"%(memdir)
             
         elif expr.op == '/':
-            print >>file, "!     div"
             print >>file, "     mov %s, %%o0"%(memdir_left)
-            print >>file, "     call .div"
+            print >>file, "     call .div     ! div"
             print >>file, "     mov %s, %%o0"%(memdir_right)
             print >>file, "     mov %%o0, %s"%(memdir)
 
@@ -356,60 +354,58 @@ def eval_rel(file,rel):
         memdir_right = pop()
         memdir = push(file)
         if rel.op == "<":
-            print >>file, "!     <"
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
             label=new_label()
-            print >>file, "     bl %s"% label
+            print >>file, "     bl %s     ! <"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
+            print >>file, " %s:" % label
             
         elif rel.op == "<=":
-            print >>file, "!     <="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
             label=new_label()
-            print >>file, "     ble %s"% label
+            print >>file, "     ble %s     !<="% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
+            print >>file, " %s:" % label
            
         elif rel.op == ">":
-            print >>file, "!     >"
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
             label=new_label()
-            print >>file, "     bg %s"% label
+            print >>file, "     bg %s     ! >"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
+            print >>file, " %s:" % label
             
         elif rel.op == ">=":
-            print >>file, "!     >="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
             label=new_label()
-            print >>file, "     bge %s"% label
+            print >>file, "     bge %s     ! >="% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
+            print >>file, " %s:" % label
             
         elif rel.op == "==":            
-            print >>file, "!     =="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
             label=new_label()
-            print >>file, "     be %s"% label
+            print >>file, "     be %s     ! =="% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
+            print >>file, " %s:" % label
         
         elif rel.type == "!=":
-            print >>file, "!     !="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
             label=new_label()
-            print >>file, "     bne %s"% label
+            print >>file, "     bne %s     ! !="% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
+            print >>file, " %s:" % label
       
         elif rel.op == 'and':
-            print >>file, "!     and"
-            print >>file, "     and %s, %s, %s"%(memdir_left,memdir_right,memdir)
+            print >>file, "     and %s, %s, %s     ! and"%(memdir_left,memdir_right,memdir)
         
         elif rel.op == "or":
-            print >>file, "!     or"
-            print >>file, "     or %s, %s, %s"%(memdir_left,memdir_right,memdir)
+            print >>file, "     or %s, %s, %s     ! or"%(memdir_left,memdir_right,memdir)
             
     if isinstance(rel, Unary_op):
         if rel.type == "not":
