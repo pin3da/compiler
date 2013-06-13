@@ -203,14 +203,18 @@ def emit_assign(file,s):
 
     ubication = s.ubication
     expr = s.value   
+    result = pop()
     if isinstance(ubication,Ubication_vector):
         eval_expression(file, ubication.Position.expr)
-        print >>file, "!     index := pop"
+        memdir_index = pop()
+        print >>file, "     sll %s, 2, %s" % (memdir_index, memdir_index)
+        print >>file, "     add %%fp, %s, %s" % (memdir_index ,memdir_index),
+        print >>file, "     ! index := pop"
         eval_expression(file, expr)
-        print >>file, "!     %s[index]:= pop"% ubication.id
+        print >>file, "     st %s, [%s + offset]     ! %s[index] := pop" % (result ,memdir_index, ubication.id)
     else:
         eval_expression(file, expr)
-        print >>file, "!     %s:= pop"% ubication.value
+        print >>file, "     st %s, [%%fp + offset]     ! %s := pop" % (result, ubication.value)
     print >>file, "! assign (end)"
     
     
@@ -270,8 +274,12 @@ def eval_expression(file,expr):
     
     elif isinstance(expr, Call_func):
         emit_funcall(file, expr)
-##        print >>file, 'mov %%s, '
-        print >>file, '! push %s()' % expr.func_id
+        ###
+        #dest = push(file)
+        #print >>file, 'mov %%o0, %s'%dest ,
+        #print >>file, '! push %s()' % expr.func_id
+        # Esto se esta haciendo en funcall para que imprima los argumentos
+        ####
 
     
     elif isinstance(expr, Id):
@@ -301,7 +309,7 @@ def eval_expression(file,expr):
         memdir = push(file)
         if numb >= -4095 and numb <= 4095:
             print >>file, '     mov %d, %s'% (numb , memdir),
-            print >>file,  '      ! push constant value'
+            print >>file, '     ! push constant value'
         else:
             label = new_label()
             print >>data, '     %s: .integer "%s"' % (label, numb)
@@ -359,26 +367,29 @@ def eval_rel(file,rel):
 
 def eval_funcall(file,s):
 
-
     args = s.varlist
     if isinstance(args,Expression_list):
-        i=1 
+        i=0
         for arg in args.expr:
             eval_expression(file,arg)
-            print >>file, "!     arg%d :=pop" %i
+            ori = pop()
+            print >>file, '     store %s, %%o%d'%(ori,i),
+            print >>file, "     ! arg%d :=pop" %i
             i+=1
+        
+        print >>file, '     call .%s'%s.func_id
+        
+        dest = push(file)
+        print >>file, '     mov %s, %%o0'%(dest),
+        fun = "    ! push %s(" %s.func_id
+        tam = len(args.expr)
+        for j in (0,tam):
+            fun += "arg%d" %j
+            if j < tam:
+                fun += ", "            
+        fun += ")"
+        print >>file,fun
 
-    '''
-    Aun no se para que sirve!!
-    sAux = "!     push %s(" %s.leaf
-    length = len(args.children)
-    for j in range(1,length+1):        
-        sAux+="arg%d" %j
-        if j<length:
-            sAux+=", "            
-    sAux+=")"
-    print >>file,sAux
-    '''
 
 
 def new_label():
