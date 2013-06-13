@@ -25,7 +25,7 @@ def emit_function(file,fun):
     for statement in fun.block.declarations_list:
         emit_statement(file, statement)
 
-    print >>file, "\n ! function: %s (end) " % fun.id
+    print >>file, "\n! function: %s (end) " % fun.id
 
 def emit_statement(file, st):
     if isinstance(st,Print):
@@ -54,25 +54,24 @@ def emit_statement(file, st):
         for statement in st.declarations_list:
             emit_statement(file,statement)
 
-######## Revisado hasta aqui ##############
+
 
 def emit_print(file,s):
     print >>file, "\n! print (start)"
     print >>file, "! print (end)"
 
+
 def emit_read(file,s):
     print >>file, "\n! read (start)"
-#    loc = s.var_id
+    loc = s.var_id
     print >>file, "! read (end)"
+
 
 def emit_write(file,s):
     print >>file, "! write (start)"
-    '''
     expr = s.value
     eval_expression(file, expr)
     print >>file, "!     expr := pop"
-    '''
-
     print >>file, "!     write(expr)"
     print >>file, "! write (end)"
 
@@ -100,11 +99,9 @@ def emit_while(file,s):
 def emit_ifthen(file,s):
     print >>file, "\n! ifthen (start)"
     
-    '''
     cond = s.conditional
     then = s.then
     eval_rel( file, cond)
-    '''
     
     print >>file, "!     cond:= pop"
     print >>file, "!     if not cond: goto end"
@@ -115,14 +112,10 @@ def emit_ifthen(file,s):
 
 def emit_ifthenelse(file,s):
     print >>file, "\n! ifthenelse (start)"
-    
-    '''
     cond = s.conditional
     then = s.then
     _else = s._else
     eval_rel(file, cond)
-    '''
-    
     print >>file, "!     cond:= pop"
     print >>file, "!     if not cond: goto else"
     #then
@@ -146,10 +139,15 @@ def emit_assign(file,s):
     print >>file, "\n! assign (start)"
 
     ubication = s.ubication
-    expr = s.value
-    eval_expression(file, expr)
-    
-#    print >>file, "!     %s:= pop"% loc.leaf
+    expr = s.value   
+    if isinstance(ubication,Ubication_vector):
+        eval_expression(file, ubication.Position.expr)
+        print >>file, "!     index := pop"
+        eval_expression(file, expr)
+        print >>file, "!     %s[index]:= pop"% ubication.id
+    else:
+        eval_expression(file, expr)
+        print >>file, "!     %s:= pop"% ubication.value
     print >>file, "! assign (end)"
     
     
@@ -200,15 +198,17 @@ def eval_expression(file,expr):
     
     elif isinstance(expr, Call_func):
         emit_funcall(file, expr)
+        print >>file, '! push %s()' % expr.func_id
+
     
     elif isinstance(expr, Id):
-        pass
-        ## Cargar variable
-    
+        print >>file , '!     push', expr.value
+            
     elif isinstance(expr, Ubication_vector):
-        pos=expr.Position
+        pos = expr.Position
         eval_expression(file, pos.expr)
-        ## Cargar Ubication
+        print >>file, "!     index := pop"
+        print >>file, "!     push %s[index]" % Ubication_vector.id
     
     elif isinstance(expr, Cast_int):
         pass

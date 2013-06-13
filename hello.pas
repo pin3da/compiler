@@ -15,7 +15,9 @@ fun main()
    x : int;
    y : int;
    r : int;
+   arr : int[10];
    begin
+      arr[x+y*2] := r;
       print("Entre dos numeros\n");
       read(x);
       read(y);
