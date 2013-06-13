@@ -1,6 +1,6 @@
 for file in	test/semantic_test/*.pas
 do 
-    python ssa.py ${file}
+    python mpascal.py ${file}
     if [ $? ]; then
         echo "Filename : "  ${file}
     fi
