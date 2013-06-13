@@ -1,9 +1,13 @@
 ! Creado por mpascal.py
 ! Manuel Pineda, Carlos Gonzalez, IS744 (2013-1)
 
+     .section ".text"
+
 ! program
 
 ! function: gcd (start) 
+
+        .global gcd
 
 ! assign (start)
 !     push y
@@ -54,6 +58,7 @@
 
 ! function: gcd (end) 
 
+
 ! function: main (start) 
 
         .global main
@@ -69,7 +74,6 @@
 ! assign (end)
 
 ! print (start)
-!     print(Entre dos numeros_NL_)
 ! print (end)
 
 ! read (start)
@@ -99,5 +103,7 @@
 
 ! function: main (end) 
 
- .section ".rodata"
+.L3: .asciz "Entre dos numeros_NL_"
+
+     .section ".rodata"
 

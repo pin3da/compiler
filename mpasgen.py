@@ -7,8 +7,9 @@ labelNumber=1
 def generate(file,top):
     print >>file, "! Creado por mpascal.py"
     print >>file, "! Manuel Pineda, Carlos Gonzalez, IS744 (2013-1)"
+    print >>file, '\n     .section ".text"'
     emit_program(file,top)
-    print >>data, '\n .section ".rodata"'
+    print >>data, '\n     .section ".rodata"'
     print >>file,data.getvalue()
     
 def emit_program(file,root):
@@ -19,13 +20,12 @@ def emit_program(file,root):
 
 def emit_function(file,fun):
     print >>file, "\n! function: %s (start) " % fun.id
-    if fun.id == "main":
-        print >>file, "\n        .global main"
-    #print >>file, "%s:" %fun.leaf
+    
+    print >>file,'\n        .global %s' % fun.id
     for statement in fun.block.declarations_list:
         emit_statement(file, statement)
 
-    print >>file, "\n! function: %s (end) " % fun.id
+    print >>file, "\n! function: %s (end) \n" % fun.id
 
 def emit_statement(file, st):
     if isinstance(st,Print):
@@ -58,7 +58,10 @@ def emit_statement(file, st):
 
 def emit_print(file,s):
     print >>file, "\n! print (start)"
-    print >>file, '!     print(%s)'% s.value
+    value = s.value
+    label = new_label()
+    # Drop a literal in the data segment
+    print >>data, '%s: .asciz "%s"' % (label, value)
     print >>file, "! print (end)"
 
 
