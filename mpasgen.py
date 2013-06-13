@@ -4,6 +4,11 @@ from mpasast import *
 data = StringIO.StringIO()
 labelNumber=1
 
+cont = -1
+sp_cont = 64
+l_cont = 0
+t_cont = 0
+
 def generate(file,top):
     print >>file, "! Creado por mpascal.py"
     print >>file, "! Manuel Pineda, Carlos Gonzalez, IS744 (2013-1)"
@@ -252,10 +257,12 @@ def eval_expression(file,expr):
     
     elif isinstance(expr, Call_func):
         emit_funcall(file, expr)
+##        print >>file, 'mov %%s, '
         print >>file, '! push %s()' % expr.func_id
 
     
     elif isinstance(expr, Id):
+        print >>file , ' mov %s, %%%s'% (expr.value, push(file)) , 
         print >>file , '!     push', expr.value
             
     elif isinstance(expr, Ubication_vector):
@@ -338,4 +345,36 @@ def new_label():
     newL= ".L%d" %labelNumber
     labelNumber+=1
     return newL
+    
+
+def push(out):
+    global l_cont
+    global t_cont
+    global sp_cont
+    if l_cont < 8 and t_cont != 8:
+        l = '%l'+str(l_cont)
+        l_cont +=1        
+    else:
+        if l_cont == 8:
+            l_cont = 0
+            t_cont = 8
+        l = '%l'+str(l_cont)
+        print >> out, "     st %s, [%%fp -%d]" % (l, sp_cont)
+        sp_cont +=4
+        l_cont +=1        
+    return l
+    
+def pop():
+    global l_cont
+    global t_cont
+    global sp_cont
+    if l_cont >= 0 and t_cont == 0:
+        l_cont -=1
+        l = '%l'+str(l_cont)
+    else:
+        l_cont = t_cont
+        t_cont = 0
+        l_cont -=1
+        l = '%l'+str(l_cont)
+    return l
 
