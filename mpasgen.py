@@ -130,7 +130,7 @@ def emit_write(file,s):
     eval_expression(file, s.value)
     print >>file, "!     expr := pop"
     print >>file, "!     write(expr)"
-    print >>file, '! call flwritei(int)'
+    print >>file, '!     call flwritei(int)'
     val = pop()
     print >>file, '     mov %%%s, %%o0'%val
     print >>file, '     call flwritei'

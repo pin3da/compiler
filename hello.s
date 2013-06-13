@@ -140,7 +140,7 @@
      ld [%fp + offset], %l0     ! push r
 !     expr := pop
 !     write(expr)
-! call flwritei(int)
+!     call flwritei(int)
      mov %%l0, %o0
      call flwritei
      nop
