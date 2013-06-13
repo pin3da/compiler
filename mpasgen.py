@@ -10,21 +10,34 @@ def generate(file,top):
     print >>file, '\n     .section ".text"'
     emit_program(file,top)
     print >>data, '\n     .section ".rodata"'
-    print >>file,data.getvalue()
+    print >>file, data.getvalue()
     
 def emit_program(file,root):
     print >>file,"\n! program"
-    functions = root.func_list.functions
+    functions = root.func_list.functions    
     for fun in functions:
         emit_function(file,fun)
 
 def emit_function(file,fun):
     print >>file, "\n! function: %s (start) " % fun.id
-    
-    print >>file,'\n        .global %s' % fun.id
+    print >>file, '\n .global %s' % fun.id
+    f = StringIO.StringIO()
     for statement in fun.block.declarations_list:
-        emit_statement(file, statement)
+        emit_statement(f, statement)
 
+    print >>file, "     save %%sp, -%d, %%sp" % -96  ## Falta organizar aca !!!
+    print >>file, f.getvalue()
+    
+    print >>file, " .Ln:"
+
+    if(fun.id == 'main'):
+        print >>file , "     mov 0, %o0 ! solamente aparece en main"
+        print >>file , "     call _exit ! solamente aparece en main"
+        print >>file , "     nop ! solamente aparece en main"
+        
+    print >>file, "     ret"
+    print >>file, "     restore"
+    
     print >>file, "\n! function: %s (end) \n" % fun.id
 
 def emit_statement(file, st):
@@ -90,7 +103,7 @@ def emit_while(file,s):
     test = new_label()
     done = new_label()
     print >>file, "\n! while (start)"
-    print >>file, "\n%s:\n" %test   
+    print >>file, "\n %s:\n" %test   
     
 
     cond = s.conditional
@@ -104,7 +117,7 @@ def emit_while(file,s):
         emit_statement(file,statement)
     
     print >>file, "\n! goto %s" %test
-    print >>file, "\n%s:" %done
+    print >>file, "\n %s:" %done
     print >>file, "\n! while (end)"
 
 def emit_ifthen(file,s):

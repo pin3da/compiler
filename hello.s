@@ -7,7 +7,8 @@
 
 ! function: gcd (start) 
 
-        .global gcd
+ .global gcd
+     save %sp, --96, %sp
 
 ! assign (start)
 !     push y
@@ -16,7 +17,7 @@
 
 ! while (start)
 
-.L1:
+ .L1:
 
 !     push x
 !     >
@@ -46,7 +47,7 @@
 
 ! goto .L1
 
-.L2:
+ .L2:
 
 ! while (end)
 
@@ -56,12 +57,17 @@
 !     return(expr)
 ! return (end)
 
+ .Ln:
+     ret
+     restore
+
 ! function: gcd (end) 
 
 
 ! function: main (start) 
 
-        .global main
+ .global main
+     save %sp, --96, %sp
 
 ! assign (start)
 !     push x
@@ -100,6 +106,13 @@
 !     expr := pop
 !     write(expr)
 ! write (end)
+
+ .Ln:
+     mov 0, %o0 ! solamente aparece en main
+     call _exit ! solamente aparece en main
+     nop ! solamente aparece en main
+     ret
+     restore
 
 ! function: main (end) 
 
