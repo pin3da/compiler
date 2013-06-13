@@ -179,6 +179,7 @@ def emit_ifthenelse(file,s):
     then = s.then
     _else = s._else
     eval_rel(file, cond)
+    
     print >>file, "!     cond:= pop"
     print >>file, "!     if not cond: goto else"
     #then
@@ -246,14 +247,30 @@ def eval_expression(file,expr):
         right = expr.right
         eval_expression(file,left)
         eval_expression(file,right)
+        memdir_left = pop()
+        memdir_right = pop()
+        memdir =push(file)
         if expr.op == '+' :
-          print >>file, "!     add"
+            print >>file, "!     add"
+            print >>file, "     add %s, %s, %s"%(memdir_left, memdir_right, memdir)
+          
         elif expr.op == '-':
             print >>file, "!     sub"
+            print >>file, "     sub %s, %s, %s"%(memdir_left, memdir_right, memdir)
+            
         elif expr.op == '*' :        
             print >>file, "!     mul"
+            print >>file, "     mov %s, %%o0"%(memdir_left)
+            print >>file, "     call .mul"
+            print >>file, "     mov %s, %%o0"%(memdir_right)
+            print >>file, "     mov %%o0, %s"%(memdir)
+            
         elif expr.op == '/':
             print >>file, "!     div"
+            print >>file, "     mov %s, %%o0"%(memdir_left)
+            print >>file, "     call .div"
+            print >>file, "     mov %s, %%o0"%(memdir_right)
+            print >>file, "     mov %%o0, %s"%(memdir)
 
             
     elif isinstance(expr,Unary_op):
@@ -328,35 +345,73 @@ def eval_rel(file,rel):
         right = rel.right
         eval_expression(file,left)
         eval_expression(file,right)
+        memdir_left = pop()
+        memdir_right = pop()
+        memdir = push(file)
         if rel.op == "<":
             print >>file, "!     <"
+            print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
+            label=new_label()
+            print >>file, "     bl %s"% label
+            print >>file, "     mov 1, %s"%(memdir)
+            print >>file, "     mov 0, %s"%(memdir)
             
         elif rel.op == "<=":
-           print >>file, "!     <="
+            print >>file, "!     <="
+            print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
+            label=new_label()
+            print >>file, "     ble %s"% label
+            print >>file, "     mov 1, %s"%(memdir)
+            print >>file, "     mov 0, %s"%(memdir)
            
         elif rel.op == ">":
             print >>file, "!     >"
+            print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
+            label=new_label()
+            print >>file, "     bg %s"% label
+            print >>file, "     mov 1, %s"%(memdir)
+            print >>file, "     mov 0, %s"%(memdir)
             
         elif rel.op == ">=":
             print >>file, "!     >="
+            print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
+            label=new_label()
+            print >>file, "     bge %s"% label
+            print >>file, "     mov 1, %s"%(memdir)
+            print >>file, "     mov 0, %s"%(memdir)
             
-        elif rel.op == "==":
-           print >>file, "!     =="
+        elif rel.op == "==":            
+            print >>file, "!     =="
+            print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
+            label=new_label()
+            print >>file, "     be %s"% label
+            print >>file, "     mov 1, %s"%(memdir)
+            print >>file, "     mov 0, %s"%(memdir)
         
         elif rel.type == "!=":
             print >>file, "!     !="
+            print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
+            label=new_label()
+            print >>file, "     bne %s"% label
+            print >>file, "     mov 1, %s"%(memdir)
+            print >>file, "     mov 0, %s"%(memdir)
       
         elif rel.op == 'and':
             print >>file, "!     and"
+            print >>file, "     and %s, %s, %s"%(memdir_left,memdir_right,memdir)
         
         elif rel.op == "or":
             print >>file, "!     or"
+            print >>file, "     or %s, %s, %s"%(memdir_left,memdir_right,memdir)
             
     if isinstance(rel, Unary_op):
         if rel.type == "not":
-            sub = rel.children[0]
+            sub = rel.value
             eval_rel(file,sub)
+            memdir_op=pop()
+            memdir=push(file)
             print >>file, "!     not"
+            print >>file, "     xor %s, 1, %s"%(memdir_op, memdir)     
 
 def eval_funcall(file,s):
 
