@@ -118,6 +118,7 @@ def emit_ifthen(file,s):
     print >>file, "! end:"
     print >>file, "! ifthen (end)"
 
+
 def emit_ifthenelse(file,s):
     print >>file, "\n! ifthenelse (start)"
     cond = s.conditional
@@ -264,6 +265,7 @@ def eval_rel(file,rel):
             print >>file, "!     not"
 
 def eval_funcall(file,s):
+    print >>file, "call_func"
     '''
     args = s.varlist
     i=1
