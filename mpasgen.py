@@ -275,8 +275,7 @@ def eval_expression(file,expr):
 
     
     elif isinstance(expr, Id):
-        print >>file , '     mov %s, %s'% (expr.value, push(file)) , 
-        print >>file , '     ! push', expr.value
+        print >>file , '     ld [%%fp + offset], %s     ! push %s'% (push(file),expr.value)
             
     elif isinstance(expr, Ubication_vector):
         pos = expr.Position
@@ -315,7 +314,7 @@ def eval_expression(file,expr):
         numb= expr.value
         memdir=push(file)
         label = new_label()
-        print >>data, '%s: .integer "%s"' % (label, numb) 
+        print >>data, '     %s: .float "%s"' % (label, numb) 
         print >>file, '     sethi %%hi(%s), %%g1'%label
         print >>file, '     or %%g1, %%lo(%s), %%g1'%label
         print >>file, '     ld [%%g1], %s'%memdir 

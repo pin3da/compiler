@@ -11,7 +11,7 @@
      save %sp, -72, %sp
 
 ! assign (start)
-     mov y, %l0      ! push y
+     ld [%fp + offset], %l0     ! push y
 !     g:= pop
 ! assign (end)
 
@@ -19,23 +19,23 @@
 
  .L1:
 
-     mov x, %l1      ! push x
+     ld [%fp + offset], %l1     ! push x
      mov 0, %l2       ! push constant value
 !     >
 !     relop:= pop
 !     if not relop: goto .L2
 
 ! assign (start)
-     mov x, %l3      ! push x
+     ld [%fp + offset], %l3     ! push x
 !     g:= pop
 ! assign (end)
 
 ! assign (start)
-     mov y, %l4      ! push y
-     mov y, %l5      ! push y
-     mov x, %l6      ! push x
+     ld [%fp + offset], %l4     ! push y
+     ld [%fp + offset], %l5     ! push y
+     ld [%fp + offset], %l6     ! push x
 !     div
-     mov x, %l7      ! push x
+     ld [%fp + offset], %l7     ! push x
 !     mul
 !     sub
 !     x:= pop
@@ -43,7 +43,7 @@
 
 ! assign (start)
      st %l0, [%fp -64]
-     mov g, %l0      ! push g
+     ld [%fp + offset], %l0     ! push g
 !     y:= pop
 ! assign (end)
 
@@ -55,7 +55,7 @@
 
 ! return (start)
      st %l1, [%fp -68]
-     mov g, %l1      ! push g
+     ld [%fp + offset], %l1     ! push g
 !     expr := pop
 !     return(expr)
 ! return (end)
@@ -74,16 +74,16 @@
 
 ! assign (start)
      st %l2, [%fp -72]
-     mov x, %l2      ! push x
+     ld [%fp + offset], %l2     ! push x
      st %l3, [%fp -76]
-     mov y, %l3      ! push y
+     ld [%fp + offset], %l3     ! push y
      st %l4, [%fp -80]
      mov 2, %l4       ! push constant value
 !     mul
 !     add
 !     index := pop
      st %l5, [%fp -84]
-     mov r, %l5      ! push r
+     ld [%fp + offset], %l5     ! push r
 !     arr[index]:= pop
 ! assign (end)
 
@@ -114,9 +114,9 @@
 ! assign (start)
 
 ! funcall (gcd) (start)
-     mov x, %l6      ! push x
+     ld [%fp + offset], %l6     ! push x
 !     arg1 :=pop
-     mov y, %l7      ! push y
+     ld [%fp + offset], %l7     ! push y
 !     arg2 :=pop
 ! funcall (end)
 ! push gcd()
@@ -124,7 +124,7 @@
 ! assign (end)
 ! write (start)
      st %l0, [%fp -88]
-     mov r, %l0      ! push r
+     ld [%fp + offset], %l0     ! push r
 !     expr := pop
 !     write(expr)
 ! call flwritei(int)
