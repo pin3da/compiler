@@ -83,6 +83,10 @@
 ! assign (start)
 
 ! funcall (gcd) (start)
+!     push x
+!     arg1 :=pop
+!     push y
+!     arg2 :=pop
 ! funcall (end)
 ! push gcd()
 !     r:= pop

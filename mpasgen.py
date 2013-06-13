@@ -265,18 +265,18 @@ def eval_rel(file,rel):
             print >>file, "!     not"
 
 def eval_funcall(file,s):
-    print >>file, "call_func"
-    '''
+
+
     args = s.varlist
-    i=1
-    
-    ###
-    # Este for esta malo
-    ###
-    for arg in args.children:
-        eval_expression(file,arg)
-        print >>file, "!     arg%d :=pop" %i
-        i+=1
+    if isinstance(args,Expression_list):
+        i=1 
+        for arg in args.expr:
+            eval_expression(file,arg)
+            print >>file, "!     arg%d :=pop" %i
+            i+=1
+
+    '''
+    Aun no se para que sirve!!
     sAux = "!     push %s(" %s.leaf
     length = len(args.children)
     for j in range(1,length+1):        
@@ -286,7 +286,7 @@ def eval_funcall(file,s):
     sAux+=")"
     print >>file,sAux
     '''
-    pass
+
 
 def new_label():
     global labelNumber
