@@ -110,14 +110,17 @@ def emit_read(file,s):
     if isinstance(loc,Ubication_vector):
         eval_expression(file, loc.Position.expr)
         print >>file, "!     index := pop"
-        print >>file, "!     read(%s[index])"% loc.id
+        index = pop()
+        print >>file, "!     read(%s[%%%s])"% (loc.id, index)
     else:
         print >>file, "!     read(%s)"% loc.value
+        
+    result = pop()
 
-    print >>file, '! call flreadf()'
-    print >>file, '     call flreadf'
+    print >>file, '! call flreadi(int)'
+    print >>file, '     call flreadi'
     print >>file, '     nop'
-    print >>file, '     st %o0, result'
+    print >>file, '     st %o0, %%%s'%result
         
     print >>file, "! read (end)"
 
@@ -127,9 +130,10 @@ def emit_write(file,s):
     eval_expression(file, s.value)
     print >>file, "!     expr := pop"
     print >>file, "!     write(expr)"
-    print >>file, '! call flwritef(float)'
-    print >>file, '     mov val, %o0'
-    print >>file, '     call flwritef'
+    print >>file, '! call flwritei(int)'
+    val = pop()
+    print >>file, '     mov %%%s, %o0'%val
+    print >>file, '     call flwritei'
     print >>file, '     nop'
     print >>file, "! write (end)"
 
