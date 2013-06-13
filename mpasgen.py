@@ -291,11 +291,17 @@ def eval_expression(file,expr):
         
     elif isinstance(expr,Integer):
         numb = expr.value
+        memdir = push(file)
         if numb >= -4095 and numb <= 4095:
-            print >>file, 'mov %d, %%%s'% (numb ,push(file)),
+            print >>file, 'mov %d, %%%s'% (numb , memdir),
             print >>file,  '      ! push constant value'
         else:
-            pass
+            label = new_label()
+            print >>data, '%s: .integer "%s"' % (label, numb)
+            print >>file, 'sethi %%hi(%s), %%g1'%label
+            print >>file, 'or %%g1, %%lo(%s), %%g1'%label
+            print >>file, 'ld [%%g1], %%%s'%memdir
+            
             #sethi
         
     elif isinstance(expr,Float):
