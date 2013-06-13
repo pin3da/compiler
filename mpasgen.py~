@@ -318,7 +318,6 @@ def eval_expression(file,expr):
         print >>file, '     ld [%%g1], %s'%memdir 
     
     
-    
 def eval_rel(file,rel):
     if isinstance(rel, Binary_op):
         left = rel.left
