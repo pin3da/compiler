@@ -28,22 +28,38 @@ def emit_function(file,fun):
     print >>file, '\n .global %s' % fun.id
     f = StringIO.StringIO()
 
+    ret_label = new_label()
     for statement in fun.block.declarations_list:
-        emit_statement(f, statement)
+        if isinstance(statement, Return):
+            emit_return(f,statement,ret_label)
+        else:
+            emit_statement(f, statement)
 
 
     stack = -64
     if not isinstance(fun.locals, Empty_locals):
-        for var in fun.locals.local_var:
-            if isinstance(var,Function):
-                emit_function(file,var)
-            elif isinstance(var.typename,Vector):
-                if isinstance(var.typename.length,Integer):
-                    stack = stack - 4*var.typename.length.value
+        if isinstance(fun.locals, Local_fun):
+            for var in fun.locals.local_fun:
+                if isinstance(var,Function):
+                    emit_function(file,var)
+                elif isinstance(var.typename,Vector):
+                    if isinstance(var.typename.length,Integer):
+                        stack = stack - 4*var.typename.length.value
+                    else:
+                        print >>file, '     ! Lenght can not be calculated'
                 else:
-                    print >>file, '     ! Lenght can not be calculated'
-            else:
-                stack = stack - 4
+                    stack = stack - 4
+        else:
+            for var in fun.locals.local_var:
+                if isinstance(var,Function):
+                    emit_function(file,var)
+                elif isinstance(var.typename,Vector):
+                    if isinstance(var.typename.length,Integer):
+                        stack = stack - 4*var.typename.length.value
+                    else:
+                        print >>file, '     ! Lenght can not be calculated'
+                else:
+                    stack = stack - 4
     
     falta = (stack%8)
     if falta != 0:
@@ -52,7 +68,7 @@ def emit_function(file,fun):
     print >>file, "     save %%sp, %d, %%sp" % stack
     print >>file, f.getvalue()
     
-    print >>file, " .Ln:"
+    print >>file, ret_label
 
     if(fun.id == 'main'):
         print >>file , "     mov 0, %o0 ! solamente aparece en main"
@@ -79,8 +95,8 @@ def emit_statement(file, st):
         emit_ifthenelse(file,st)
     elif isinstance(st,Assignation):
         emit_assign(file,st)
-    elif isinstance(st,Return):
-        emit_return(file,st)
+##    elif isinstance(st,Return):
+##        emit_return(file,st)
     elif isinstance(st,Call_func):
         emit_funcall(file,st)
     elif isinstance(st,Skip):
@@ -227,13 +243,14 @@ def emit_assign(file,s):
     print >>file, "! assign (end)"
     
     
-def emit_return(file,s):
+def emit_return(file,s,ret_label):
     print >>file, "\n! return (start)"
     expr = s.value
     eval_expression(file, expr)
-    
-    print >>file, "!     expr := pop"
-    print >>file, "!     return(expr)"
+    memdir = pop()
+    print >>file, "     mov %s, %%o0     ! expr := pop" % (memdir)
+    print >>file, '     jmp %s     ! return(expr)'% ret_label
+    print >>file, '     nop'
     print >>file, "! return (end)"
     
     
@@ -282,13 +299,13 @@ def eval_expression(file,expr):
 
             
     elif isinstance(expr,Unary_op):
-        eval_expression(out,expr.right)
+        eval_expression(file,expr.value)
         l = pop()
-        tmp = push(out)
+        tmp = push(file)
         if expr.op == "not":
             print >>file, "    neg %s, %s        ! -%s -> %s" %(l,tmp,l,tmp)
         elif expr.op == '-':
-            print >>file, '!     unary minus'
+            print >>file, "     sub %s, %s, %s     ! Unary minus"%("%g0", l, l)
         else:
             print >>file, "    %s 0, %s, %s        ! %s %s -> %s" %(un_ops[expr.op],l,tmp,expr.op,l,tmp)
           

@@ -17,61 +17,61 @@
 
 ! while (start)
 
- .L1:
+ .L2:
 
      ld [%fp + offset], %l0     ! push x
      mov 0, %l1      ! push constant value
-!     >
      cmp %l1, %l0
-     bg .L3
+     bg .L4     ! >
      mov 1, %l0
      mov 0, %l0
-!     relop:= pop
-!     if not relop: goto .L2
+ .L4:
+     cmp %l0, %g0     ! relop:= pop
+     be .L3     ! if not relop: goto .L3
+     nop
 
 ! assign (start)
-     ld [%fp + offset], %l0     ! push x
-     st %l0, [%fp + offset]     ! g := pop
+     ld [%fp + offset], %l-1     ! push x
+     st %l-1, [%fp + offset]     ! g := pop
 ! assign (end)
 
 ! assign (start)
+     ld [%fp + offset], %l-1     ! push y
      ld [%fp + offset], %l0     ! push y
-     ld [%fp + offset], %l1     ! push y
-     ld [%fp + offset], %l2     ! push x
-!     div
-     mov %l2, %o0
-     call .div
+     ld [%fp + offset], %l1     ! push x
      mov %l1, %o0
-     mov %o0, %l1
-     ld [%fp + offset], %l2     ! push x
-!     mul
-     mov %l2, %o0
-     call .mul
+     call .div     ! div
+     mov %l0, %o0
+     mov %o0, %l0
+     ld [%fp + offset], %l1     ! push x
      mov %l1, %o0
-     mov %o0, %l1
-!     sub
-     sub %l1, %l0, %l0
-     st %l0, [%fp + offset]     ! x := pop
+     call .mul     ! mul
+     mov %l0, %o0
+     mov %o0, %l0
+     sub %l0, %l-1, %l-1     ! sub
+     st %l-1, [%fp + offset]     ! x := pop
 ! assign (end)
 
 ! assign (start)
-     ld [%fp + offset], %l0     ! push g
-     st %l0, [%fp + offset]     ! y := pop
+     ld [%fp + offset], %l-1     ! push g
+     st %l-1, [%fp + offset]     ! y := pop
 ! assign (end)
 
-! goto .L1
+     ba  .L2     ! goto .L2
+     nop
 
- .L2:
+ .L3:
 
 ! while (end)
 
 ! return (start)
-     ld [%fp + offset], %l1     ! push g
-!     expr := pop
-!     return(expr)
+     ld [%fp + offset], %l0     ! push g
+     mov %l0, %o0     ! expr := pop
+     jmp .L1     ! return(expr)
+     nop
 ! return (end)
 
- .Ln:
+.L1
      ret
      restore
 
@@ -85,8 +85,8 @@
 
 ! print (start)
 ! call flprint()
-     sethi %hi(.L4), %o0
-     or %o0, %lo(.L4), %o0
+     sethi %hi(.L6), %o0
+     or %o0, %lo(.L6), %o0
      call flprint
      nop
 ! print (end)
@@ -96,7 +96,7 @@
 ! call flreadi(int)
      call flreadi
      nop
-     st %o0, %%l1
+     st %o0, %%l-1
 ! read (end)
 
 ! read (start)
@@ -104,7 +104,7 @@
 ! call flreadi(int)
      call flreadi
      nop
-     st %o0, %%l0
+     st %o0, %%l-1
 ! read (end)
 
 ! assign (start)
@@ -129,7 +129,7 @@
      nop
 ! write (end)
 
- .Ln:
+.L5
      mov 0, %o0 ! solamente aparece en main
      call _exit ! solamente aparece en main
      nop ! solamente aparece en main
@@ -141,5 +141,5 @@
 
      .section ".rodata"
 
-.L4: .asciz "Entre dos numeros_NL_"
+.L6: .asciz "Entre dos numeros_NL_"
 

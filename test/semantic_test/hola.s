@@ -19,12 +19,11 @@
 ! assign (start)
      mov 10, %l-1      ! push constant value
      mov 5, %l0      ! push constant value
-!     add
-     add %l0, %l-1, %l-1
+     add %l0, %l-1, %l-1     ! add
      st %l-1, [%fp + offset]     ! b := pop
 ! assign (end)
 
- .Ln:
+.L1
      ret
      restore
 
@@ -41,8 +40,8 @@
      store %l0, %o0      ! arg0 :=pop
      mov 12, %l0      ! push constant value
      store %l0, %o1      ! arg1 :=pop
-     sethi %hi(.L1), %g1
-     or %g1, %lo(.L1), %g1
+     sethi %hi(.L3), %g1
+     or %g1, %lo(.L3), %g1
      ld [%g1], %l0
      store %l0, %o2      ! arg2 :=pop
      call .mf
@@ -54,7 +53,7 @@
      st %l0, [%fp + offset]     ! a := pop
 ! assign (end)
 
- .Ln:
+.L2
      mov 0, %o0 ! solamente aparece en main
      call _exit ! solamente aparece en main
      nop ! solamente aparece en main
@@ -66,5 +65,5 @@
 
      .section ".rodata"
 
-     .L1: .float "1.3"
+     .L3: .float "1.3"
 

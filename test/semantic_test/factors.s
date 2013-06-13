@@ -14,24 +14,22 @@
      ld [%fp + offset], %l0     ! push x
      ld [%fp + offset], %l1     ! push x
      ld [%fp + offset], %l2     ! push y
-!     div
      mov %l2, %o0
-     call .div
+     call .div     ! div
      mov %l1, %o0
      mov %o0, %l1
      ld [%fp + offset], %l2     ! push y
-!     mul
      mov %l2, %o0
-     call .mul
+     call .mul     ! mul
      mov %l1, %o0
      mov %o0, %l1
-!     sub
-     sub %l1, %l0, %l0
-!     expr := pop
-!     return(expr)
+     sub %l1, %l0, %l0     ! sub
+     mov %l0, %o0     ! expr := pop
+     jmp .L1     ! return(expr)
+     nop
 ! return (end)
 
- .Ln:
+.L1
      ret
      restore
 
@@ -44,98 +42,101 @@
      save %sp, -72, %sp
 
 ! assign (start)
-     mov 1, %l0      ! push constant value
-     st %l0, [%fp + offset]     ! nfacts := pop
+     mov 1, %l-1      ! push constant value
+     st %l-1, [%fp + offset]     ! nfacts := pop
 ! assign (end)
 
 ! assign (start)
-     mov 0, %l0      ! push constant value
-     sll %l0, 2, %l0
-     add %fp, %l0, %l0      ! index := pop
-     mov 1, %l0      ! push constant value
-     st %l0, [%l0 + offset]     ! stor[index] := pop
+     mov 0, %l-1      ! push constant value
+     sll %l-1, 2, %l-1
+     add %fp, %l-1, %l-1      ! index := pop
+     mov 1, %l-1      ! push constant value
+     st %l-1, [%l-1 + offset]     ! stor[index] := pop
 ! assign (end)
 
 ! assign (start)
-     mov 2, %l0      ! push constant value
-     st %l0, [%fp + offset]     ! i := pop
+     mov 2, %l-1      ! push constant value
+     st %l-1, [%fp + offset]     ! i := pop
 ! assign (end)
 
 ! while (start)
 
- .L1:
+ .L3:
 
-     ld [%fp + offset], %l1     ! push i
-     ld [%fp + offset], %l2     ! push n
-!     <=
-     cmp %l2, %l1
-     ble .L3
-     mov 1, %l1
-     mov 0, %l1
-!     relop:= pop
-!     if not relop: goto .L2
+     ld [%fp + offset], %l0     ! push i
+     ld [%fp + offset], %l1     ! push n
+     cmp %l1, %l0
+     ble .L5     !<=
+     mov 1, %l0
+     mov 0, %l0
+ .L5:
+     cmp %l0, %g0     ! relop:= pop
+     be .L4     ! if not relop: goto .L4
+     nop
 
 ! ifthen (start)
 
 ! funcall (mod) (start)
-     ld [%fp + offset], %l2     ! push n
-     store %l2, %o0      ! arg0 :=pop
-     ld [%fp + offset], %l2     ! push i
-     store %l2, %o1      ! arg1 :=pop
+     ld [%fp + offset], %l0     ! push n
+     store %l0, %o0      ! arg0 :=pop
+     ld [%fp + offset], %l0     ! push i
+     store %l0, %o1      ! arg1 :=pop
      call .mod
-     mov %l2, %o0     ! push mod(arg0, arg2)
+     mov %l0, %o0     ! push mod(arg0, arg2)
 ! funcall (end)
-     mov 0, %l3      ! push constant value
-!     ==
-     cmp %l3, %l2
-     be .L4
-     mov 1, %l2
-     mov 0, %l2
-!     cond:= pop
-!     if not cond: goto end
+     mov 0, %l1      ! push constant value
+     cmp %l1, %l0
+     be .L7     ! ==
+     mov 1, %l0
+     mov 0, %l0
+ .L7:
+     cmp %l0, g0     !cond:= pop
+     be .L6     ! goto .L6
+     nop
 
 ! assign (start)
-     ld [%fp + offset], %l2     ! push nfacts
-     mov 1, %l3      ! push constant value
-!     add
-     add %l3, %l2, %l2
-     st %l2, [%fp + offset]     ! nfacts := pop
+     ld [%fp + offset], %l-1     ! push nfacts
+     mov 1, %l0      ! push constant value
+     add %l0, %l-1, %l-1     ! add
+     st %l-1, [%fp + offset]     ! nfacts := pop
 ! assign (end)
 
 ! assign (start)
-     ld [%fp + offset], %l2     ! push i
-     mov 1, %l3      ! push constant value
-!     sub
-     sub %l3, %l2, %l2
-     sll %l2, 2, %l2
-     add %fp, %l2, %l2      ! index := pop
-     ld [%fp + offset], %l2     ! push i
-     st %l2, [%l2 + offset]     ! stor[index] := pop
+     ld [%fp + offset], %l-1     ! push i
+     mov 1, %l0      ! push constant value
+     sub %l0, %l-1, %l-1     ! sub
+     sll %l-1, 2, %l-1
+     add %fp, %l-1, %l-1      ! index := pop
+     ld [%fp + offset], %l-1     ! push i
+     st %l-1, [%l-1 + offset]     ! stor[index] := pop
 ! assign (end)
-! end:
+
+ .L6:
+
 ! ifthen (end)
 
 ! assign (start)
-     ld [%fp + offset], %l2     ! push i
-     mov 1, %l3      ! push constant value
-!     add
-     add %l3, %l2, %l2
-     st %l2, [%fp + offset]     ! i := pop
+     ld [%fp + offset], %l-1     ! push i
+     mov 1, %l0      ! push constant value
+     add %l0, %l-1, %l-1     ! add
+     st %l-1, [%fp + offset]     ! i := pop
 ! assign (end)
 
-! goto .L1
+     ba  .L3     ! goto .L3
+     nop
 
- .L2:
+ .L4:
 
 ! while (end)
 
 ! return (start)
-     ld [%fp + offset], %l3     ! push nfacts
-!     expr := pop
-!     return(expr)
+     ld [%fp + offset], %l0     ! push nfacts
+     mov %l0, %o0     ! expr := pop
+     jmp .L2     ! return(expr)
+     nop
 ! return (end)
 
- .Ln:
+.L2
      ret
      restore
 
@@ -148,39 +149,40 @@
      save %sp, -72, %sp
 
 ! assign (start)
-     mov 0, %l3      ! push constant value
-     st %l3, [%fp + offset]     ! i := pop
+     mov 0, %l-1      ! push constant value
+     st %l-1, [%fp + offset]     ! i := pop
 ! assign (end)
 
 ! while (start)
 
- .L5:
+ .L9:
 
-     ld [%fp + offset], %l4     ! push i
-     ld [%fp + offset], %l5     ! push nelem
-!     <
-     cmp %l5, %l4
-     bl .L7
-     mov 1, %l4
-     mov 0, %l4
-!     relop:= pop
-!     if not relop: goto .L6
+     ld [%fp + offset], %l0     ! push i
+     ld [%fp + offset], %l1     ! push nelem
+     cmp %l1, %l0
+     bl .L11     ! <
+     mov 1, %l0
+     mov 0, %l0
+ .L11:
+     cmp %l0, %g0     ! relop:= pop
+     be .L10     ! if not relop: goto .L10
+     nop
 ! write (start)
-     ld [%fp + offset], %l5     ! push i
-     sll %l5, 2, %l5
-     add %fp, %l5, %l5      ! index := pop
-     ld [%l5 + offset], %l5     ! push a[index] !     expr := pop
+     ld [%fp + offset], %l0     ! push i
+     sll %l0, 2, %l0
+     add %fp, %l0, %l0      ! index := pop
+     ld [%l0 + offset], %l0     ! push a[index] !     expr := pop
 !     write(expr)
 !     call flwritei(int)
-     mov %%l5, %o0
+     mov %%l0, %o0
      call flwritei
      nop
 ! write (end)
 
 ! print (start)
 ! call flprint()
-     sethi %hi(.L8), %o0
-     or %o0, %lo(.L8), %o0
+     sethi %hi(.L12), %o0
+     or %o0, %lo(.L12), %o0
      call flprint
      nop
 ! print (end)
@@ -188,46 +190,48 @@
 ! ifthen (start)
 
 ! funcall (mod) (start)
-     ld [%fp + offset], %l5     ! push i
-     store %l5, %o0      ! arg0 :=pop
-     mov 5, %l5      ! push constant value
-     store %l5, %o1      ! arg1 :=pop
+     ld [%fp + offset], %l0     ! push i
+     store %l0, %o0      ! arg0 :=pop
+     mov 5, %l0      ! push constant value
+     store %l0, %o1      ! arg1 :=pop
      call .mod
-     mov %l5, %o0     ! push mod(arg0, arg2)
+     mov %l0, %o0     ! push mod(arg0, arg2)
 ! funcall (end)
-     mov 0, %l6      ! push constant value
-     ld [%fp + offset], %l6     ! push i
-     mov 0, %l7      ! push constant value
-!     and
-     and %l6, %l5, %l5
-!     cond:= pop
-!     if not cond: goto end
+     mov 0, %l1      ! push constant value
+     ld [%fp + offset], %l1     ! push i
+     mov 0, %l2      ! push constant value
+     and %l1, %l0, %l0     ! and
+     cmp %l0, g0     !cond:= pop
+     be .L13     ! goto .L13
+     nop
 
 ! print (start)
 ! call flprint()
-     sethi %hi(.L9), %o0
-     or %o0, %lo(.L9), %o0
+     sethi %hi(.L14), %o0
+     or %o0, %lo(.L14), %o0
      call flprint
      nop
 ! print (end)
-! end:
+
+ .L13:
+
 ! ifthen (end)
 
 ! assign (start)
-     ld [%fp + offset], %l5     ! push i
-     mov 1, %l6      ! push constant value
-!     add
-     add %l6, %l5, %l5
-     st %l5, [%fp + offset]     ! i := pop
+     ld [%fp + offset], %l-1     ! push i
+     mov 1, %l0      ! push constant value
+     add %l0, %l-1, %l-1     ! add
+     st %l-1, [%fp + offset]     ! i := pop
 ! assign (end)
 
-! goto .L5
+     ba  .L9     ! goto .L9
+     nop
 
- .L6:
+ .L10:
 
 ! while (end)
 
- .Ln:
+.L8
      ret
      restore
 
@@ -241,8 +245,8 @@
 
 ! print (start)
 ! call flprint()
-     sethi %hi(.L10), %o0
-     or %o0, %lo(.L10), %o0
+     sethi %hi(.L16), %o0
+     or %o0, %lo(.L16), %o0
      call flprint
      nop
 ! print (end)
@@ -252,32 +256,32 @@
 ! call flreadi(int)
      call flreadi
      nop
-     st %o0, %%l5
+     st %o0, %%l-1
 ! read (end)
 
 ! assign (start)
 
 ! funcall (factor) (start)
-     ld [%fp + offset], %l4     ! push x
-     store %l4, %o0      ! arg0 :=pop
-     ld [%fp + offset], %l4     ! push results
-     store %l4, %o1      ! arg1 :=pop
+     ld [%fp + offset], %l-1     ! push x
+     store %l-1, %o0      ! arg0 :=pop
+     ld [%fp + offset], %l-1     ! push results
+     store %l-1, %o1      ! arg1 :=pop
      call .factor
-     mov %l4, %o0     ! push factor(arg0, arg2)
+     mov %l-1, %o0     ! push factor(arg0, arg2)
 ! funcall (end)
-     st %l4, [%fp + offset]     ! nfs := pop
+     st %l-1, [%fp + offset]     ! nfs := pop
 ! assign (end)
 
 ! funcall (print_arr) (start)
-     ld [%fp + offset], %l5     ! push results
-     store %l5, %o0      ! arg0 :=pop
-     ld [%fp + offset], %l5     ! push nfs
-     store %l5, %o1      ! arg1 :=pop
+     ld [%fp + offset], %l0     ! push results
+     store %l0, %o0      ! arg0 :=pop
+     ld [%fp + offset], %l0     ! push nfs
+     store %l0, %o1      ! arg1 :=pop
      call .print_arr
-     mov %l5, %o0     ! push print_arr(arg0, arg2)
+     mov %l0, %o0     ! push print_arr(arg0, arg2)
 ! funcall (end)
 
- .Ln:
+.L15
      mov 0, %o0 ! solamente aparece en main
      call _exit ! solamente aparece en main
      nop ! solamente aparece en main
@@ -289,7 +293,7 @@
 
      .section ".rodata"
 
-.L8: .asciz " "
-.L9: .asciz "_NL_"
-.L10: .asciz "Enter a number_NL_"
+.L12: .asciz " "
+.L14: .asciz "_NL_"
+.L16: .asciz "Enter a number_NL_"
 

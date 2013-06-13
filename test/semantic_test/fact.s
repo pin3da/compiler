@@ -13,46 +13,22 @@
 ! ifthenelse (start)
      ld [%fp + offset], %l0     ! push n
      mov 1, %l1      ! push constant value
-!     ==
      cmp %l1, %l0
-     be .L1
+     be .L4     ! ==
      mov 1, %l0
      mov 0, %l0
-!     cond:= pop
-!     if not cond: goto else
+ .L4:
+     cmp %l0, g0     ! cond:= pop
+     be .L2     ! if not cond: goto else
+     nop
+     ba .L3     ! if not cond: goto end:
 
-! return (start)
-     mov 1, %l1      ! push constant value
-!     expr := pop
-!     return(expr)
-! return (end)
-! goto end:
-! else:
+ .L2:     ! else:
 
-! return (start)
-     ld [%fp + offset], %l2     ! push n
-
-! funcall (fact) (start)
-     ld [%fp + offset], %l3     ! push n
-     mov 1, %l4      ! push constant value
-!     sub
-     sub %l4, %l3, %l3
-     store %l3, %o0      ! arg0 :=pop
-     call .fact
-     mov %l3, %o0     ! push fact(arg0, arg1)
-! funcall (end)
-!     mul
-     mov %l3, %o0
-     call .mul
-     mov %l2, %o0
-     mov %o0, %l2
-!     expr := pop
-!     return(expr)
-! return (end)
-! end:
+ .L3:     ! end:
 ! ifthenelse (end)
 
- .Ln:
+.L1
      ret
      restore
 
@@ -66,8 +42,8 @@
 
 ! print (start)
 ! call flprint()
-     sethi %hi(.L2), %o0
-     or %o0, %lo(.L2), %o0
+     sethi %hi(.L6), %o0
+     or %o0, %lo(.L6), %o0
      call flprint
      nop
 ! print (end)
@@ -77,30 +53,30 @@
 ! call flreadi(int)
      call flreadi
      nop
-     st %o0, %%l2
+     st %o0, %%l-1
 ! read (end)
 
 ! assign (start)
 
 ! funcall (fact) (start)
-     ld [%fp + offset], %l1     ! push x
-     store %l1, %o0      ! arg0 :=pop
+     ld [%fp + offset], %l-1     ! push x
+     store %l-1, %o0      ! arg0 :=pop
      call .fact
-     mov %l1, %o0     ! push fact(arg0, arg1)
+     mov %l-1, %o0     ! push fact(arg0, arg1)
 ! funcall (end)
-     st %l1, [%fp + offset]     ! r := pop
+     st %l-1, [%fp + offset]     ! r := pop
 ! assign (end)
 ! write (start)
-     ld [%fp + offset], %l2     ! push r
+     ld [%fp + offset], %l0     ! push r
 !     expr := pop
 !     write(expr)
 !     call flwritei(int)
-     mov %%l2, %o0
+     mov %%l0, %o0
      call flwritei
      nop
 ! write (end)
 
- .Ln:
+.L5
      mov 0, %o0 ! solamente aparece en main
      call _exit ! solamente aparece en main
      nop ! solamente aparece en main
@@ -112,5 +88,5 @@
 
      .section ".rodata"
 
-.L2: .asciz "Entre un numero_NL_"
+.L6: .asciz "Entre un numero_NL_"
 

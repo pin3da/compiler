@@ -12,13 +12,13 @@
 
 ! print (start)
 ! call flprint()
-     sethi %hi(.L1), %o0
-     or %o0, %lo(.L1), %o0
+     sethi %hi(.L2), %o0
+     or %o0, %lo(.L2), %o0
      call flprint
      nop
 ! print (end)
 
- .Ln:
+.L1
      mov 0, %o0 ! solamente aparece en main
      call _exit ! solamente aparece en main
      nop ! solamente aparece en main
@@ -30,5 +30,5 @@
 
      .section ".rodata"
 
-.L1: .asciz "Hola Mundo_NL_"
+.L2: .asciz "Hola Mundo_NL_"
 
