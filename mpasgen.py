@@ -58,19 +58,27 @@ def emit_statement(file, st):
 
 def emit_print(file,s):
     print >>file, "\n! print (start)"
+    print >>file, '!     print(%s)'% s.value
     print >>file, "! print (end)"
 
 
 def emit_read(file,s):
     print >>file, "\n! read (start)"
     loc = s.var_id
+
+    if isinstance(loc,Ubication_vector):
+        eval_expression(file, loc.Position.expr)
+        print >>file, "!     index := pop"
+        print >>file, "!     read(%s[index])"% loc.id
+    else:
+        print >>file, "!     read(%s)"% loc.value
+        
     print >>file, "! read (end)"
 
 
 def emit_write(file,s):
     print >>file, "! write (start)"
-    expr = s.value
-    eval_expression(file, expr)
+    eval_expression(file, s.value)
     print >>file, "!     expr := pop"
     print >>file, "!     write(expr)"
     print >>file, "! write (end)"
@@ -162,7 +170,7 @@ def emit_return(file,s):
     
     
 def emit_funcall(file,s):
-    print >>file, "\n! funcall (start)"
+    print >>file, "\n! funcall (%s) (start)"%s.func_id
     eval_funcall(file,s)
     print >>file, "! funcall (end)"
     

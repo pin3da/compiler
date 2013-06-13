@@ -69,17 +69,20 @@
 ! assign (end)
 
 ! print (start)
+!     print(Entre dos numeros_NL_)
 ! print (end)
 
 ! read (start)
+!     read(x)
 ! read (end)
 
 ! read (start)
+!     read(y)
 ! read (end)
 
 ! assign (start)
 
-! funcall (start)
+! funcall (gcd) (start)
 ! funcall (end)
 ! push gcd()
 !     r:= pop
