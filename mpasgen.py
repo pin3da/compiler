@@ -33,11 +33,17 @@ def emit_function(file,fun):
 
 
     stack = -64
-    for var in fun.locals.local_var:
-        if isinstance(var.typename,Vector):
-            stack = stack - 4*var.typename.length.value
-        else:
-            stack = stack - 4
+    if not isinstance(fun.locals, Empty_locals):
+        for var in fun.locals.local_var:
+            if isinstance(var,Function):
+                emit_function(file,var)
+            elif isinstance(var.typename,Vector):
+                if isinstance(var.typename.length,Integer):
+                    stack = stack - 4*var.typename.length.value
+                else:
+                    print >>file, '     ! Lenght can not be calculated'
+            else:
+                stack = stack - 4
     
     falta = (stack%8)
     if falta != 0:
@@ -309,8 +315,7 @@ def eval_expression(file,expr):
         print >>file, "     sll %s, 2, %s" % (result,result)
         print >>file, "     add %%fp, %s, %s" % (result,result),
         print >>file, "     ! index := pop"        
-        print >>file, "     ld [%s + offset], %s   !   push %s[index]" % (Ubication_vector.id),
-        print >>file, "     ! push %s[index]" % Ubication_vector.id
+        print >>file, "     ld [%s + offset], %s     ! push %s[index]" % (result, push(file), expr.id),
      
     elif isinstance(expr, Cast_int):
         pass
@@ -358,7 +363,7 @@ def eval_rel(file,rel):
         if rel.op == "<":
             print >>file, "!     <"
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
-            label=new_label()
+            label = new_label()
             print >>file, "     bl %s"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
@@ -366,7 +371,7 @@ def eval_rel(file,rel):
         elif rel.op == "<=":
             print >>file, "!     <="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
-            label=new_label()
+            label = new_label()
             print >>file, "     ble %s"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
@@ -374,7 +379,7 @@ def eval_rel(file,rel):
         elif rel.op == ">":
             print >>file, "!     >"
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
-            label=new_label()
+            label = new_label()
             print >>file, "     bg %s"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
@@ -382,7 +387,7 @@ def eval_rel(file,rel):
         elif rel.op == ">=":
             print >>file, "!     >="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
-            label=new_label()
+            label = new_label()
             print >>file, "     bge %s"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
@@ -390,15 +395,15 @@ def eval_rel(file,rel):
         elif rel.op == "==":            
             print >>file, "!     =="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
-            label=new_label()
+            label = new_label()
             print >>file, "     be %s"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)
         
-        elif rel.type == "!=":
+        elif rel.op == "!=":
             print >>file, "!     !="
             print >>file, "     cmp %s, %s"%(memdir_left, memdir_right)
-            label=new_label()
+            label = new_label()
             print >>file, "     bne %s"% label
             print >>file, "     mov 1, %s"%(memdir)
             print >>file, "     mov 0, %s"%(memdir)

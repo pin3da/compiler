@@ -63,7 +63,7 @@ def error(lineno, message, filename=None):
 	#Reporta un error del compilador a todos los suscriptores.
 	
 	global _num_errors
-	if not filename:
+	if filename==None:
 		errmsg = "{}: {}".format(lineno, message)
 	else:
 		errmsg = "{} : {} : {}".format(filename,lineno,message)

@@ -9,8 +9,9 @@ func mf( a :int, b:int , c:float)
 
 fun main()
     aa:int;
-        begin
-           mf(5 , 12 , 1.3);
+    a:int;
+    begin
+       mf(5 , 12 , 1.3);
        a := 5;
     end
 
