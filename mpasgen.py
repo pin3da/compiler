@@ -22,10 +22,23 @@ def emit_function(file,fun):
     print >>file, "\n! function: %s (start) " % fun.id
     print >>file, '\n .global %s' % fun.id
     f = StringIO.StringIO()
+
     for statement in fun.block.declarations_list:
         emit_statement(f, statement)
 
-    print >>file, "     save %%sp, -%d, %%sp" % -96  ## Falta organizar aca !!!
+
+    stack = -64
+    for var in fun.locals.local_var:
+        if isinstance(var.typename,Vector):
+            stack = stack - 4*var.typename.length.value
+        else:
+            stack = stack - 4
+    
+    falta = (stack%8)
+    if falta != 0:
+        stack = stack - (8-falta)
+   
+    print >>file, "     save %%sp, %d, %%sp" % stack
     print >>file, f.getvalue()
     
     print >>file, " .Ln:"
@@ -74,6 +87,13 @@ def emit_print(file,s):
     value = s.value
     label = new_label()
     # Drop a literal in the data segment
+    print >>file, '! call flprint()' 
+
+    print >>file, '     sethi %%hi(%s), %%o0'%label
+    print >>file, '     or %%o0, %%lo(%s), %%o0'%label
+    print >>file, '     call flprint'
+    print >>file, '     nop'
+    
     print >>data, '%s: .asciz "%s"' % (label, value)
     print >>file, "! print (end)"
 
@@ -88,6 +108,11 @@ def emit_read(file,s):
         print >>file, "!     read(%s[index])"% loc.id
     else:
         print >>file, "!     read(%s)"% loc.value
+
+    print >>file, '! call flreadf()'
+    print >>file, '     call flreadf'
+    print >>file, '     nop'
+    print >>file, '     st %o0, result'
         
     print >>file, "! read (end)"
 
@@ -97,6 +122,10 @@ def emit_write(file,s):
     eval_expression(file, s.value)
     print >>file, "!     expr := pop"
     print >>file, "!     write(expr)"
+    print >>file, '! call flwritef(float)'
+    print >>file, '     mov val, %o0'
+    print >>file, '     call flwritef'
+    print >>file, '     nop'
     print >>file, "! write (end)"
 
 def emit_while(file,s):

@@ -8,7 +8,7 @@
 ! function: gcd (start) 
 
  .global gcd
-     save %sp, --96, %sp
+     save %sp, -72, %sp
 
 ! assign (start)
 !     push y
@@ -67,7 +67,7 @@
 ! function: main (start) 
 
  .global main
-     save %sp, --96, %sp
+     save %sp, -120, %sp
 
 ! assign (start)
 !     push x
@@ -80,14 +80,27 @@
 ! assign (end)
 
 ! print (start)
+! call flprint()
+     sethi %hi(.L3), %o0
+     or %o0, %lo(.L3), %o0
+     call flprint
+     nop
 ! print (end)
 
 ! read (start)
 !     read(x)
+! call flreadf()
+     call flreadf
+     nop
+     st %o0, result
 ! read (end)
 
 ! read (start)
 !     read(y)
+! call flreadf()
+     call flreadf
+     nop
+     st %o0, result
 ! read (end)
 
 ! assign (start)
@@ -105,6 +118,10 @@
 !     push r
 !     expr := pop
 !     write(expr)
+! call flwritef(float)
+     mov val, %o0
+     call flwritef
+     nop
 ! write (end)
 
  .Ln:
