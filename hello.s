@@ -116,7 +116,8 @@
 
 ! function: main (end) 
 
-.L3: .asciz "Entre dos numeros_NL_"
 
      .section ".rodata"
+
+.L3: .asciz "Entre dos numeros_NL_"
 

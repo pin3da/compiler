@@ -8,8 +8,8 @@ def generate(file,top):
     print >>file, "! Creado por mpascal.py"
     print >>file, "! Manuel Pineda, Carlos Gonzalez, IS744 (2013-1)"
     print >>file, '\n     .section ".text"'
+    print >>data, '\n     .section ".rodata"\n'
     emit_program(file,top)
-    print >>data, '\n     .section ".rodata"'
     print >>file, data.getvalue()
     
 def emit_program(file,root):
