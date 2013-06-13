@@ -257,7 +257,16 @@ def eval_expression(file,expr):
 
             
     elif isinstance(expr,Unary_op):
-        pass
+        eval_expression(out,expr.right)
+        l = pop()
+        tmp = push(out)
+        if expr.op == "not":
+            print >>file, "    neg %s, %s        ! -%s -> %s" %(l,tmp,l,tmp)
+        elif expr.op == '-':
+            print >>file, '!     unary minus'
+        else:
+            print >>file, "    %s 0, %s, %s        ! %s %s -> %s" %(un_ops[expr.op],l,tmp,expr.op,l,tmp)
+          
     
     elif isinstance(expr, Call_func):
         emit_funcall(file, expr)
@@ -283,6 +292,19 @@ def eval_expression(file,expr):
     
     elif isinstance(expr,Ubication):
         pass
+        
+    elif isinstance(expr,Integer):
+        numb = expr.value
+        if numb >= -4095 and numb <= 4095:
+            print >>file, 'mov %d, %%%s'% (numb ,push(file)),
+            print >>file,  '      ! push constant value'
+        else:
+            pass
+            #sethi
+        
+    elif isinstance(expr,Float):
+        pass
+    
     
 def eval_rel(file,rel):
     if isinstance(rel, Binary_op):

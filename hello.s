@@ -20,28 +20,30 @@
  .L1:
 
  mov x, %%l1 !     push x
+mov 0, %%l2       ! push constant value
 !     >
 !     relop:= pop
 !     if not relop: goto .L2
 
 ! assign (start)
- mov x, %%l2 !     push x
+ mov x, %%l3 !     push x
 !     g:= pop
 ! assign (end)
 
 ! assign (start)
- mov y, %%l3 !     push y
  mov y, %%l4 !     push y
- mov x, %%l5 !     push x
-!     div
+ mov y, %%l5 !     push y
  mov x, %%l6 !     push x
+!     div
+ mov x, %%l7 !     push x
 !     mul
 !     sub
 !     x:= pop
 ! assign (end)
 
 ! assign (start)
- mov g, %%l7 !     push g
+     st %l0, [%fp -64]
+ mov g, %%l0 !     push g
 !     y:= pop
 ! assign (end)
 
@@ -52,8 +54,8 @@
 ! while (end)
 
 ! return (start)
-     st %l0, [%fp -64]
- mov g, %%l0 !     push g
+     st %l1, [%fp -68]
+ mov g, %%l1 !     push g
 !     expr := pop
 !     return(expr)
 ! return (end)
@@ -71,15 +73,17 @@
      save %sp, -120, %sp
 
 ! assign (start)
-     st %l1, [%fp -68]
- mov x, %%l1 !     push x
      st %l2, [%fp -72]
- mov y, %%l2 !     push y
+ mov x, %%l2 !     push x
+     st %l3, [%fp -76]
+ mov y, %%l3 !     push y
+     st %l4, [%fp -80]
+mov 2, %%l4       ! push constant value
 !     mul
 !     add
 !     index := pop
-     st %l3, [%fp -76]
- mov r, %%l3 !     push r
+     st %l5, [%fp -84]
+ mov r, %%l5 !     push r
 !     arr[index]:= pop
 ! assign (end)
 
@@ -110,19 +114,19 @@
 ! assign (start)
 
 ! funcall (gcd) (start)
-     st %l4, [%fp -80]
- mov x, %%l4 !     push x
+     st %l6, [%fp -88]
+ mov x, %%l6 !     push x
 !     arg1 :=pop
-     st %l5, [%fp -84]
- mov y, %%l5 !     push y
+     st %l7, [%fp -92]
+ mov y, %%l7 !     push y
 !     arg2 :=pop
 ! funcall (end)
 ! push gcd()
 !     r:= pop
 ! assign (end)
 ! write (start)
-     st %l6, [%fp -88]
- mov r, %%l6 !     push r
+     st %l0, [%fp -96]
+ mov r, %%l0 !     push r
 !     expr := pop
 !     write(expr)
 ! call flwritef(float)
