@@ -97,27 +97,25 @@
 
 ! read (start)
 !     read(x)
-! call flreadf()
-     call flreadf
+! call flreadi(int)
+     call flreadi
      nop
-     st %o0, result
+     st %o0, %%l7
 ! read (end)
 
 ! read (start)
 !     read(y)
-! call flreadf()
-     call flreadf
+! call flreadi(int)
+     call flreadi
      nop
-     st %o0, result
+     st %o0, %%l6
 ! read (end)
 
 ! assign (start)
 
 ! funcall (gcd) (start)
-     st %l6, [%fp -88]
      mov x, %l6      ! push x
 !     arg1 :=pop
-     st %l7, [%fp -92]
      mov y, %l7      ! push y
 !     arg2 :=pop
 ! funcall (end)
@@ -125,13 +123,13 @@
 !     r:= pop
 ! assign (end)
 ! write (start)
-     st %l0, [%fp -96]
+     st %l0, [%fp -88]
      mov r, %l0      ! push r
 !     expr := pop
 !     write(expr)
-! call flwritef(float)
-     mov val, %o0
-     call flwritef
+! call flwritei(int)
+     mov %%l7, %o0
+     call flwritei
      nop
 ! write (end)
 

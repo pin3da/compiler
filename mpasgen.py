@@ -120,7 +120,7 @@ def emit_read(file,s):
     print >>file, '! call flreadi(int)'
     print >>file, '     call flreadi'
     print >>file, '     nop'
-    print >>file, '     st %o0, %%%s'%result
+    print >>file, '     st %%o0, %%%s'%result
         
     print >>file, "! read (end)"
 
@@ -132,7 +132,7 @@ def emit_write(file,s):
     print >>file, "!     write(expr)"
     print >>file, '! call flwritei(int)'
     val = pop()
-    print >>file, '     mov %%%s, %o0'%val
+    print >>file, '     mov %%%s, %%o0'%val
     print >>file, '     call flwritei'
     print >>file, '     nop'
     print >>file, "! write (end)"
