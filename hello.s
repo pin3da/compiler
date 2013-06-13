@@ -38,8 +38,8 @@
 !     expr := pop
 !     return(expr)
 ! return (end)
-!
- function: gcd (end) 
+
+ ! function: gcd (end) 
 
 ! function: main (start) 
 
@@ -62,8 +62,8 @@
 ! write (start)
 !     write(expr)
 ! write (end)
-!
- function: main (end) 
+
+ ! function: main (end) 
 
  .section ".rodata"
 

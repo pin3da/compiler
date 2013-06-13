@@ -25,7 +25,7 @@ def emit_function(file,fun):
     for statement in fun.block.declarations_list:
         emit_statement(file, statement)
 
-    print >>file, "!\n function: %s (end) " % fun.id
+    print >>file, "\n ! function: %s (end) " % fun.id
 
 def emit_statement(file, st):
     if isinstance(st,Print):
